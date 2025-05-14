@@ -8,8 +8,8 @@ const Main: React.FC = () => {
   return (
     <main className="w-full">
       <FeaturedArtistSection />
-      <MusicPlayerSection />
       <TourDatesSection />
+      <MusicPlayerSection />
       <MerchandiseSection />
     </main>
   );
