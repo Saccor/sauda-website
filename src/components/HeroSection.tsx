@@ -1,30 +1,19 @@
 import Header from "./Header";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import React, { forwardRef } from "react";
-
-interface HeroSectionProps {
-  // Accept the ref and pass it to Header
-}
 
 const HeroSection = forwardRef<HTMLDivElement>((props, ref) => {
   return (
-    <section ref={ref} className="relative w-full h-screen overflow-hidden bg-black">
+    <section ref={ref} className="relative w-full h-screen overflow-hidden bg-black mb-0 pb-0">
       <Header heroRef={ref as React.RefObject<HTMLElement>} />
-      <div className="absolute inset-0">
-        <AspectRatio ratio={16 / 9} className="h-full md:block hidden">
+      <div className="absolute inset-0 h-full w-full">
+        <picture>
+          <source media="(max-width: 767px)" srcSet="/Testify-2-3.JPG" />
           <img 
             src="/Testify-16-9.JPG"
-            alt="SAUDA Hero - Desktop"
+            alt="SAUDA Hero"
             className="w-full h-full object-cover object-center"
           />
-        </AspectRatio>
-        <AspectRatio ratio={2 / 3} className="h-full md:hidden block">
-          <img 
-            src="/Testify-2-3.JPG"
-            alt="SAUDA Hero - Mobile"
-            className="w-full h-full object-cover object-center"
-          />
-        </AspectRatio>
+        </picture>
       </div>
     </section>
   );
