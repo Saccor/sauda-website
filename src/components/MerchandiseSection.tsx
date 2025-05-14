@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
+import ProductCard from './ProductCard';
 import { shopifyClient } from '@/lib/shopify';
 
 interface Product {
@@ -192,42 +192,13 @@ const MerchandiseSection: React.FC = () => {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {products.map((product) => (
-            <div key={product.id} className="bg-black/60 rounded-lg overflow-hidden group hover:shadow-lg hover:shadow-white/10 transition-all duration-300 shadow-lg">
-              {product.featuredImage ? (
-                <div className="aspect-square relative overflow-hidden">
-                  <Image
-                    src={product.featuredImage.url}
-                    alt={product.title}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                    className="object-cover transition-transform duration-300 group-hover:scale-105"
-                    loading="lazy"
-                    quality={85}
-                  />
-                </div>
-              ) : (
-                <div className="aspect-square bg-gray-800 flex items-center justify-center">
-                  <span className="text-gray-500">No image available</span>
-                </div>
-              )}
-              
-              <div className="p-3">
-                <h3 className="font-medium text-base mb-1">{product.title}</h3>
-                <p className="text-xs text-gray-400 line-clamp-2 mb-2">{product.description}</p>
-                <p className="text-lg font-bold">
-                  {formatPrice(product.priceRange.minVariantPrice.amount, product.priceRange.minVariantPrice.currencyCode || 'USD')}
-                </p>
-                
-                <div className="mt-3 flex space-x-2">
-                  <button className="flex-1 bg-white text-black py-2 rounded font-medium hover:bg-gray-200 transition-colors text-sm">
-                    Add to Cart
-                  </button>
-                  <button className="w-8 h-8 flex items-center justify-center border border-white rounded hover:bg-white/10 transition-colors text-sm" aria-label="Add to wishlist">
-                    <span aria-hidden="true">♡</span>
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ProductCard
+              key={product.id}
+              imageUrl={product.featuredImage?.url || 'https://placehold.co/282x282'}
+              title={product.title}
+              price={formatPrice(product.priceRange.minVariantPrice.amount, product.priceRange.minVariantPrice.currencyCode || 'USD')}
+              iconUrl={undefined} // You can pass an icon URL here if available
+            />
           ))}
         </div>
         

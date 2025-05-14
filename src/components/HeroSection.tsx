@@ -1,12 +1,15 @@
 import Header from "./Header";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Card, CardContent } from "@/components/ui/card";
-import React from "react";
+import React, { forwardRef } from "react";
 
-const HeroSection: React.FC = () => {
+interface HeroSectionProps {
+  // Accept the ref and pass it to Header
+}
+
+const HeroSection = forwardRef<HTMLDivElement>((props, ref) => {
   return (
-    <section className="relative w-full h-screen overflow-hidden bg-black">
-      <Header />
+    <section ref={ref} className="relative w-full h-screen overflow-hidden bg-black">
+      <Header heroRef={ref as React.RefObject<HTMLElement>} />
       <div className="absolute inset-0">
         <AspectRatio ratio={16 / 9} className="h-full md:block hidden">
           <img 
@@ -25,6 +28,6 @@ const HeroSection: React.FC = () => {
       </div>
     </section>
   );
-};
+});
 
 export default HeroSection; 
