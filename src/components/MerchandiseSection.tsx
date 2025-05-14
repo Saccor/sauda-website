@@ -116,14 +116,14 @@ const MerchandiseSection: React.FC = () => {
   // Handle loading state with a better loading indicator
   if (loading) {
     return (
-      <section className="w-full py-16 bg-gray-900 text-white">
+      <section className="w-full py-8 text-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-8">Merchandise</h2>
+          <h2 className="text-3xl font-bold mb-6">Merchandise</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[...Array(4)].map((_, index) => (
-              <div key={index} className="bg-black/60 rounded-lg overflow-hidden animate-pulse">
+              <div key={index} className="bg-black/60 rounded-lg overflow-hidden animate-pulse shadow-lg">
                 <div className="aspect-square bg-gray-800"></div>
-                <div className="p-4">
+                <div className="p-3">
                   <div className="h-6 bg-gray-700 rounded mb-2"></div>
                   <div className="h-4 bg-gray-700 rounded w-3/4 mb-4"></div>
                   <div className="h-8 bg-gray-700 rounded w-1/3"></div>
@@ -136,16 +136,16 @@ const MerchandiseSection: React.FC = () => {
     );
   }
 
-  // Handle error state with more useful information
+  // Handle error state with a better loading indicator
   if (error) {
     return (
-      <section className="w-full py-16 bg-gray-900 text-white">
+      <section className="w-full py-8 text-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-8">Merchandise</h2>
-          <div className="bg-red-900/40 border border-red-500 rounded-lg p-6 max-w-2xl mx-auto">
-            <h3 className="text-xl font-bold text-red-400 mb-2">Error loading products</h3>
+          <h2 className="text-3xl font-bold mb-6">Merchandise</h2>
+          <div className="bg-red-900/40 border border-red-500 rounded-lg p-5 max-w-2xl mx-auto shadow-lg">
+            <h3 className="text-lg font-bold text-red-400 mb-2">Error loading products</h3>
             <p className="mb-4">{error}</p>
-            <div className="bg-black/40 p-4 rounded text-sm">
+            <div className="bg-black/40 p-3 rounded text-sm">
               <p className="font-semibold mb-2">Verification steps:</p>
               <ul className="list-disc pl-5 space-y-1">
                 <li>Check Shopify credentials in .env.local</li>
@@ -163,11 +163,11 @@ const MerchandiseSection: React.FC = () => {
   // Handle no products state with a friendly message
   if (products.length === 0) {
     return (
-      <section className="w-full py-16 bg-gray-900 text-white">
+      <section className="w-full py-8 text-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-8">Merchandise</h2>
-          <div className="bg-yellow-900/40 border border-yellow-500 rounded-lg p-6 max-w-2xl mx-auto">
-            <h3 className="text-xl font-bold text-yellow-400 mb-2">No products available</h3>
+          <h2 className="text-3xl font-bold mb-6">Merchandise</h2>
+          <div className="bg-yellow-900/40 border border-yellow-500 rounded-lg p-5 max-w-2xl mx-auto shadow-lg">
+            <h3 className="text-lg font-bold text-yellow-400 mb-2">No products available</h3>
             <p>There are currently no products in your Shopify store.</p>
             <div className="mt-4">
               <a 
@@ -186,13 +186,13 @@ const MerchandiseSection: React.FC = () => {
   }
 
   return (
-    <section className="w-full py-16 bg-gray-900 text-white">
+    <section className="w-full py-8 text-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold mb-8">Merchandise</h2>
+        <h2 className="text-3xl font-bold mb-6">Merchandise</h2>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {products.map((product) => (
-            <div key={product.id} className="bg-black/60 rounded-lg overflow-hidden group hover:shadow-lg hover:shadow-white/10 transition-all duration-300">
+            <div key={product.id} className="bg-black/60 rounded-lg overflow-hidden group hover:shadow-lg hover:shadow-white/10 transition-all duration-300 shadow-lg">
               {product.featuredImage ? (
                 <div className="aspect-square relative overflow-hidden">
                   <Image
@@ -211,18 +211,18 @@ const MerchandiseSection: React.FC = () => {
                 </div>
               )}
               
-              <div className="p-4">
-                <h3 className="font-medium text-lg mb-1">{product.title}</h3>
-                <p className="text-sm text-gray-400 line-clamp-2 mb-2">{product.description}</p>
-                <p className="text-xl font-bold">
+              <div className="p-3">
+                <h3 className="font-medium text-base mb-1">{product.title}</h3>
+                <p className="text-xs text-gray-400 line-clamp-2 mb-2">{product.description}</p>
+                <p className="text-lg font-bold">
                   {formatPrice(product.priceRange.minVariantPrice.amount, product.priceRange.minVariantPrice.currencyCode || 'USD')}
                 </p>
                 
-                <div className="mt-4 flex space-x-2">
-                  <button className="flex-1 bg-white text-black py-2 rounded font-medium hover:bg-gray-200 transition-colors">
+                <div className="mt-3 flex space-x-2">
+                  <button className="flex-1 bg-white text-black py-2 rounded font-medium hover:bg-gray-200 transition-colors text-sm">
                     Add to Cart
                   </button>
-                  <button className="w-10 h-10 flex items-center justify-center border border-white rounded hover:bg-white/10 transition-colors" aria-label="Add to wishlist">
+                  <button className="w-8 h-8 flex items-center justify-center border border-white rounded hover:bg-white/10 transition-colors text-sm" aria-label="Add to wishlist">
                     <span aria-hidden="true">♡</span>
                   </button>
                 </div>
@@ -231,10 +231,10 @@ const MerchandiseSection: React.FC = () => {
           ))}
         </div>
         
-        <div className="mt-10 text-center">
+        <div className="mt-8 text-center">
           <a 
             href="#" 
-            className="bg-white text-black py-2 px-6 rounded-full font-bold hover:bg-gray-200 transition-colors inline-block"
+            className="bg-white text-black py-2 px-6 rounded-full font-bold hover:bg-gray-200 transition-colors inline-block text-base"
           >
             View Full Store
           </a>

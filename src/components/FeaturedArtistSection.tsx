@@ -45,12 +45,12 @@ const FeaturedArtistSection: React.FC = () => {
   const artist = data || fallbackArtistData;
 
   return (
-    <section className="w-full bg-gradient-to-b from-black to-gray-900 text-white py-16 md:py-24">
+    <section className="w-full py-8 text-white">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row gap-8 md:gap-16 items-center">
+        <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center">
           {/* Artist Image */}
           <div className="w-full md:w-1/2 lg:w-2/5">
-            <div className="relative aspect-[3/4] overflow-hidden rounded-lg shadow-2xl">
+            <div className="relative aspect-[3/4] overflow-hidden rounded-lg shadow-2xl bg-black/40">
               <Image
                 src={artist.image}
                 alt={`${artist.name} artist photo`}
@@ -60,43 +60,27 @@ const FeaturedArtistSection: React.FC = () => {
                 priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 w-full p-6">
-                <div className="flex flex-row gap-3">
-                  {Object.entries(artist.socials).map(([key, url]) => (
-                    <Link
-                      key={key}
-                      href={String(url)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Visit SAUDA on ${key}`}
-                      className="bg-white/10 backdrop-blur-sm p-2.5 rounded-full hover:bg-white/20 transition-colors focus:outline-none focus:ring-2 focus:ring-white/30"
-                    >
-                      {socialIcons[key] || key}
-                    </Link>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
           
           {/* Artist Info */}
           <div className="w-full md:w-1/2 lg:w-3/5">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
+            <h1 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
               {artist.name}
             </h1>
             {loading && <p className="text-gray-400">Loading artist info...</p>}
             {error && <p className="text-red-400">{error}</p>}
-            <div className="space-y-6">
-              <p className="text-xl text-gray-300 leading-relaxed">
+            <div className="space-y-4">
+              <p className="text-lg text-gray-300 leading-relaxed">
                 {artist.description}
               </p>
               <p className="text-gray-400">
                 {artist.longBio || ''}
               </p>
-              <div className="pt-4">
+              <div className="pt-2">
                 <a 
                   href="#music" 
-                  className="inline-flex items-center gap-2 bg-white text-black py-3 px-8 rounded-full font-medium hover:bg-gray-200 transition-colors"
+                  className="inline-flex items-center gap-2 bg-white text-black py-2 px-6 rounded-full font-medium hover:bg-gray-200 transition-colors text-base"
                 >
                   Listen Now
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
