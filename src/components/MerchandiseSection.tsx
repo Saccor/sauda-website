@@ -13,6 +13,7 @@ interface Product {
   priceRange: {
     minVariantPrice: {
       amount: string;
+      currencyCode: string;
     };
   };
 }
@@ -46,6 +47,7 @@ const PRODUCTS_QUERY = `
           priceRange {
             minVariantPrice {
               amount
+              currencyCode
             }
           }
         }
@@ -53,6 +55,16 @@ const PRODUCTS_QUERY = `
     }
   }
 `;
+
+// Format price according to locale and currency
+const formatPrice = (amount: string, currencyCode: string = 'USD') => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currencyCode,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(parseFloat(amount));
+};
 
 const MerchandiseSection: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -101,34 +113,75 @@ const MerchandiseSection: React.FC = () => {
     fetchProducts();
   }, []);
 
-  // Handle loading state
+  // Handle loading state with a better loading indicator
   if (loading) {
     return (
-      <div className="w-full py-16 bg-gray-900 text-white flex items-center justify-center">
-        <h2 className="text-xl font-bold">Loading products...</h2>
-      </div>
+      <section className="w-full py-16 bg-gray-900 text-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-bold mb-8">Merchandise</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, index) => (
+              <div key={index} className="bg-black/60 rounded-lg overflow-hidden animate-pulse">
+                <div className="aspect-square bg-gray-800"></div>
+                <div className="p-4">
+                  <div className="h-6 bg-gray-700 rounded mb-2"></div>
+                  <div className="h-4 bg-gray-700 rounded w-3/4 mb-4"></div>
+                  <div className="h-8 bg-gray-700 rounded w-1/3"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
     );
   }
 
-  // Handle error state
+  // Handle error state with more useful information
   if (error) {
     return (
-      <div className="w-full py-16 bg-gray-900 text-white flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-bold text-red-400">Error loading products</h2>
-          <p className="mt-2">{error}</p>
-          <p className="mt-2">Please check your Shopify credentials in .env.local</p>
+      <section className="w-full py-16 bg-gray-900 text-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-bold mb-8">Merchandise</h2>
+          <div className="bg-red-900/40 border border-red-500 rounded-lg p-6 max-w-2xl mx-auto">
+            <h3 className="text-xl font-bold text-red-400 mb-2">Error loading products</h3>
+            <p className="mb-4">{error}</p>
+            <div className="bg-black/40 p-4 rounded text-sm">
+              <p className="font-semibold mb-2">Verification steps:</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li>Check Shopify credentials in .env.local</li>
+                <li>Ensure your Shopify store domain is correct</li>
+                <li>Verify that your storefront access token is valid</li>
+                <li>Confirm your Shopify store has products</li>
+              </ul>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
     );
   }
 
-  // Handle no products state
+  // Handle no products state with a friendly message
   if (products.length === 0) {
     return (
-      <div className="w-full py-16 bg-gray-900 text-white flex items-center justify-center">
-        <h2 className="text-xl font-bold">No products available</h2>
-      </div>
+      <section className="w-full py-16 bg-gray-900 text-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-bold mb-8">Merchandise</h2>
+          <div className="bg-yellow-900/40 border border-yellow-500 rounded-lg p-6 max-w-2xl mx-auto">
+            <h3 className="text-xl font-bold text-yellow-400 mb-2">No products available</h3>
+            <p>There are currently no products in your Shopify store.</p>
+            <div className="mt-4">
+              <a 
+                href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/admin/products`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white text-black py-2 px-4 rounded font-medium hover:bg-gray-200 transition-colors inline-block"
+              >
+                Add Products in Shopify Admin
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
     );
   }
 
@@ -137,18 +190,19 @@ const MerchandiseSection: React.FC = () => {
       <div className="container mx-auto px-4">
         <h2 className="text-4xl font-bold mb-8">Merchandise</h2>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {products.map((product) => (
-            <div key={product.id} className="bg-black/60 rounded-lg overflow-hidden group">
+            <div key={product.id} className="bg-black/60 rounded-lg overflow-hidden group hover:shadow-lg hover:shadow-white/10 transition-all duration-300">
               {product.featuredImage ? (
-                <div className="aspect-square relative">
+                <div className="aspect-square relative overflow-hidden">
                   <Image
                     src={product.featuredImage.url}
                     alt={product.title}
-                    width={400}
-                    height={400}
-                    className="w-full h-64 object-cover"
-                    priority
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    loading="lazy"
+                    quality={85}
                   />
                 </div>
               ) : (
@@ -160,14 +214,16 @@ const MerchandiseSection: React.FC = () => {
               <div className="p-4">
                 <h3 className="font-medium text-lg mb-1">{product.title}</h3>
                 <p className="text-sm text-gray-400 line-clamp-2 mb-2">{product.description}</p>
-                <p className="text-xl font-bold">${parseFloat(product.priceRange.minVariantPrice.amount).toFixed(2)}</p>
+                <p className="text-xl font-bold">
+                  {formatPrice(product.priceRange.minVariantPrice.amount, product.priceRange.minVariantPrice.currencyCode || 'USD')}
+                </p>
                 
                 <div className="mt-4 flex space-x-2">
                   <button className="flex-1 bg-white text-black py-2 rounded font-medium hover:bg-gray-200 transition-colors">
                     Add to Cart
                   </button>
-                  <button className="w-10 h-10 flex items-center justify-center border border-white rounded hover:bg-white/10 transition-colors">
-                    ♡
+                  <button className="w-10 h-10 flex items-center justify-center border border-white rounded hover:bg-white/10 transition-colors" aria-label="Add to wishlist">
+                    <span aria-hidden="true">♡</span>
                   </button>
                 </div>
               </div>
