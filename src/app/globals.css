@@ -24,3 +24,76 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Custom Music Player Styles */
+.sauda-player.rhap_container {
+  background-color: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.sauda-player .rhap_main {
+  gap: 16px;
+}
+
+.sauda-player .rhap_progress-container {
+  margin: 0;
+}
+
+.sauda-player .rhap_progress-bar {
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.sauda-player .rhap_progress-filled {
+  background-color: white;
+}
+
+.sauda-player .rhap_progress-indicator {
+  width: 12px;
+  height: 12px;
+  top: -4px;
+  background: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.sauda-player .rhap_controls-section {
+  margin-top: 12px;
+}
+
+.sauda-player .rhap_additional-controls,
+.sauda-player .rhap_volume-controls {
+  display: none;
+}
+
+.sauda-player .rhap_main-controls {
+  width: 100%;
+  justify-content: center;
+}
+
+.sauda-player .rhap_main-controls-button {
+  color: white;
+  font-size: 24px;
+}
+
+.sauda-player .rhap_play-pause-button {
+  font-size: 36px;
+  width: 56px;
+  height: 56px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.sauda-player .rhap_play-pause-button:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.sauda-player .rhap_time {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+}
