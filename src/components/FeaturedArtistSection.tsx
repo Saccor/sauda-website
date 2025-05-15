@@ -40,57 +40,39 @@ const socialIcons: Record<string, React.ReactNode> = {
   ),
 };
 
-const FeaturedArtistSection: React.FC = () => {
-  const { data, loading, error } = useFetch('/api/artist');
-  const artist = data || fallbackArtistData;
+interface FeaturedArtistSectionProps {
+  imageUrl?: string;
+  title?: string;
+  buttonText?: string;
+  buttonUrl?: string;
+}
 
+const FeaturedArtistSection: React.FC<FeaturedArtistSectionProps> = ({
+  imageUrl = "/featured-artist.jpg", // fallback image
+  title = "LISTEN",
+  buttonText = "LISTEN NOW",
+  buttonUrl = "#",
+}) => {
   return (
-    <section className="w-full py-8 text-white">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-center">
-          {/* Artist Image */}
-          <div className="w-full md:w-1/2 lg:w-2/5">
-            <div className="relative aspect-[3/4] overflow-hidden rounded-lg shadow-2xl bg-black/40">
-              <Image
-                src={artist.image}
-                alt={`${artist.name} artist photo`}
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-cover hover:scale-105 transition-transform duration-700"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-            </div>
-          </div>
-          
-          {/* Artist Info */}
-          <div className="w-full md:w-1/2 lg:w-3/5">
-            <h1 className="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
-              {artist.name}
-            </h1>
-            {loading && <p className="text-gray-400">Loading artist info...</p>}
-            {error && <p className="text-red-400">{error}</p>}
-            <div className="space-y-4">
-              <p className="text-lg text-gray-300 leading-relaxed">
-                {artist.description}
-              </p>
-              <p className="text-gray-400">
-                {artist.longBio || ''}
-              </p>
-              <div className="pt-2">
-                <a 
-                  href="#music" 
-                  className="inline-flex items-center gap-2 bg-white text-black py-2 px-6 rounded-full font-medium hover:bg-gray-200 transition-colors text-base"
-                >
-                  Listen Now
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
+    <section className="relative w-full h-[400px] md:h-[650px] flex items-center justify-center overflow-hidden">
+      {/* Background image */}
+      <img
+        src={imageUrl}
+        alt="Featured Artist"
+        className="absolute inset-0 w-full h-full object-cover object-center z-0"
+        draggable={false}
+      />
+      {/* Overlay */}
+      <div className="relative z-10 flex flex-col items-center justify-center w-full h-full bg-black/40">
+        <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 drop-shadow-lg text-center">
+          {title}
+        </h2>
+        <a
+          href={buttonUrl}
+          className="bg-white text-black font-bold py-2 px-6 rounded-full shadow-lg hover:bg-gray-200 transition-colors text-base md:text-lg"
+        >
+          {buttonText}
+        </a>
       </div>
     </section>
   );
