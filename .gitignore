@@ -35,6 +35,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+.env.local
 /backend/.env*
 
 # vercel
@@ -65,3 +66,6 @@ public/*.avif
 public/*.webp
 public/*.gif
 public/*.svg
+
+# Custom rules
+mycustomrules
