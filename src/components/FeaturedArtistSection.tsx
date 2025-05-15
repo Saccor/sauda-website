@@ -41,38 +41,40 @@ const socialIcons: Record<string, React.ReactNode> = {
 };
 
 interface FeaturedArtistSectionProps {
-  imageUrl?: string;
-  title?: string;
-  buttonText?: string;
-  buttonUrl?: string;
+  imageUrl: string;
+  title: string;
+  buttonText: string;
 }
 
 const FeaturedArtistSection: React.FC<FeaturedArtistSectionProps> = ({
-  imageUrl = "/featured-artist.jpg", // fallback image
-  title = "LISTEN",
-  buttonText = "LISTEN NOW",
-  buttonUrl = "#",
+  imageUrl,
+  title,
+  buttonText,
 }) => {
   return (
     <section className="relative w-full h-[400px] md:h-[650px] flex items-center justify-center overflow-hidden">
       {/* Background image */}
-      <img
-        src={imageUrl}
-        alt="Featured Artist"
-        className="absolute inset-0 w-full h-full object-cover object-center z-0"
-        draggable={false}
-      />
+      {imageUrl && (
+        <img
+          src={imageUrl}
+          alt="Featured Artist"
+          className="absolute inset-0 w-full h-full object-cover object-center z-0"
+          draggable={false}
+        />
+      )}
       {/* Overlay */}
       <div className="relative z-10 flex flex-col items-center justify-center w-full h-full bg-black/40">
         <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 drop-shadow-lg text-center">
           {title}
         </h2>
-        <a
-          href={buttonUrl}
-          className="bg-white text-black font-bold py-2 px-6 rounded-full shadow-lg hover:bg-gray-200 transition-colors text-base md:text-lg"
-        >
-          {buttonText}
-        </a>
+        {buttonText && (
+          <a
+            href="#"
+            className="bg-white text-black font-bold py-2 px-6 rounded-full shadow-lg hover:bg-gray-200 transition-colors text-base md:text-lg"
+          >
+            {buttonText}
+          </a>
+        )}
       </div>
     </section>
   );

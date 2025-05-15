@@ -5,6 +5,16 @@ import { useFetch } from '@/lib/useFetch';
 const TourDatesSection: React.FC = () => {
   const { data, loading, error } = useFetch('/api/events');
 
+  // Helper to format date as 'Jun. 20, 2025'
+  const formatDate = (dateStr: string) => {
+    const date = new Date(dateStr);
+    return date.toLocaleString('en-US', {
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric',
+    });
+  };
+
   return (
     <section className="w-full py-8 text-white">
       <div className="container mx-auto px-4">
@@ -14,19 +24,39 @@ const TourDatesSection: React.FC = () => {
         {Array.isArray(data) && data.length > 0 ? (
           <ul className="space-y-4">
             {data.map((event, idx) => (
-              <li key={idx} className="bg-black/40 rounded-lg p-4 flex flex-col md:flex-row md:items-center md:justify-between shadow">
-                <div>
-                  <div className="text-base font-semibold">{event.venue} - {event.city}</div>
-                  <div className="text-gray-400 text-sm">{new Date(event.date).toLocaleDateString()}</div>
+              <li key={idx}>
+                <div className="w-full max-w-[1180px] h-20 relative border-t border-white mx-auto flex items-center bg-black/40 rounded-lg shadow overflow-hidden">
+                  {/* Date & City */}
+                  <div className="w-48 h-full flex flex-col justify-center pl-4">
+                    <span className="text-white text-sm font-bold leading-snug tracking-wide">
+                      {formatDate(event.date)}<br />
+                    </span>
+                    <span className="text-white text-sm font-normal capitalize leading-snug tracking-wide">
+                      {event.city}
+                    </span>
+                  </div>
+                  {/* Venue */}
+                  <div className="flex-1 h-full flex items-center">
+                    <span className="text-white text-xs font-normal capitalize leading-snug tracking-wide">
+                      {event.venue}
+                    </span>
+                  </div>
+                  {/* (Optional) Icon */}
+                  {/* <div className="w-9 h-11 flex items-center justify-center">
+                    <div className="w-5 h-5 bg-white rounded" />
+                  </div> */}
+                  {/* Tickets Button */}
+                  <div className="h-full flex items-center pr-4">
+                    <a
+                      href={event.ticketUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-red-700 hover:bg-red-800 text-white text-xs font-bold rounded px-6 py-2 transition-colors text-center capitalize"
+                    >
+                      Tickets
+                    </a>
+                  </div>
                 </div>
-                <a
-                  href={event.ticketUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 md:mt-0 inline-block bg-white text-black py-2 px-6 rounded-full font-bold hover:bg-gray-200 transition-colors text-sm"
-                >
-                  Tickets
-                </a>
               </li>
             ))}
           </ul>
