@@ -1,3 +1,6 @@
+import React from 'react';
+import { fetchShopify, FEATURED_ARTIST_SECTION_QUERY } from '@/lib/shopify';
+import type { ShopifyMetaobjectField, MediaImageReference } from '@/lib/shopify';
 import Main from '../components/Main';
 
 interface FeaturedArtistProps {
@@ -7,57 +10,51 @@ interface FeaturedArtistProps {
 }
 
 export default async function Home() {
-  const query = `#graphql
-    query GetHomepageFeaturedArtistSection {
-      page(handle: "homepage") {
-        metafield(namespace: "custom", key: "featuredartistsection") {
-          reference {
-            ... on Metaobject {
-              fields {
-                key
-                value
-                type
-                reference {
-                  ... on MediaImage {
-                    image {
-                      url
-                      altText
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+  let featuredArtistProps = {
+    imageUrl: '',
+    title: '',
+    buttonText: '',
+  };
+  let error: string | null = null;
+
+  try {
+    const data = await fetchShopify<{
+      page: {
+        metafield?: {
+          reference?: {
+            fields: ShopifyMetaobjectField[];
+          };
+        };
+      };
+    }>(FEATURED_ARTIST_SECTION_QUERY);
+    const fields = data?.page?.metafield?.reference?.fields || [];
+    console.log('Shopify fields:', JSON.stringify(fields, null, 2));
+    const getField = (key: string) => fields.find((f: ShopifyMetaobjectField) => f.key === key)?.value || '';
+    const getImage = () => {
+      const imgField = fields.find((f: ShopifyMetaobjectField) => f.key === 'image' && f.reference && 'image' in f.reference);
+      if (imgField && imgField.reference && 'image' in imgField.reference) {
+        return (imgField.reference as MediaImageReference).image.url || '';
       }
-    }
-  `;
-  const response = await fetch(
-    `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/api/2024-04/graphql.json`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN || '',
-      },
-      body: JSON.stringify({ query }),
-      next: { revalidate: 60 },
-    }
+      return '';
+    };
+
+    featuredArtistProps = {
+      imageUrl: getImage(),
+      title: getField('title'),
+      buttonText: getField('button_text'),
+    };
+  } catch (err) {
+    console.error('Error fetching featured artist:', err);
+    error = err instanceof Error ? err.message : 'Failed to load featured artist';
+  }
+
+  return (
+    <div>
+      {error ? (
+        <p className="text-center text-red-500">{error}</p>
+      ) : (
+        <Main featuredArtist={featuredArtistProps} />
+      )}
+    </div>
   );
-  const result = await response.json();
-  const fields = result?.data?.page?.metafield?.reference?.fields || [];
-  console.log('Shopify fields:', JSON.stringify(fields, null, 2));
-  const getField = (key: string) => fields.find((f: any) => f.key === key)?.value || '';
-  const getImage = () => {
-    const imgField = fields.find((f: any) => f.key === 'image' && f.reference?.image?.url);
-    return imgField ? imgField.reference.image.url : '';
-  };
-
-  const featuredArtistProps: FeaturedArtistProps = {
-    imageUrl: getImage(),
-    title: getField('title'),
-    buttonText: getField('button_text'),
-  };
-
-  return <Main featuredArtist={featuredArtistProps} />;
 }
