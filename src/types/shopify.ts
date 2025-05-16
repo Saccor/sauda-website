@@ -23,9 +23,13 @@ export interface ShopifyMetaobjectField {
   key: string;
   value: string;
   type: string;
-  reference?: {
-    fields: ShopifyMetaobjectField[];
-  } | MediaImage | null;
+  references?: {
+    edges: Array<{
+      node: {
+        fields: ShopifyMetaobjectField[];
+      };
+    }>;
+  } | null;
 }
 
 // Menu types
