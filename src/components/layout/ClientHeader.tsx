@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import ErrorDisplay from '../common/ErrorDisplay';
 
 interface MenuItem {
   id: string;
@@ -46,7 +47,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
     return (
       <header className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[1280px] h-[80px] z-50 bg-black/80 backdrop-blur-md shadow-lg">
         <div className="w-full h-full flex items-center justify-center px-6">
-          <p className="text-red-500">{error}</p>
+          <ErrorDisplay message={error} />
         </div>
       </header>
     );

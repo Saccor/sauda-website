@@ -119,4 +119,14 @@ export interface FeaturedArtistResponse {
       };
     };
   };
+}
+
+export interface MusicPlayerResponse {
+  page: {
+    metafield: {
+      reference: {
+        fields: ShopifyMetaobjectField[];
+      };
+    };
+  };
 } 

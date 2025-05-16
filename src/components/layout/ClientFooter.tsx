@@ -1,6 +1,7 @@
 "use client";
 
 import React from 'react';
+import ErrorDisplay from '../common/ErrorDisplay';
 
 interface MenuItem {
   id: string;
@@ -25,7 +26,7 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
         {/* Left: Footer Links */}
         <nav className="flex flex-wrap gap-8 justify-center md:justify-start order-2 md:order-1">
           {error ? (
-            <span className="text-red-500 font-semibold">{error}</span>
+            <ErrorDisplay message={error} />
           ) : menuItems.length > 0 ? (
             menuItems.map((item) => (
               <a
