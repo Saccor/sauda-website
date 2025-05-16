@@ -23,12 +23,12 @@ export interface ShopifyMetaobjectField {
   key: string;
   value: string;
   type: string;
-  references?: {
-    edges: Array<{
-      node: {
-        fields: ShopifyMetaobjectField[];
-      };
-    }>;
+  reference?: {
+    fields?: ShopifyMetaobjectField[];
+    image?: {
+      url: string;
+      altText?: string;
+    };
   } | null;
 }
 
