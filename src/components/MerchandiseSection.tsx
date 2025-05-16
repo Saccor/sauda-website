@@ -1,60 +1,7 @@
-'use client';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ProductCard from './ProductCard';
-import { shopifyClient } from '@/lib/shopify';
-
-interface Product {
-  id: string;
-  title: string;
-  description: string;
-  featuredImage?: {
-    url: string;
-  };
-  priceRange: {
-    minVariantPrice: {
-      amount: string;
-      currencyCode: string;
-    };
-  };
-}
-
-interface Edge {
-  node: Product;
-}
-
-interface ShopifyResponse {
-  data?: {
-    products: {
-      edges: Edge[];
-    };
-  };
-  errors?: Array<{
-    message: string;
-  }>;
-}
-
-const PRODUCTS_QUERY = `
-  query Products {
-    products(first: 10) {
-      edges {
-        node {
-          id
-          title
-          description
-          featuredImage {
-            url
-          }
-          priceRange {
-            minVariantPrice {
-              amount
-              currencyCode
-            }
-          }
-        }
-      }
-    }
-  }
-`;
+import { fetchShopify, PRODUCTS_QUERY } from '@/lib/shopify';
+import type { Product } from '@/lib/shopify';
 
 // Format price according to locale and currency
 const formatPrice = (amount: string, currencyCode: string = 'USD') => {
@@ -66,82 +13,31 @@ const formatPrice = (amount: string, currencyCode: string = 'USD') => {
   }).format(parseFloat(amount));
 };
 
-const MerchandiseSection: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const MerchandiseSection = async () => {
+  let products: Product[] = [];
+  let error: string | null = null;
 
-  useEffect(() => {
-    async function fetchProducts() {
-      try {
-        // Use the createStorefrontClient's API correctly
-        const response = await fetch(
-          `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/api/2024-04/graphql.json`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'X-Shopify-Storefront-Access-Token': process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN || '',
-            },
-            body: JSON.stringify({ query: PRODUCTS_QUERY }),
-          }
-        );
-
-        if (!response.ok) {
-          throw new Error(`Failed to fetch products: ${response.status} ${response.statusText}`);
-        }
-
-        const result: ShopifyResponse = await response.json();
-
-        if (result.errors) {
-          throw new Error(result.errors[0].message);
-        }
-
-        if (result.data?.products.edges) {
-          setProducts(result.data.products.edges.map((edge: Edge) => edge.node));
-        } else {
-          setProducts([]);
-        }
-      } catch (err) {
-        console.error('Error fetching products:', err);
-        setError(err instanceof Error ? err.message : 'Unknown error');
-      } finally {
-        setLoading(false);
-      }
+  try {
+    const data = await fetchShopify<{
+      products: {
+        edges: { node: Product }[];
+      };
+    }>(PRODUCTS_QUERY);
+    
+    if (data.products?.edges) {
+      products = data.products.edges.map((edge) => edge.node);
     }
-
-    fetchProducts();
-  }, []);
-
-  // Handle loading state with a better loading indicator
-  if (loading) {
-    return (
-      <section className="w-full py-8 text-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-6">Merchandise</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[...Array(4)].map((_, index) => (
-              <div key={index} className="bg-black/60 rounded-lg overflow-hidden animate-pulse shadow-lg">
-                <div className="aspect-square bg-gray-800"></div>
-                <div className="p-3">
-                  <div className="h-6 bg-gray-700 rounded mb-2"></div>
-                  <div className="h-4 bg-gray-700 rounded w-3/4 mb-4"></div>
-                  <div className="h-8 bg-gray-700 rounded w-1/3"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    );
+  } catch (err) {
+    console.error('Error fetching products:', err);
+    error = err instanceof Error ? err.message : 'Unknown error';
   }
 
-  // Handle error state with a better loading indicator
+  // Handle error state
   if (error) {
     return (
       <section className="w-full py-8 text-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-6">Merchandise</h2>
+          <h2 className="text-3xl font-bold mb-6 text-center">MERCHANDISE</h2>
           <div className="bg-red-900/40 border border-red-500 rounded-lg p-5 max-w-2xl mx-auto shadow-lg">
             <h3 className="text-lg font-bold text-red-400 mb-2">Error loading products</h3>
             <p className="mb-4">{error}</p>
@@ -160,12 +56,12 @@ const MerchandiseSection: React.FC = () => {
     );
   }
 
-  // Handle no products state with a friendly message
+  // Handle no products state
   if (products.length === 0) {
     return (
       <section className="w-full py-8 text-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-6">Merchandise</h2>
+          <h2 className="text-3xl font-bold mb-6 text-center">MERCHANDISE</h2>
           <div className="bg-yellow-900/40 border border-yellow-500 rounded-lg p-5 max-w-2xl mx-auto shadow-lg">
             <h3 className="text-lg font-bold text-yellow-400 mb-2">No products available</h3>
             <p>There are currently no products in your Shopify store.</p>
@@ -188,7 +84,7 @@ const MerchandiseSection: React.FC = () => {
   return (
     <section className="w-full py-8 text-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-6">Merchandise</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center">MERCHANDISE</h2>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-8 gap-x-4 justify-center">
           {products.map((product) => (
@@ -197,7 +93,7 @@ const MerchandiseSection: React.FC = () => {
               imageUrl={product.featuredImage?.url || 'https://placehold.co/282x282'}
               title={product.title}
               price={formatPrice(product.priceRange.minVariantPrice.amount, product.priceRange.minVariantPrice.currencyCode || 'USD')}
-              iconUrl={undefined} // You can pass an icon URL here if available
+              iconUrl={undefined}
             />
           ))}
         </div>

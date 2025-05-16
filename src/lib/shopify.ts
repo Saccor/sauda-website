@@ -139,44 +139,72 @@ export const FEATURED_ARTIST_SECTION_QUERY = `#graphql
   }
 `;
 
-export async function getMainMenu() {
-  const response = await fetch(
-    `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/api/2024-04/graphql.json`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Storefront-Access-Token': process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN || '',
-      },
-      body: JSON.stringify({ query: MAIN_MENU_QUERY }),
+export interface Product {
+  id: string;
+  title: string;
+  description: string;
+  featuredImage?: {
+    url: string;
+  };
+  priceRange: {
+    minVariantPrice: {
+      amount: string;
+      currencyCode: string;
+    };
+  };
+}
+
+export const PRODUCTS_QUERY = `#graphql
+  query Products {
+    products(first: 10) {
+      edges {
+        node {
+          id
+          title
+          description
+          featuredImage {
+            url
+          }
+          priceRange {
+            minVariantPrice {
+              amount
+              currencyCode
+            }
+          }
+        }
+      }
     }
-  );
-  if (!response.ok) {
-    throw new Error(`Failed to fetch menu: ${response.status} ${response.statusText}`);
   }
-  const result = await response.json();
-  return result.data.menu;
+`;
+
+export async function getMainMenu() {
+  try {
+    const data = await fetchShopify<{
+      menu: {
+        id: string;
+        title: string;
+        items: Array<{
+          id: string;
+          title: string;
+          url: string;
+          items: Array<{
+            id: string;
+            title: string;
+            url: string;
+          }>;
+        }>;
+      };
+    }>(MAIN_MENU_QUERY);
+    return data.menu;
+  } catch (error) {
+    console.error('Error fetching main menu:', error);
+    throw error;
+  }
 }
 
 export async function getTourDatesSection(): Promise<ShopifyMetaobjectField[]> {
   try {
-    const response = await fetch(
-      `https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/api/2024-04/graphql.json`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Shopify-Storefront-Access-Token': process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN || '',
-        },
-        body: JSON.stringify({ query: TOUR_DATES_SECTION_QUERY }),
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch tour dates section: ${response.status} ${response.statusText}`);
-    }
-
-    const result: ShopifyResponse<{
+    const data = await fetchShopify<{
       shop: {
         metafield?: {
           reference?: {
@@ -184,13 +212,8 @@ export async function getTourDatesSection(): Promise<ShopifyMetaobjectField[]> {
           };
         };
       };
-    }> = await response.json();
-
-    if (result.errors) {
-      throw new Error(result.errors[0].message);
-    }
-
-    return result.data?.shop?.metafield?.reference?.fields || [];
+    }>(TOUR_DATES_SECTION_QUERY);
+    return data?.shop?.metafield?.reference?.fields || [];
   } catch (error) {
     console.error('Error fetching tour dates:', error);
     throw error;
