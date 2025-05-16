@@ -26,6 +26,13 @@ function parseTourDate(fields: ShopifyMetaobjectField[]): TourDate {
   };
 }
 
+// Type for the tour date edge in the response
+interface TourDateEdge {
+  node: {
+    fields: ShopifyMetaobjectField[];
+  };
+}
+
 const TourDatesSection = async () => {
   let tourDates: TourDate[] = [];
   let error: string | null = null;
@@ -42,8 +49,8 @@ const TourDatesSection = async () => {
       const tourDatesField = tourDatesSection.fields.find((f: ShopifyMetaobjectField) => f.key === 'tour_dates');
       
       if (tourDatesField?.references?.edges) {
-        // Parse each tour date
-        tourDates = tourDatesField.references.edges.map((edge) => 
+        // Parse each tour date from the references
+        tourDates = tourDatesField.references.edges.map((edge: TourDateEdge) => 
           parseTourDate(edge.node.fields)
         );
       }

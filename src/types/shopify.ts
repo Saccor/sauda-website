@@ -30,6 +30,13 @@ export interface ShopifyMetaobjectField {
       altText?: string;
     };
   } | null;
+  references?: {
+    edges: Array<{
+      node: {
+        fields: ShopifyMetaobjectField[];
+      };
+    }>;
+  };
 }
 
 // Menu types
