@@ -2,25 +2,17 @@ import React from 'react';
 import { fetchShopify, TOUR_DATES_SECTION_QUERY } from '@/lib/shopify';
 import type { ShopifyMetaobjectField, TourDate } from '@/lib/shopify';
 
-function parseTourDates(fields: ShopifyMetaobjectField[]): TourDate[] {
-  const datesField = fields.find((f) => f.key === 'tour_dates' && f.reference && Array.isArray(f.reference));
-  if (!datesField?.reference || !Array.isArray(datesField.reference)) return [];
-
-  // Only keep references that have 'fields' (not MediaImageReference)
-  return (datesField.reference as unknown[]).filter(
-    (ref): ref is { fields: ShopifyMetaobjectField[] } => typeof ref === 'object' && ref !== null && 'fields' in ref
-  ).map((ref) => {
-    const get = (key: string) => ref.fields.find((f: ShopifyMetaobjectField) => f.key === key)?.value || '';
-    return {
-      date: get('date_time'),
-      city: get('city'),
-      venue: get('venue'),
-      ticketUrl: get('ticket_url'),
-      soldOut: get('sold_out'),
-      specialGuest: get('special_guest'),
-      additionalInfo: get('additional_info'),
-    };
-  });
+function parseTourDate(fields: ShopifyMetaobjectField[]): TourDate {
+  const get = (key: string) => fields.find((f) => f.key === key)?.value || '';
+  return {
+    date: get('date_time'),
+    city: get('city'),
+    venue: get('venue'),
+    ticketUrl: get('ticket_url'),
+    soldOut: get('sold_out'),
+    specialGuest: get('special_guest'),
+    additionalInfo: get('additional_info'),
+  };
 }
 
 const formatDate = (dateStr: string) => {
@@ -38,17 +30,54 @@ const TourDatesSection = async () => {
 
   try {
     const data = await fetchShopify<{
-      shop: {
+      page: {
         metafield?: {
-          reference?: {
-            fields: ShopifyMetaobjectField[];
+          references?: {
+            edges: Array<{
+              node: {
+                fields: Array<{
+                  key: string;
+                  value: string;
+                  type: string;
+                  references?: {
+                    edges: Array<{
+                      node: {
+                        fields: ShopifyMetaobjectField[];
+                      };
+                    }>;
+                  };
+                }>;
+              };
+            }>;
           };
         };
       };
     }>(TOUR_DATES_SECTION_QUERY);
-    const fields = data?.shop?.metafield?.reference?.fields || [];
-    console.log('Shopify Tour Dates fields:', JSON.stringify(fields, null, 2));
-    tourDates = parseTourDates(fields);
+    
+    // Enhanced logging
+    console.log('=== TOUR DATES DEBUG LOGS ===');
+    console.log('1. Full API Response:', JSON.stringify(data, null, 2));
+    
+    const edges = data?.page?.metafield?.references?.edges || [];
+    console.log('2. References Edges:', JSON.stringify(edges, null, 2));
+    
+    // Extract fields from the first node (Tour Dates Section)
+    const tourDatesSection = edges[0]?.node;
+    console.log('3. Tour Dates Section:', JSON.stringify(tourDatesSection, null, 2));
+    
+    if (tourDatesSection) {
+      // Find the tour_dates field
+      const tourDatesField = tourDatesSection.fields.find(f => f.key === 'tour_dates');
+      console.log('4. Tour Dates Field:', JSON.stringify(tourDatesField, null, 2));
+      
+      if (tourDatesField?.references?.edges) {
+        // Parse each tour date
+        tourDates = tourDatesField.references.edges.map(edge => parseTourDate(edge.node.fields));
+        console.log('5. Final Parsed Tour Dates:', JSON.stringify(tourDates, null, 2));
+      }
+    }
+    
+    console.log('=== END DEBUG LOGS ===');
   } catch (err) {
     console.error('Error in TourDatesSection:', err);
     error = err instanceof Error ? err.message : 'Failed to load tour dates';

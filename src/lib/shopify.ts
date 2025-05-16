@@ -89,19 +89,37 @@ export const MAIN_MENU_QUERY = `#graphql
 
 export const TOUR_DATES_SECTION_QUERY = `#graphql
   query GetTourDatesSection {
-    shop {
-      metafield(namespace: "custom", key: "tourdatessection") {
-        reference {
-          ... on Metaobject {
-            fields {
-              key
-              value
-              type
-              reference {
-                ... on Metaobject {
-                  fields {
-                    key
-                    value
+    page(handle: "homepage") {
+      metafield(namespace: "custom", key: "tour_dates_section") {
+        id
+        namespace
+        key
+        value
+        type
+        references(first: 10) {
+          edges {
+            node {
+              ... on Metaobject {
+                id
+                type
+                fields {
+                  key
+                  value
+                  type
+                  references(first: 10) {
+                    edges {
+                      node {
+                        ... on Metaobject {
+                          id
+                          type
+                          fields {
+                            key
+                            value
+                            type
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
