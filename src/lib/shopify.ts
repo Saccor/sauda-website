@@ -193,4 +193,23 @@ export const PRODUCTS_QUERY = `#graphql
       }
     }
   }
+`;
+
+export const FOOTER_MENU_QUERY = `#graphql
+  query GetFooterMenu {
+    menu(handle: "footer") {
+      id
+      title
+      items {
+        id
+        title
+        url
+        items {
+          id
+          title
+          url
+        }
+      }
+    }
+  }
 `; 

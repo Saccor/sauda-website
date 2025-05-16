@@ -1,7 +1,6 @@
-// Split into two components: Server and Client
 import React from 'react';
-import { fetchShopify, MAIN_MENU_QUERY } from '@/lib/shopify';
-import ClientHeader from './ClientHeader';
+import { fetchShopify, FOOTER_MENU_QUERY } from '@/lib/shopify';
+import ClientFooter from './ClientFooter';
 
 interface MenuItem {
   id: string;
@@ -14,7 +13,7 @@ interface MenuItem {
   }>;
 }
 
-const Header = async () => {
+const Footer = async () => {
   let menuItems: MenuItem[] = [];
   let error: string | null = null;
 
@@ -25,15 +24,14 @@ const Header = async () => {
         title: string;
         items: MenuItem[];
       };
-    }>(MAIN_MENU_QUERY);
-    
+    }>(FOOTER_MENU_QUERY);
     menuItems = data.menu?.items || [];
   } catch (err) {
-    console.error('Error fetching menu:', err);
-    error = err instanceof Error ? err.message : 'Failed to load menu';
+    console.error('Error fetching footer menu:', err);
+    error = err instanceof Error ? err.message : 'Failed to load footer menu';
   }
 
-  return <ClientHeader menuItems={menuItems} error={error} />;
+  return <ClientFooter menuItems={menuItems} error={error} />;
 };
 
-export default Header; 
+export default Footer; 
