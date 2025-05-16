@@ -1,5 +1,5 @@
 import { createStorefrontClient } from '@shopify/hydrogen-react';
-import { MenuResponse, ProductsResponse, TourDatesResponse, FeaturedArtistResponse } from '@/types/shopify';
+import { MenuResponse, TourDatesResponse, FeaturedArtistResponse } from '@/types/shopify';
 import { ShopifyError, NetworkError, handleShopifyError, handleNetworkError } from '@/utils/error-handling';
 
 // TypeScript interfaces for Shopify data
@@ -226,6 +226,7 @@ export const PRODUCTS_QUERY = `#graphql
           id
           title
           description
+          handle
           featuredImage {
             url
           }
@@ -258,14 +259,11 @@ export async function fetchFeaturedArtist() {
   return fetchShopify<FeaturedArtistResponse>(FEATURED_ARTIST_SECTION_QUERY, undefined, { cache: 'MEDIUM' });
 }
 
-export async function fetchProducts() {
-  return fetchShopify<ProductsResponse>(PRODUCTS_QUERY, undefined, { cache: 'SHORT' });
-}
-
 export interface Product {
   id: string;
   title: string;
   description: string;
+  handle: string;
   featuredImage?: {
     url: string;
   };
@@ -275,4 +273,16 @@ export interface Product {
       currencyCode: string;
     };
   };
+}
+
+export interface ProductsResponse {
+  products: {
+    edges: Array<{
+      node: Product;
+    }>;
+  };
+}
+
+export async function fetchProducts() {
+  return fetchShopify<ProductsResponse>(PRODUCTS_QUERY, undefined, { cache: 'SHORT' });
 } 

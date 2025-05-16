@@ -1,16 +1,23 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 interface ProductCardProps {
   imageUrl: string;
   title: string;
   price: string | number;
   iconUrl?: string;
+  handle: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconUrl }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconUrl, handle }) => {
   return (
-    <div className="w-full max-w-xs md:max-w-sm lg:max-w-md bg-transparent flex flex-col items-center mx-auto">
+    <Link 
+      href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/products/${handle}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="w-full max-w-xs md:max-w-sm lg:max-w-md bg-transparent flex flex-col items-center mx-auto hover:opacity-90 transition-opacity"
+    >
       {/* Floating image with portrait aspect ratio and subtle shadow */}
       <div className="aspect-[3/4] w-full bg-transparent flex items-center justify-center drop-shadow-lg relative">
         <Image
@@ -41,7 +48,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconU
         )}
         <span className="text-center text-white text-[11.5px] font-normal font-inter tracking-[0.8px]">{price}</span>
       </div>
-    </div>
+    </Link>
   );
 };
 

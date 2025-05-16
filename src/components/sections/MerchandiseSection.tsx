@@ -1,6 +1,6 @@
 import React from 'react';
 import ProductCard from '@/components/common/ProductCard';
-import { fetchShopify, PRODUCTS_QUERY } from '@/api/shopify';
+import { fetchProducts } from '@/api/shopify';
 import type { Product } from '@/api/shopify';
 
 // Format price according to locale and currency
@@ -18,15 +18,8 @@ const MerchandiseSection = async () => {
   let error: string | null = null;
 
   try {
-    const data = await fetchShopify<{
-      products: {
-        edges: { node: Product }[];
-      };
-    }>(PRODUCTS_QUERY);
-    
-    if (data.products?.edges) {
-      products = data.products.edges.map((edge) => edge.node);
-    }
+    const { products: productsData } = await fetchProducts();
+    products = productsData.edges.map((edge) => edge.node);
   } catch (err) {
     console.error('Error fetching products:', err);
     error = err instanceof Error ? err.message : 'Unknown error';
@@ -94,13 +87,16 @@ const MerchandiseSection = async () => {
               title={product.title}
               price={formatPrice(product.priceRange.minVariantPrice.amount, product.priceRange.minVariantPrice.currencyCode || 'USD')}
               iconUrl={undefined}
+              handle={product.handle}
             />
           ))}
         </div>
         
         <div className="mt-8 text-center">
           <a 
-            href="#" 
+            href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="bg-white text-black py-2 px-6 rounded-full font-bold hover:bg-gray-200 transition-colors inline-block text-base"
           >
             View Full Store
