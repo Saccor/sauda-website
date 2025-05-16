@@ -1,8 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { fetchShopify, FEATURED_ARTIST_SECTION_QUERY } from '@/lib/shopify';
-import type { ShopifyMetaobjectField } from '@/lib/shopify';
+import { fetchFeaturedArtist } from '@/api/shopify';
+import { FeaturedArtist } from '@/types/shopify';
 
 const socialIcons: Record<string, React.ReactNode> = {
   instagram: (
@@ -28,83 +28,60 @@ const socialIcons: Record<string, React.ReactNode> = {
 };
 
 const FeaturedArtistSection = async () => {
-  let imageUrl = '';
-  let title = '';
-  let buttonText = '';
-  let error: string | null = null;
-
   try {
-    const data = await fetchShopify<{
-      page: {
-        metafield?: {
-          reference?: {
-            fields: ShopifyMetaobjectField[];
-          };
-        };
-      };
-    }>(FEATURED_ARTIST_SECTION_QUERY);
-
-    const fields = data?.page?.metafield?.reference?.fields || [];
+    const { page } = await fetchFeaturedArtist();
+    const fields = page.metafield.reference.fields;
     
     // Extract values from fields
     const imageField = fields.find(f => f.key === 'image');
-    if (imageField?.reference && 'image' in imageField.reference) {
-      imageUrl = imageField.reference.image.url;
-    }
-
     const titleField = fields.find(f => f.key === 'title');
-    if (titleField) {
-      title = titleField.value;
-    }
-
     const buttonTextField = fields.find(f => f.key === 'button_text');
-    if (buttonTextField) {
-      buttonText = buttonTextField.value;
-    }
-  } catch (err) {
-    console.error('Error fetching featured artist section:', err);
-    error = err instanceof Error ? err.message : 'Failed to load featured artist section';
-  }
 
-  if (error) {
+    const imageUrl = imageField?.reference && 'image' in imageField.reference 
+      ? imageField.reference.image.url 
+      : '';
+    const title = titleField?.value || '';
+    const buttonText = buttonTextField?.value || '';
+
+    return (
+      <section className="relative w-full h-[400px] md:h-[650px] flex items-center justify-center overflow-hidden">
+        {/* Background image */}
+        {imageUrl && (
+          <Image
+            src={imageUrl}
+            alt="Featured Artist"
+            fill
+            className="object-cover object-center z-0"
+            priority
+            sizes="100vw"
+          />
+        )}
+        {/* Overlay */}
+        <div className="relative z-10 flex flex-col items-center justify-center w-full h-full bg-black/40">
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 drop-shadow-lg text-center">
+            {title}
+          </h2>
+          {buttonText && (
+            <a
+              href="#"
+              className="bg-white text-black font-bold py-2 px-6 rounded-full shadow-lg hover:bg-gray-200 transition-colors text-base md:text-lg"
+            >
+              {buttonText}
+            </a>
+          )}
+        </div>
+      </section>
+    );
+  } catch (error) {
+    console.error('Error fetching featured artist section:', error);
     return (
       <section className="relative w-full h-[400px] md:h-[650px] flex items-center justify-center overflow-hidden">
         <div className="relative z-10 flex flex-col items-center justify-center w-full h-full bg-black/40">
-          <p className="text-red-500">{error}</p>
+          <p className="text-red-500">Failed to load featured artist section</p>
         </div>
       </section>
     );
   }
-
-  return (
-    <section className="relative w-full h-[400px] md:h-[650px] flex items-center justify-center overflow-hidden">
-      {/* Background image */}
-      {imageUrl && (
-        <Image
-          src={imageUrl}
-          alt="Featured Artist"
-          fill
-          className="object-cover object-center z-0"
-          priority
-          sizes="100vw"
-        />
-      )}
-      {/* Overlay */}
-      <div className="relative z-10 flex flex-col items-center justify-center w-full h-full bg-black/40">
-        <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 drop-shadow-lg text-center">
-          {title}
-        </h2>
-        {buttonText && (
-          <a
-            href="#"
-            className="bg-white text-black font-bold py-2 px-6 rounded-full shadow-lg hover:bg-gray-200 transition-colors text-base md:text-lg"
-          >
-            {buttonText}
-          </a>
-        )}
-      </div>
-    </section>
-  );
 };
 
 export default FeaturedArtistSection; 

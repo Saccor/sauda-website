@@ -1,8 +1,8 @@
-import HeroSection from './HeroSection';
-import MerchandiseSection from './MerchandiseSection';
-import FeaturedArtistSection from './FeaturedArtistSection';
-import MusicPlayerSection from './MusicPlayerSection';
-import TourDatesSection from './TourDatesSection';
+import HeroSection from './sections/HeroSection';
+import MerchandiseSection from './sections/MerchandiseSection';
+import FeaturedArtistSection from './sections/FeaturedArtistSection';
+import MusicPlayerSection from './sections/MusicPlayerSection';
+import TourDatesSection from './sections/TourDatesSection';
 
 const Main = () => {
   return (

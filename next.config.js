@@ -5,6 +5,14 @@ const nextConfig = {
       "images.unsplash.com",
       // add any other domains you need here
     ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
   },
 };
 

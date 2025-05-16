@@ -1,8 +1,8 @@
 import React from 'react';
-import { fetchShopify, FEATURED_ARTIST_SECTION_QUERY } from '@/lib/shopify';
-import type { ShopifyMetaobjectField, MediaImageReference } from '@/lib/shopify';
+import { fetchShopify, FEATURED_ARTIST_SECTION_QUERY } from '@/api/shopify';
+import type { ShopifyMetaobjectField, MediaImageReference } from '@/api/shopify';
 import Main from '../components/Main';
-import ErrorDisplay from '../components/ErrorDisplay';
+import ErrorDisplay from '@/components/common/ErrorDisplay';
 
 export default async function Home() {
   let error: string | null = null;

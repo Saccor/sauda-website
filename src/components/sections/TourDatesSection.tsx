@@ -1,6 +1,6 @@
 import React from 'react';
-import { fetchShopify, TOUR_DATES_SECTION_QUERY } from '@/lib/shopify';
-import type { ShopifyMetaobjectField, TourDate } from '@/lib/shopify';
+import { fetchShopify, TOUR_DATES_SECTION_QUERY } from '@/api/shopify';
+import type { ShopifyMetaobjectField, TourDate } from '@/api/shopify';
 
 function parseTourDate(fields: ShopifyMetaobjectField[]): TourDate {
   const get = (key: string) => fields.find((f) => f.key === key)?.value || '';
