@@ -1,21 +1,8 @@
-'use client';
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useFetch } from '@/lib/useFetch';
-
-const fallbackArtistData = {
-  name: 'SAUDA',
-  description: 'SAUDA is a dynamic artist duo signed by Bad Taste Empire, known for blending electronic beats with soulful vocals. Their unique sound bridges the gap between underground dance culture and accessible pop, creating an immersive sonic experience that has captivated audiences worldwide.',
-  longBio: 'Formed in 2020, SAUDA quickly established themselves in the electronic music scene with their debut EP "Electric Dreams". The duo\'s creative process combines analog synthesizers with digital production techniques, resulting in a distinctive sound that feels both nostalgic and futuristic. Their live performances are known for high energy and impressive visual elements that complement their musical journey.',
-  image: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=1200&auto=format&fit=crop',
-  socials: {
-    instagram: 'https://instagram.com/sauda',
-    spotify: 'https://open.spotify.com/artist/sauda',
-    youtube: 'https://youtube.com/sauda',
-    soundcloud: 'https://soundcloud.com/sauda',
-  },
-};
+import { fetchShopify, FEATURED_ARTIST_SECTION_QUERY } from '@/lib/shopify';
+import type { ShopifyMetaobjectField } from '@/lib/shopify';
 
 const socialIcons: Record<string, React.ReactNode> = {
   instagram: (
@@ -40,26 +27,66 @@ const socialIcons: Record<string, React.ReactNode> = {
   ),
 };
 
-interface FeaturedArtistSectionProps {
-  imageUrl: string;
-  title: string;
-  buttonText: string;
-}
+const FeaturedArtistSection = async () => {
+  let imageUrl = '';
+  let title = '';
+  let buttonText = '';
+  let error: string | null = null;
 
-const FeaturedArtistSection: React.FC<FeaturedArtistSectionProps> = ({
-  imageUrl,
-  title,
-  buttonText,
-}) => {
+  try {
+    const data = await fetchShopify<{
+      page: {
+        metafield?: {
+          reference?: {
+            fields: ShopifyMetaobjectField[];
+          };
+        };
+      };
+    }>(FEATURED_ARTIST_SECTION_QUERY);
+
+    const fields = data?.page?.metafield?.reference?.fields || [];
+    
+    // Extract values from fields
+    const imageField = fields.find(f => f.key === 'image');
+    if (imageField?.reference && 'image' in imageField.reference) {
+      imageUrl = imageField.reference.image.url;
+    }
+
+    const titleField = fields.find(f => f.key === 'title');
+    if (titleField) {
+      title = titleField.value;
+    }
+
+    const buttonTextField = fields.find(f => f.key === 'button_text');
+    if (buttonTextField) {
+      buttonText = buttonTextField.value;
+    }
+  } catch (err) {
+    console.error('Error fetching featured artist section:', err);
+    error = err instanceof Error ? err.message : 'Failed to load featured artist section';
+  }
+
+  if (error) {
+    return (
+      <section className="relative w-full h-[400px] md:h-[650px] flex items-center justify-center overflow-hidden">
+        <div className="relative z-10 flex flex-col items-center justify-center w-full h-full bg-black/40">
+          <p className="text-red-500">{error}</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="relative w-full h-[400px] md:h-[650px] flex items-center justify-center overflow-hidden">
       {/* Background image */}
       {imageUrl && (
-        <img
+        <Image
           src={imageUrl}
           alt="Featured Artist"
-          className="absolute inset-0 w-full h-full object-cover object-center z-0"
-          draggable={false}
+          fill
+          className="object-cover object-center z-0"
+          priority
+          sizes="100vw"
         />
       )}
       {/* Overlay */}

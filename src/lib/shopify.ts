@@ -175,47 +175,4 @@ export const PRODUCTS_QUERY = `#graphql
       }
     }
   }
-`;
-
-export async function getMainMenu() {
-  try {
-    const data = await fetchShopify<{
-      menu: {
-        id: string;
-        title: string;
-        items: Array<{
-          id: string;
-          title: string;
-          url: string;
-          items: Array<{
-            id: string;
-            title: string;
-            url: string;
-          }>;
-        }>;
-      };
-    }>(MAIN_MENU_QUERY);
-    return data.menu;
-  } catch (error) {
-    console.error('Error fetching main menu:', error);
-    throw error;
-  }
-}
-
-export async function getTourDatesSection(): Promise<ShopifyMetaobjectField[]> {
-  try {
-    const data = await fetchShopify<{
-      shop: {
-        metafield?: {
-          reference?: {
-            fields: ShopifyMetaobjectField[];
-          };
-        };
-      };
-    }>(TOUR_DATES_SECTION_QUERY);
-    return data?.shop?.metafield?.reference?.fields || [];
-  } catch (error) {
-    console.error('Error fetching tour dates:', error);
-    throw error;
-  }
-} 
+`; 

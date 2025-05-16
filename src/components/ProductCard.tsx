@@ -1,9 +1,10 @@
 import React from "react";
+import Image from "next/image";
 
 interface ProductCardProps {
   imageUrl: string;
   title: string;
-  price: string;
+  price: string | number;
   iconUrl?: string;
 }
 
@@ -11,8 +12,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconU
   return (
     <div className="w-full max-w-xs md:max-w-sm lg:max-w-md bg-transparent flex flex-col items-center mx-auto">
       {/* Floating image with portrait aspect ratio and subtle shadow */}
-      <div className="aspect-[3/4] w-full bg-transparent flex items-center justify-center drop-shadow-lg">
-        <img src={imageUrl} alt={title} className="object-contain w-full h-full" />
+      <div className="aspect-[3/4] w-full bg-transparent flex items-center justify-center drop-shadow-lg relative">
+        <Image
+          src={imageUrl}
+          alt={title}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-contain"
+          quality={85}
+        />
       </div>
       {/* Product Title below image, white text */}
       <div className="w-full flex justify-center">
@@ -23,10 +31,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconU
       {/* Price and icon centered under title, white text */}
       <div className="w-[67px] h-[22px] flex items-center justify-center mt-1">
         {iconUrl && (
-          <img className="w-[22px] h-[22px] mr-1" src={iconUrl} alt="icon" />
+          <Image
+            src={iconUrl}
+            alt="icon"
+            width={22}
+            height={22}
+            className="mr-1"
+          />
         )}
-        <span className="text-center text-white text-[11.5px] font-normal font-inter tracking-[0.8px] mr-1">$</span>
-        <span className="text-center text-white text-[9.7px] font-normal font-inter tracking-[0.8px]">{price}</span>
+        <span className="text-center text-white text-[11.5px] font-normal font-inter tracking-[0.8px]">{price}</span>
       </div>
     </div>
   );
