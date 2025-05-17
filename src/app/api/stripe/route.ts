@@ -9,7 +9,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(req: Request) {
   try {
-    const { items, paymentMethod } = await req.json();
+    const { items } = await req.json();
 
     // Get the base URL from the request
     const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
           currency: 'sek', // Swedish Krona
           product_data: {
             name: item.product.title,
-            images: [item.product.featuredImage?.url],
+            images: [item.product.featuredImage?.url].filter((url): url is string => Boolean(url)),
           },
           unit_amount: Math.round(parseFloat(item.product.priceRange.minVariantPrice.amount) * 100), // Convert to cents
         },

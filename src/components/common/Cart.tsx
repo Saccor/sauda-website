@@ -9,7 +9,6 @@ import { loadStripe } from '@stripe/stripe-js';
 const Cart = () => {
   const { items, removeItem, updateQuantity, total, isOpen, setIsOpen } = useCart();
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<'card' | 'swish' | 'klarna'>('card');
 
   const handleCheckout = async () => {
     try {
@@ -19,10 +18,7 @@ const Cart = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
-          items,
-          paymentMethod: selectedPaymentMethod 
-        }),
+        body: JSON.stringify({ items }),
       });
 
       const { sessionId } = await response.json();

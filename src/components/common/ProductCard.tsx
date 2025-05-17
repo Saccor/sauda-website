@@ -13,11 +13,10 @@ interface ProductCardProps {
   title: string;
   price: string | number;
   iconUrl?: string;
-  handle: string;
   product: Product;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconUrl, handle, product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconUrl, product }) => {
   const { addItem } = useCart();
 
   const handleAddToCart = (e: React.MouseEvent) => {

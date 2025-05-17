@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 
-export default function SuccessPage() {
+function SuccessContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { clearCart } = useCart();
@@ -30,5 +30,13 @@ export default function SuccessPage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-black text-white">Loading...</div>}>
+      <SuccessContent />
+    </Suspense>
   );
 } 
