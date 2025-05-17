@@ -46,14 +46,14 @@ const Cart = () => {
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="w-full max-w-md bg-black h-full flex flex-col"
+            className="w-full max-w-md bg-gradient-to-b from-[#0a1833] via-black to-[#0a1833] h-full flex flex-col"
             onClick={e => e.stopPropagation()}
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 200, damping: 30 }}
           >
-            <div className="p-4 border-b border-gray-800 flex justify-between items-center">
+            <div className="p-4 border-b border-gray-800/50 flex justify-between items-center">
               <h2 className="text-xl font-bold text-white">Shopping Cart</h2>
               <button
                 onClick={() => setIsOpen(false)}
@@ -69,7 +69,7 @@ const Cart = () => {
               ) : (
                 <div className="space-y-4">
                   {items.map((item) => (
-                    <div key={item.product.id} className="flex gap-4 text-white">
+                    <div key={item.product.id} className="flex gap-4 text-white bg-black/20 rounded-lg p-4">
                       <div className="relative w-24 h-24">
                         <Image
                           src={item.product.featuredImage?.url || 'https://placehold.co/282x282'}
