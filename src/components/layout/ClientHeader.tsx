@@ -66,7 +66,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
     >
       <div className="w-full h-full flex items-center justify-between px-4 md:px-8 max-w-none">
         {/* Left Links */}
-        <nav className="hidden md:flex flex-1 items-center justify-end gap-x-6">
+        <nav className="hidden md:flex flex-1 items-center justify-end gap-x-10">
           {leftLinks.map((item) => (
             <motion.div
               key={item.id}
@@ -76,19 +76,22 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
             >
               <Link
                 href={item.url}
-                className="text-white/90 hover:text-white text-base font-medium tracking-wide transition-colors px-1"
+                className="relative text-white/90 hover:text-white text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
               >
                 {item.title}
+                {/* Underline effect for active link (pseudo-active for demo, replace with actual logic if needed) */}
+                {/* Example: add underline if item.url === window.location.pathname */}
+                {/* <span className="absolute left-0 -bottom-1 w-full h-0.5 bg-white rounded transition-all" /> */}
               </Link>
             </motion.div>
           ))}
         </nav>
 
         {/* Logo Centered */}
-        <div className="flex-shrink-0 flex justify-center items-center w-[180px]">
+        <div className="flex-shrink-0 flex justify-center items-center w-[220px]">
           <Link href="/" className="block">
             <span 
-              className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-gray-200 transition-colors"
+              className="text-4xl md:text-5xl font-extrabold tracking-wide text-white hover:text-gray-200 transition-colors"
               style={{fontFamily: 'Zurich Extended, sans-serif'}}
             >
               SAUDA
@@ -97,7 +100,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
         </div>
 
         {/* Right Links */}
-        <nav className="hidden md:flex flex-1 items-center justify-start gap-x-6">
+        <nav className="hidden md:flex flex-1 items-center justify-start gap-x-10">
           {rightLinks.map((item) => (
             <motion.div
               key={item.id}
@@ -107,16 +110,18 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
             >
               <Link
                 href={item.url}
-                className="text-white/90 hover:text-white text-base font-medium tracking-wide transition-colors px-1"
+                className="relative text-white/90 hover:text-white text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
               >
                 {item.title}
+                {/* Underline effect for active link (pseudo-active for demo, replace with actual logic if needed) */}
+                {/* <span className="absolute left-0 -bottom-1 w-full h-0.5 bg-white rounded transition-all" /> */}
               </Link>
             </motion.div>
           ))}
         </nav>
 
         {/* Cart Icon Far Right */}
-        <div className="flex-shrink-0 flex items-center justify-end ml-4">
+        <div className="flex-shrink-0 flex items-center justify-end ml-4 mr-6 md:mr-10">
           <CartButton />
         </div>
 

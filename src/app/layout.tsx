@@ -41,6 +41,7 @@ export const metadata: Metadata = {
     description: "Official website of SAUDA - Music, Tour Dates, and Merchandise",
     images: ["/Testify-16-9.JPG"],
   },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
 };
 
 export default function RootLayout({
