@@ -28,7 +28,7 @@ const MerchandiseSection = async () => {
   // Handle error state
   if (error) {
     return (
-      <section className="relative w-full py-28 bg-neutral-dark">
+      <section className="relative w-full py-28 bg-transparent">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6">
             <h3 className="text-2xl font-bold text-error mb-4">Error loading products</h3>
@@ -51,7 +51,7 @@ const MerchandiseSection = async () => {
   // Handle no products state
   if (products.length === 0) {
     return (
-      <section className="relative w-full py-28 bg-neutral-dark">
+      <section className="relative w-full py-28 bg-transparent">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6">
             <h3 className="text-2xl font-bold text-warning mb-4">No products available</h3>
@@ -71,10 +71,10 @@ const MerchandiseSection = async () => {
   }
 
   return (
-    <section className="relative w-full py-28 bg-neutral-dark">
+    <section className="relative w-full py-28 bg-transparent">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="space-y-8">
-          <h2 className="text-4xl font-bold text-center text-on-dark">MERCHANDISE</h2>
+          <h2 className="text-4xl font-bold text-center text-white">MERCHANDISE</h2>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {products.map((product) => (
@@ -94,7 +94,7 @@ const MerchandiseSection = async () => {
               href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-primary text-on-dark px-8 py-3 rounded-full hover:bg-primary-light transition-colors text-xl"
+              className="inline-flex items-center justify-center bg-[#0a1833] text-white font-bold px-10 py-3 rounded-none hover:bg-[#142a4d] transition-colors text-lg min-w-[180px] text-center"
             >
               View Full Store
             </a>

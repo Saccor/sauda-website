@@ -106,40 +106,38 @@ const TourDatesSection = async () => {
   }
 
   return (
-    <section className="relative w-full py-28 bg-neutral-dark">
+    <section className="relative w-full py-28 bg-transparent">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="space-y-8">
-          <h2 className="text-4xl font-bold text-center text-on-dark">TOUR DATES</h2>
-          
-          <ul className="space-y-4">
+        <div className="space-y-12">
+          <h2 className="text-5xl font-extrabold text-center text-white tracking-tight mb-12">TOUR DATES</h2>
+          <ul className="space-y-10">
             {tourDates.map((event, idx) => (
               <li key={idx}>
-                <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6 flex items-center justify-between">
+                <div className="bg-black text-white border-t border-b border-white flex flex-col md:flex-row items-start md:items-center justify-between px-8 py-6 md:py-8 md:gap-8">
                   {/* Date, City, Venue */}
-                  <div className="space-y-2">
-                    <span className="text-xl font-bold">
+                  <div className="space-y-2 flex-1 min-w-0">
+                    <span className="text-xl font-bold block">
                       {formatDate(event.date)}
                     </span>
                     <div className="space-y-1">
-                      <span className="text-lg capitalize">
+                      <span className="text-lg font-semibold block">
                         {event.city}
                       </span>
-                      <span className="text-sm capitalize text-text-secondary">
+                      <span className="text-base block">
                         {event.venue}
                       </span>
                     </div>
                   </div>
-                  
                   {/* Share Icon and Tickets */}
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-6 mt-6 md:mt-0">
                     <a 
                       href={event.ticketUrl} 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="text-on-dark hover:text-primary-light transition-colors"
+                      className="text-white hover:text-primary transition-colors"
                       aria-label="Share"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-7 h-7">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 15l3-3m0 0l-3-3m3 3H9" />
                       </svg>
@@ -148,7 +146,7 @@ const TourDatesSection = async () => {
                       href={event.ticketUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center bg-primary text-on-dark px-6 py-2 rounded-full hover:bg-primary-light transition-colors"
+                      className="inline-flex items-center justify-center bg-[#0a1833] text-white font-bold px-10 py-3 rounded-none hover:bg-[#142a4d] transition-colors text-lg min-w-[140px] text-center"
                     >
                       Tickets
                     </a>

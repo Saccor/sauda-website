@@ -77,7 +77,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
             >
               <Link
                 href={item.url}
-                className="relative text-on-dark/90 hover:text-on-dark text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
+                className="relative text-white hover:text-white/80 text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
               >
                 {item.title}
               </Link>
@@ -86,10 +86,10 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
         </nav>
 
         {/* Logo Centered */}
-        <div className="flex-shrink-0 flex justify-center items-center w-[180px] md:w-[220px]">
+        <div className="flex-shrink-0 flex justify-center items-center w-full md:w-[220px] absolute left-1/2 top-1/2 md:static md:left-auto md:top-auto -translate-x-1/2 -translate-y-1/2 md:translate-x-0 md:translate-y-0">
           <Link href="/" className="block">
             <span 
-              className="text-3xl md:text-4xl font-extrabold tracking-wide text-on-dark hover:text-on-dark/80 transition-colors"
+              className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors"
               style={{fontFamily: 'Zurich Extended, sans-serif'}}
             >
               SAUDA
@@ -108,7 +108,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
             >
               <Link
                 href={item.url}
-                className="relative text-on-dark/90 hover:text-on-dark text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
+                className="relative text-white hover:text-white/80 text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
               >
                 {item.title}
               </Link>
@@ -117,13 +117,17 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
         </nav>
 
         {/* Cart Icon Far Right (always visible) */}
-        <div className="flex-shrink-0 flex items-center justify-end ml-4 mr-6 md:mr-10 z-50">
-          <CartButton />
-        </div>
+        { !mobileMenuOpen && (
+          <div className="flex-shrink-0 flex items-center justify-end ml-4 mr-6 md:mr-10 z-50">
+            <div className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center">
+              <CartButton />
+            </div>
+          </div>
+        )}
 
         {/* Mobile Menu Button */}
         <button 
-          className="md:hidden text-on-dark p-2 absolute left-4 z-50"
+          className="md:hidden text-white p-2 absolute right-4 z-50"
           aria-label="Toggle menu"
           onClick={() => setMobileMenuOpen(true)}
         >
@@ -175,7 +179,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
                 </button>
                 {/* Logo */}
                 <Link href="/" className="mb-10" onClick={() => setMobileMenuOpen(false)}>
-                  <span className="text-4xl font-extrabold tracking-wide text-on-dark" style={{fontFamily: 'Zurich Extended, sans-serif'}}>SAUDA</span>
+                  <span className="text-4xl font-extrabold tracking-wide text-white" style={{fontFamily: 'Zurich Extended, sans-serif'}}>SAUDA</span>
                 </Link>
                 {/* All Links */}
                 <nav className="flex flex-col gap-8 w-full items-center">
@@ -187,7 +191,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
                     >
                       <Link
                         href={item.url}
-                        className="block text-on-dark text-2xl font-medium tracking-wide text-center py-2 w-full hover:text-on-dark/80 transition-colors"
+                        className="block text-white text-2xl font-medium tracking-wide text-center py-2 w-full hover:text-white/80 transition-colors"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         {item.title}

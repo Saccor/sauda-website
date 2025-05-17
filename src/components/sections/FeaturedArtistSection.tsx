@@ -39,7 +39,7 @@ const FeaturedArtistSection = async () => {
   // Handle error state
   if (error) {
     return (
-      <section className="relative w-full py-28 bg-neutral-dark">
+      <section className="relative w-full py-28 bg-transparent">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6">
             <h3 className="text-2xl font-bold text-error mb-4">Error loading featured artist</h3>
@@ -62,7 +62,7 @@ const FeaturedArtistSection = async () => {
   // Handle empty state
   if (!featuredArtist) {
     return (
-      <section className="relative w-full py-28 bg-neutral-dark">
+      <section className="relative w-full py-28 bg-transparent">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6">
             <h3 className="text-2xl font-bold text-warning mb-4">No featured artist</h3>
@@ -82,7 +82,7 @@ const FeaturedArtistSection = async () => {
   }
 
   return (
-    <section className="relative w-full py-28 bg-neutral-dark">
+    <section className="relative w-full py-28 bg-transparent">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative rounded-2xl overflow-hidden">
           {/* Background image */}
@@ -99,13 +99,13 @@ const FeaturedArtistSection = async () => {
           {/* Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
             <div className="space-y-8 text-center">
-              <h2 className="text-4xl md:text-5xl font-bold text-on-dark">
+              <h2 className="text-4xl md:text-5xl font-bold text-white">
                 {featuredArtist.title}
               </h2>
               {featuredArtist.buttonText && (
                 <Link
                   href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}`}
-                  className="inline-flex items-center justify-center bg-primary text-on-dark px-8 py-3 rounded-full hover:bg-primary-light transition-colors text-xl"
+                  className="inline-flex items-center justify-center bg-primary text-white px-8 py-3 rounded-full hover:bg-primary-light transition-colors text-xl"
                 >
                   {featuredArtist.buttonText}
                 </Link>

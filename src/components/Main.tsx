@@ -6,13 +6,15 @@ import TourDatesSection from './sections/TourDatesSection';
 
 const Main = () => {
   return (
-    <main className="w-full min-h-screen bg-gradient-to-b from-black via-[#0a0e1a] to-black">
+    <>
       <HeroSection />
-      <MerchandiseSection />
-      <FeaturedArtistSection />
-      <TourDatesSection />
-      <MusicPlayerSection />
-    </main>
+      <div className="w-full min-h-screen bg-gradient-to-b from-[#0a1833] via-black to-[#0a1833]">
+        <MerchandiseSection />
+        <FeaturedArtistSection />
+        <TourDatesSection />
+        <MusicPlayerSection />
+      </div>
+    </>
   );
 };
 

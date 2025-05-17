@@ -20,13 +20,13 @@ const SpotifyEmbed: React.FC<SpotifyEmbedProps> = ({ artistId }) => {
 
 const MusicPlayerSection: React.FC = () => {
   return (
-    <section className="relative w-full py-28 bg-neutral-dark">
+    <section className="relative w-full py-28 bg-transparent">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="space-y-8">
-          <h2 className="text-4xl font-bold text-center text-on-dark">Listen Now</h2>
+          <h2 className="text-4xl font-bold text-center text-white">Listen Now</h2>
           
           <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6">
-            <h3 className="text-2xl font-bold mb-6">Artist Profile</h3>
+            <h3 className="text-2xl font-bold mb-6 text-white">Artist Profile</h3>
             <Suspense fallback={
               <div className="h-[352px] bg-neutral-light/20 rounded-2xl animate-pulse" />
             }>
