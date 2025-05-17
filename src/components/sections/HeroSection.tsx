@@ -19,4 +19,6 @@ const HeroSection = forwardRef<HTMLDivElement>((props, ref) => {
   );
 });
 
+HeroSection.displayName = "HeroSection";
+
 export default HeroSection; 
