@@ -61,7 +61,7 @@ const CACHE_DURATION = {
  */
 export async function fetchShopify<T>(
   query: string,
-  variables?: Record<string, any>,
+  variables?: Record<string, unknown>,
   options?: {
     revalidate?: number;
     cache?: keyof typeof CACHE_DURATION;

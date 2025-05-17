@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ErrorDisplay from '../common/ErrorDisplay';
+import Link from 'next/link';
 
 interface MenuItem {
   id: string;
@@ -29,13 +30,13 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
             <ErrorDisplay message={error} />
           ) : menuItems.length > 0 ? (
             menuItems.map((item) => (
-              <a
+              <Link
                 key={item.id}
                 href={item.url}
                 className="text-white font-semibold text-base tracking-wide hover:text-gray-200 transition-colors px-2 py-1 rounded"
               >
                 {item.title}
-              </a>
+              </Link>
             ))
           ) : (
             <span className="text-white/50 text-base font-medium">No footer links</span>
@@ -43,14 +44,14 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
         </nav>
         {/* Center: Logo/Brand */}
         <div className="order-1 md:order-2 flex-shrink-0 flex justify-center items-center w-full md:w-[180px]">
-          <a href="/" className="block">
+          <Link href="/" className="block">
             <span 
               className="text-2xl md:text-3xl font-extrabold tracking-wide text-white hover:text-gray-200 transition-colors"
               style={{fontFamily: 'Zurich Extended, sans-serif'}}
             >
               SAUDA
             </span>
-          </a>
+          </Link>
         </div>
         {/* Right: Copyright */}
         <div className="order-3 text-xs text-white/50 text-center md:text-right w-full md:w-auto">

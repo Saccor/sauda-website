@@ -87,7 +87,7 @@ const MerchandiseSection = async () => {
               title={product.title}
               price={formatPrice(product.priceRange.minVariantPrice.amount, product.priceRange.minVariantPrice.currencyCode || 'USD')}
               iconUrl={undefined}
-              handle={product.handle}
+              product={product}
             />
           ))}
         </div>
