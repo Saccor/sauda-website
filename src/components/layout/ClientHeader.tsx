@@ -65,150 +65,154 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
           : 'bg-transparent'
       }`}
     >
-      <div className="grid grid-cols-[auto_min-content_auto_min-content] items-center w-full h-full px-4 sm:px-6 lg:px-8 gap-x-10">
-        {/* Left: nav or menu */}
-        <div className="flex items-center gap-x-10 justify-end">
-          <nav className="hidden md:flex items-center gap-x-10">
-            {leftLinks.map((item) => (
-              <motion.div
-                key={item.id}
-                whileHover={{ scale: 1.08 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className="inline-block"
-              >
-                <Link
-                  href={item.url}
-                  className="relative text-white hover:text-white/80 text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-full">
+        <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center w-full h-full">
+          {/* Left: nav or menu */}
+          <div className="flex items-center gap-x-4 justify-end">
+            <nav className="hidden md:flex items-center gap-x-4">
+              {leftLinks.map((item) => (
+                <motion.div
+                  key={item.id}
+                  whileHover={{ scale: 1.08 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                  className="inline-block"
                 >
-                  {item.title}
-                </Link>
-              </motion.div>
-            ))}
-          </nav>
-          {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden text-white p-2 z-50"
-            aria-label="Toggle menu"
-            onClick={() => setMobileMenuOpen(open => !open)}
-          >
-            <svg 
-              className="w-6 h-6" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
+                  <Link
+                    href={item.url}
+                    className="relative text-white hover:text-white/80 text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
+                  >
+                    {item.title}
+                  </Link>
+                </motion.div>
+              ))}
+            </nav>
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden text-white p-2 z-50"
+              aria-label="Toggle menu"
+              onClick={() => setMobileMenuOpen(open => !open)}
             >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M4 6h16M4 12h16M4 18h16" 
-              />
-            </svg>
-          </button>
-        </div>
-        {/* Center: logo */}
-        <div className="flex justify-center items-center">
-          <Link href="/" className="block">
-            <span 
-              className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors text-center w-full block"
-              style={{fontFamily: 'Zurich Extended, sans-serif'}}
-            >
-              SAUDA
-            </span>
-          </Link>
-        </div>
-        {/* Right: nav */}
-        <div className="flex items-center gap-x-10 justify-start">
-          <nav className="hidden md:flex items-center gap-x-10">
-            {rightLinks.map((item) => (
-              <motion.div
-                key={item.id}
-                whileHover={{ scale: 1.08 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className="inline-block"
+              <svg 
+                className="w-6 h-6" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
               >
-                <Link
-                  href={item.url}
-                  className="relative text-white hover:text-white/80 text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
-                >
-                  {item.title}
-                </Link>
-              </motion.div>
-            ))}
-          </nav>
-        </div>
-        {/* Far right: cart button */}
-        <div className="flex items-center justify-end">
-          { !mobileMenuOpen && (
-            <div className="flex-shrink-0 flex items-center justify-end z-50 mr-4 md:mr-8">
-              <div className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center">
-                <CartButton />
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Mobile Menu Overlay */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-neutral-dark/95 backdrop-blur-md z-40 flex flex-col"
-              aria-modal="true"
-              role="dialog"
-              tabIndex={-1}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <motion.div
-                initial={{ y: -40, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -40, opacity: 0 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                className="flex flex-col items-center justify-start w-11/12 max-w-sm h-auto mx-auto mt-10 pt-10 px-6 relative"
-                onClick={e => e.stopPropagation()}
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M4 6h16M4 12h16M4 18h16" 
+                />
+              </svg>
+            </button>
+          </div>
+          {/* Empty space before logo */}
+          <div></div>
+          {/* Center: logo */}
+          <div className="flex justify-center items-center">
+            <Link href="/" className="block">
+              <span 
+                className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors text-center w-full block"
+                style={{fontFamily: 'Zurich Extended, sans-serif'}}
               >
-                {/* Close Button */}
-                <button
-                  className="absolute top-6 right-6 text-on-dark p-2"
-                  aria-label="Close menu"
-                  onClick={() => setMobileMenuOpen(false)}
+                SAUDA
+              </span>
+            </Link>
+          </div>
+          {/* Empty space after logo */}
+          <div></div>
+          {/* Right: nav + cart */}
+          <div className="flex items-center gap-x-4 justify-start">
+            <nav className="hidden md:flex items-center gap-x-4">
+              {rightLinks.map((item) => (
+                <motion.div
+                  key={item.id}
+                  whileHover={{ scale: 1.08 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                  className="inline-block"
                 >
-                  <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-                {/* Logo */}
-                <Link href="/" className="mb-10" onClick={() => setMobileMenuOpen(false)}>
-                  <span className="text-4xl font-extrabold tracking-wide text-white" style={{fontFamily: 'Zurich Extended, sans-serif'}}>SAUDA</span>
-                </Link>
-                {/* All Links */}
-                <nav className="flex flex-col gap-8 w-full items-center">
-                  {menuItems.map((item) => (
-                    <motion.div
-                      key={item.id}
-                      whileTap={{ scale: 0.96 }}
-                      className="w-full"
-                    >
-                      <Link
-                        href={item.url}
-                        className="block text-white text-2xl font-medium tracking-wide text-center py-2 w-full hover:text-white/80 transition-colors"
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        {item.title}
-                      </Link>
-                    </motion.div>
-                  ))}
-                </nav>
-                {/* Cart Button */}
-                <div className="mt-12 w-full flex justify-center">
+                  <Link
+                    href={item.url}
+                    className="relative text-white hover:text-white/80 text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
+                  >
+                    {item.title}
+                  </Link>
+                </motion.div>
+              ))}
+            </nav>
+            {/* Cart Button */}
+            { !mobileMenuOpen && (
+              <div className="flex-shrink-0 flex items-center justify-end z-50 ml-8 mr-4">
+                <div className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center">
                   <CartButton />
                 </div>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile Menu Overlay */}
+          <AnimatePresence>
+            {mobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-neutral-dark/95 backdrop-blur-md z-40 flex flex-col"
+                aria-modal="true"
+                role="dialog"
+                tabIndex={-1}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <motion.div
+                  initial={{ y: -40, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -40, opacity: 0 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                  className="flex flex-col items-center justify-start w-11/12 max-w-sm h-auto mx-auto mt-10 pt-10 px-6 relative"
+                  onClick={e => e.stopPropagation()}
+                >
+                  {/* Close Button */}
+                  <button
+                    className="absolute top-6 right-6 text-on-dark p-2"
+                    aria-label="Close menu"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                  {/* Logo */}
+                  <Link href="/" className="mb-10" onClick={() => setMobileMenuOpen(false)}>
+                    <span className="text-4xl font-extrabold tracking-wide text-white" style={{fontFamily: 'Zurich Extended, sans-serif'}}>SAUDA</span>
+                  </Link>
+                  {/* All Links */}
+                  <nav className="flex flex-col gap-8 w-full items-center">
+                    {menuItems.map((item) => (
+                      <motion.div
+                        key={item.id}
+                        whileTap={{ scale: 0.96 }}
+                        className="w-full"
+                      >
+                        <Link
+                          href={item.url}
+                          className="block text-white text-2xl font-medium tracking-wide text-center py-2 w-full hover:text-white/80 transition-colors"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {item.title}
+                        </Link>
+                      </motion.div>
+                    ))}
+                  </nav>
+                  {/* Cart Button */}
+                  <div className="mt-12 w-full flex justify-center">
+                    <CartButton />
+                  </div>
+                </motion.div>
               </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </header>
   );
