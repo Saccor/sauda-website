@@ -49,7 +49,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
 
   if (error) {
     return (
-      <header className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[1280px] h-[80px] z-50 bg-black/80 backdrop-blur-md shadow-lg">
+      <header className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[1280px] h-[80px] z-50 bg-neutral-dark/80 backdrop-blur-md shadow-lg">
         <div className="w-full h-full flex items-center justify-center px-6">
           <ErrorDisplay message={error} />
         </div>
@@ -61,11 +61,11 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
     <header 
       className={`fixed top-0 left-0 w-full h-[80px] z-50 transition-all duration-300 ${
         isPastHero 
-          ? 'bg-black/80 backdrop-blur-md shadow-lg' 
+          ? 'bg-neutral-dark/80 backdrop-blur-md shadow-lg' 
           : 'bg-transparent'
       }`}
     >
-      <div className="w-full h-full flex items-center justify-between px-4 md:px-8 max-w-none relative">
+      <div className="w-full h-full flex items-center justify-between px-4 sm:px-6 lg:px-8 max-w-none relative">
         {/* Left Links (Desktop) */}
         <nav className="hidden md:flex flex-1 items-center justify-end gap-x-10">
           {leftLinks.map((item) => (
@@ -77,7 +77,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
             >
               <Link
                 href={item.url}
-                className="relative text-white/90 hover:text-white text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
+                className="relative text-on-dark/90 hover:text-on-dark text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
               >
                 {item.title}
               </Link>
@@ -89,7 +89,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
         <div className="flex-shrink-0 flex justify-center items-center w-[180px] md:w-[220px]">
           <Link href="/" className="block">
             <span 
-              className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-gray-200 transition-colors"
+              className="text-3xl md:text-4xl font-extrabold tracking-wide text-on-dark hover:text-on-dark/80 transition-colors"
               style={{fontFamily: 'Zurich Extended, sans-serif'}}
             >
               SAUDA
@@ -108,7 +108,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
             >
               <Link
                 href={item.url}
-                className="relative text-white/90 hover:text-white text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
+                className="relative text-on-dark/90 hover:text-on-dark text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
               >
                 {item.title}
               </Link>
@@ -123,7 +123,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
 
         {/* Mobile Menu Button */}
         <button 
-          className="md:hidden text-white p-2 absolute left-4 z-50"
+          className="md:hidden text-on-dark p-2 absolute left-4 z-50"
           aria-label="Toggle menu"
           onClick={() => setMobileMenuOpen(true)}
         >
@@ -149,7 +149,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-[#0a1833] bg-opacity-95 z-40 flex flex-col"
+              className="fixed inset-0 bg-neutral-dark/95 backdrop-blur-md z-40 flex flex-col"
               aria-modal="true"
               role="dialog"
               tabIndex={-1}
@@ -165,7 +165,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
               >
                 {/* Close Button */}
                 <button
-                  className="absolute top-6 right-6 text-white p-2"
+                  className="absolute top-6 right-6 text-on-dark p-2"
                   aria-label="Close menu"
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -175,7 +175,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
                 </button>
                 {/* Logo */}
                 <Link href="/" className="mb-10" onClick={() => setMobileMenuOpen(false)}>
-                  <span className="text-4xl font-extrabold tracking-wide text-white" style={{fontFamily: 'Zurich Extended, sans-serif'}}>SAUDA</span>
+                  <span className="text-4xl font-extrabold tracking-wide text-on-dark" style={{fontFamily: 'Zurich Extended, sans-serif'}}>SAUDA</span>
                 </Link>
                 {/* All Links */}
                 <nav className="flex flex-col gap-8 w-full items-center">
@@ -187,7 +187,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
                     >
                       <Link
                         href={item.url}
-                        className="block text-white text-2xl font-medium tracking-wide text-center py-2 w-full hover:text-gray-200 transition-colors"
+                        className="block text-on-dark text-2xl font-medium tracking-wide text-center py-2 w-full hover:text-on-dark/80 transition-colors"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         {item.title}
@@ -195,7 +195,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
                     </motion.div>
                   ))}
                 </nav>
-                {/* Cart Button (optional, can remove if redundant) */}
+                {/* Cart Button */}
                 <div className="mt-12 w-full flex justify-center">
                   <CartButton />
                 </div>

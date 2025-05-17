@@ -1,6 +1,39 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+:root {
+  /* Primary Colors */
+  --color-primary: #b01904;    /* Main brand color, CTAs, links */
+  --color-primary-light: #d61f06;  /* Hover states, highlights */
+  --color-primary-dark: #8b1403;   /* Active states, emphasis */
+  
+  /* Accent Colors */
+  --color-accent: #fefff9;     /* Headlines, icons, highlights */
+  --color-accent-light: #ffffff;  /* Secondary text, subtle highlights */
+  --color-accent-dark: #f5f5f0;   /* Borders, dividers */
+  
+  /* Neutral Colors */
+  --color-neutral: #421800;    /* Cards, borders, secondary elements */
+  --color-neutral-light: #5a2100;  /* Hover states, subtle backgrounds */
+  --color-neutral-dark: #2d1100;   /* Active states, emphasis */
+  
+  /* Text Colors */
+  --color-text-primary: #1a1a1a;   /* Primary text */
+  --color-text-secondary: #4a4a4a; /* Secondary text */
+  --color-text-tertiary: #6a6a6a;  /* Tertiary text */
+  --color-on-dark: #ffffff;        /* Text on dark backgrounds */
+  
+  /* State Colors */
+  --color-success: #2e7d32;    /* Success states, confirmations */
+  --color-warning: #ed6c02;    /* Warning states, alerts */
+  --color-error: #d32f2f;      /* Error states, notifications */
+  --color-info: #0288d1;       /* Information states, hints */
+  
+  /* Overlay Colors */
+  --color-overlay-light: rgba(255, 255, 255, 0.1);  /* Light overlays */
+  --color-overlay-dark: rgba(0, 0, 0, 0.1);         /* Dark overlays */
+}
+
 html, body {
   margin: 0;
   padding: 0;

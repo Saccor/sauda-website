@@ -28,8 +28,8 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
   const rightLinks = menuItems.slice(half);
 
   return (
-    <footer className="w-full bg-[#0a1833] text-white border-t border-white/10 shadow-lg min-h-[120px]">
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-8 pt-8 md:pt-12 pb-4 flex flex-col items-center">
+    <footer className="w-full bg-neutral-dark text-on-dark border-t border-neutral-light/10 shadow-lg min-h-[120px]">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 pb-4 flex flex-col items-center">
         {/* Main Row: Links Left, Logo, Links Right */}
         <div className="w-full flex flex-col md:flex-row items-center justify-center md:justify-between gap-y-6 md:gap-y-0 md:gap-x-16">
           {/* Left Links */}
@@ -46,7 +46,7 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
                 >
                   <Link
                     href={item.url}
-                    className="text-white font-semibold text-base tracking-wide hover:text-gray-200 transition-colors px-2 py-1 rounded"
+                    className="text-on-dark font-semibold text-base tracking-wide hover:text-on-dark/80 transition-colors px-2 py-1 rounded"
                   >
                     {item.title}
                   </Link>
@@ -58,7 +58,7 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
           <div className="flex-shrink-0 flex justify-center items-center w-full md:w-[200px] order-1 md:order-2 mb-2 md:mb-0">
             <Link href="/" className="block">
               <span 
-                className="text-2xl md:text-3xl font-extrabold tracking-wide text-white hover:text-gray-200 transition-colors"
+                className="text-2xl md:text-3xl font-extrabold tracking-wide text-on-dark hover:text-on-dark/80 transition-colors"
                 style={{fontFamily: 'Zurich Extended, sans-serif'}}
               >
                 SAUDA
@@ -76,7 +76,7 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
               >
                 <Link
                   href={item.url}
-                  className="text-white font-semibold text-base tracking-wide hover:text-gray-200 transition-colors px-2 py-1 rounded"
+                  className="text-on-dark font-semibold text-base tracking-wide hover:text-on-dark/80 transition-colors px-2 py-1 rounded"
                 >
                   {item.title}
                 </Link>
@@ -85,7 +85,7 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
           </nav>
         </div>
         {/* Copyright Centered Underneath */}
-        <div className="w-full pt-6 text-xs text-white/50 text-center">
+        <div className="w-full pt-6 text-xs text-on-dark/50 text-center">
           &copy; {new Date().getFullYear()} SAUDA. All rights reserved.
         </div>
       </div>

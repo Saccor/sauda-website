@@ -28,15 +28,14 @@ const MerchandiseSection = async () => {
   // Handle error state
   if (error) {
     return (
-      <section className="w-full py-8 text-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-6 text-center">MERCHANDISE</h2>
-          <div className="bg-red-900/40 border border-red-500 rounded-lg p-5 max-w-2xl mx-auto shadow-lg">
-            <h3 className="text-lg font-bold text-red-400 mb-2">Error loading products</h3>
-            <p className="mb-4">{error}</p>
-            <div className="bg-black/40 p-3 rounded text-sm">
+      <section className="relative w-full py-28 bg-neutral-dark">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6">
+            <h3 className="text-2xl font-bold text-error mb-4">Error loading products</h3>
+            <p className="mb-6">{error}</p>
+            <div className="bg-neutral-light/40 p-4 rounded-lg">
               <p className="font-semibold mb-2">Verification steps:</p>
-              <ul className="list-disc pl-5 space-y-1">
+              <ul className="list-disc pl-5 space-y-2">
                 <li>Check Shopify credentials in .env.local</li>
                 <li>Ensure your Shopify store domain is correct</li>
                 <li>Verify that your storefront access token is valid</li>
@@ -52,22 +51,19 @@ const MerchandiseSection = async () => {
   // Handle no products state
   if (products.length === 0) {
     return (
-      <section className="w-full py-8 text-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-6 text-center">MERCHANDISE</h2>
-          <div className="bg-yellow-900/40 border border-yellow-500 rounded-lg p-5 max-w-2xl mx-auto shadow-lg">
-            <h3 className="text-lg font-bold text-yellow-400 mb-2">No products available</h3>
-            <p>There are currently no products in your Shopify store.</p>
-            <div className="mt-4">
-              <a 
-                href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/admin/products`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-white text-black py-2 px-4 rounded font-medium hover:bg-gray-200 transition-colors inline-block"
-              >
-                Add Products in Shopify Admin
-              </a>
-            </div>
+      <section className="relative w-full py-28 bg-neutral-dark">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6">
+            <h3 className="text-2xl font-bold text-warning mb-4">No products available</h3>
+            <p className="mb-6">There are currently no products in your Shopify store.</p>
+            <a 
+              href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/admin/products`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center bg-primary text-on-dark px-6 py-2 rounded-full hover:bg-primary-light transition-colors"
+            >
+              Add Products in Shopify Admin
+            </a>
           </div>
         </div>
       </section>
@@ -75,32 +71,34 @@ const MerchandiseSection = async () => {
   }
 
   return (
-    <section className="w-full py-8 text-white">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-6 text-center">MERCHANDISE</h2>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-8 gap-x-4 justify-center">
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              imageUrl={product.featuredImage?.url || 'https://placehold.co/282x282'}
-              title={product.title}
-              price={formatPrice(product.priceRange.minVariantPrice.amount, product.priceRange.minVariantPrice.currencyCode || 'USD')}
-              iconUrl={undefined}
-              product={product}
-            />
-          ))}
-        </div>
-        
-        <div className="mt-8 text-center">
-          <a 
-            href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-white text-black py-2 px-6 rounded-full font-bold hover:bg-gray-200 transition-colors inline-block text-base"
-          >
-            View Full Store
-          </a>
+    <section className="relative w-full py-28 bg-neutral-dark">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="space-y-8">
+          <h2 className="text-4xl font-bold text-center text-on-dark">MERCHANDISE</h2>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {products.map((product) => (
+              <ProductCard
+                key={product.id}
+                imageUrl={product.featuredImage?.url || 'https://placehold.co/282x282'}
+                title={product.title}
+                price={formatPrice(product.priceRange.minVariantPrice.amount, product.priceRange.minVariantPrice.currencyCode || 'USD')}
+                iconUrl={undefined}
+                product={product}
+              />
+            ))}
+          </div>
+          
+          <div className="text-center">
+            <a 
+              href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center bg-primary text-on-dark px-8 py-3 rounded-full hover:bg-primary-light transition-colors text-xl"
+            >
+              View Full Store
+            </a>
+          </div>
         </div>
       </div>
     </section>

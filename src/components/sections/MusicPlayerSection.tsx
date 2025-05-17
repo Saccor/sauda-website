@@ -13,21 +13,26 @@ const SpotifyEmbed: React.FC<SpotifyEmbedProps> = ({ artistId }) => {
       height="352"
       allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
       loading="lazy"
-      className="rounded-lg"
+      className="rounded-2xl"
     />
   );
 };
 
 const MusicPlayerSection: React.FC = () => {
   return (
-    <section className="w-full py-16 text-white">
-      <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold mb-8">Listen Now</h2>
-        <div className="bg-black/40 rounded-lg p-4 shadow-lg">
-          <h3 className="text-2xl font-semibold mb-6">Artist Profile</h3>
-          <Suspense fallback={<div className="h-[352px] bg-black/20 rounded-lg animate-pulse" />}>
-            <SpotifyEmbed artistId="39dIL6jVJO0gdoAOQL0Tt1" />
-          </Suspense>
+    <section className="relative w-full py-28 bg-neutral-dark">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="space-y-8">
+          <h2 className="text-4xl font-bold text-center text-on-dark">Listen Now</h2>
+          
+          <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6">
+            <h3 className="text-2xl font-bold mb-6">Artist Profile</h3>
+            <Suspense fallback={
+              <div className="h-[352px] bg-neutral-light/20 rounded-2xl animate-pulse" />
+            }>
+              <SpotifyEmbed artistId="39dIL6jVJO0gdoAOQL0Tt1" />
+            </Suspense>
+          </div>
         </div>
       </div>
     </section>

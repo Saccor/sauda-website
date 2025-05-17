@@ -63,15 +63,14 @@ const TourDatesSection = async () => {
   // Handle error state
   if (error) {
     return (
-      <section className="w-full py-8 text-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-6 text-center">TOUR DATES</h2>
-          <div className="bg-red-900/40 border border-red-500 rounded-lg p-5 max-w-2xl mx-auto shadow-lg">
-            <h3 className="text-lg font-bold text-red-400 mb-2">Error loading tour dates</h3>
-            <p className="mb-4">{error}</p>
-            <div className="bg-black/40 p-3 rounded text-sm">
+      <section className="relative w-full py-28 bg-neutral-dark">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6">
+            <h3 className="text-2xl font-bold text-error mb-4">Error loading tour dates</h3>
+            <p className="mb-6">{error}</p>
+            <div className="bg-neutral-light/40 p-4 rounded-lg">
               <p className="font-semibold mb-2">Verification steps:</p>
-              <ul className="list-disc pl-5 space-y-1">
+              <ul className="list-disc pl-5 space-y-2">
                 <li>Check Shopify credentials in .env.local</li>
                 <li>Ensure your Shopify store domain is correct</li>
                 <li>Verify that your storefront access token is valid</li>
@@ -87,22 +86,19 @@ const TourDatesSection = async () => {
   // Handle no tour dates state
   if (tourDates.length === 0) {
     return (
-      <section className="w-full py-8 text-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-6 text-center">TOUR DATES</h2>
-          <div className="bg-yellow-900/40 border border-yellow-500 rounded-lg p-5 max-w-2xl mx-auto shadow-lg">
-            <h3 className="text-lg font-bold text-yellow-400 mb-2">No upcoming events</h3>
-            <p>There are currently no tour dates scheduled.</p>
-            <div className="mt-4">
-              <a 
-                href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/admin/metafields`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-white text-black py-2 px-4 rounded font-medium hover:bg-gray-200 transition-colors inline-block"
-              >
-                Add Tour Dates in Shopify Admin
-              </a>
-            </div>
+      <section className="relative w-full py-28 bg-neutral-dark">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6">
+            <h3 className="text-2xl font-bold text-warning mb-4">No upcoming events</h3>
+            <p className="mb-6">There are currently no tour dates scheduled.</p>
+            <a 
+              href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/admin/metafields`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center bg-primary text-on-dark px-6 py-2 rounded-full hover:bg-primary-light transition-colors"
+            >
+              Add Tour Dates in Shopify Admin
+            </a>
           </div>
         </div>
       </section>
@@ -110,46 +106,58 @@ const TourDatesSection = async () => {
   }
 
   return (
-    <section className="w-full py-8 text-white">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-6 text-center">TOUR DATES</h2>
-        <ul className="space-y-4">
-          {tourDates.map((event, idx) => (
-            <li key={idx}>
-              <div className="w-full max-w-[1180px] h-20 relative border-t border-white mx-auto flex items-center bg-black/40 rounded-lg shadow overflow-hidden">
-                {/* Date, City, Venue */}
-                <div className="flex flex-col justify-center pl-4 min-w-[220px]">
-                  <span className="text-white text-sm font-bold leading-snug tracking-wide">
-                    {formatDate(event.date)}
-                  </span>
-                  <span className="text-white text-sm font-normal capitalize leading-snug tracking-wide">
-                    {event.city}
-                  </span>
-                  <span className="text-white text-xs font-normal capitalize leading-snug tracking-wide">
-                    {event.venue}
-                  </span>
+    <section className="relative w-full py-28 bg-neutral-dark">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="space-y-8">
+          <h2 className="text-4xl font-bold text-center text-on-dark">TOUR DATES</h2>
+          
+          <ul className="space-y-4">
+            {tourDates.map((event, idx) => (
+              <li key={idx}>
+                <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6 flex items-center justify-between">
+                  {/* Date, City, Venue */}
+                  <div className="space-y-2">
+                    <span className="text-xl font-bold">
+                      {formatDate(event.date)}
+                    </span>
+                    <div className="space-y-1">
+                      <span className="text-lg capitalize">
+                        {event.city}
+                      </span>
+                      <span className="text-sm capitalize text-text-secondary">
+                        {event.venue}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  {/* Share Icon and Tickets */}
+                  <div className="flex items-center gap-4">
+                    <a 
+                      href={event.ticketUrl} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className="text-on-dark hover:text-primary-light transition-colors"
+                      aria-label="Share"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 15l3-3m0 0l-3-3m3 3H9" />
+                      </svg>
+                    </a>
+                    <a
+                      href={event.ticketUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center bg-primary text-on-dark px-6 py-2 rounded-full hover:bg-primary-light transition-colors"
+                    >
+                      Tickets
+                    </a>
+                  </div>
                 </div>
-                {/* Share Icon and Tickets */}
-                <div className="flex-1 flex items-center justify-end pr-4">
-                  <a href={event.ticketUrl} target="_blank" rel="noopener noreferrer" className="mr-4" aria-label="Share">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-white hover:text-gray-300">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15" />
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 15l3-3m0 0l-3-3m3 3H9" />
-                    </svg>
-                  </a>
-                  <a
-                    href={event.ticketUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-red-700 hover:bg-red-800 text-white text-xs font-bold rounded px-6 py-2 transition-colors text-center capitalize"
-                  >
-                    Tickets
-                  </a>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );

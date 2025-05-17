@@ -39,14 +39,14 @@ const FeaturedArtistSection = async () => {
   // Handle error state
   if (error) {
     return (
-      <section className="relative w-full h-[400px] md:h-[650px] flex items-center justify-center overflow-hidden">
-        <div className="relative z-10 flex flex-col items-center justify-center w-full h-full bg-black/40">
-          <div className="bg-red-900/40 border border-red-500 rounded-lg p-5 max-w-2xl mx-auto shadow-lg">
-            <h3 className="text-lg font-bold text-red-400 mb-2">Error loading featured artist</h3>
-            <p className="mb-4">{error}</p>
-            <div className="bg-black/40 p-3 rounded text-sm">
+      <section className="relative w-full py-28 bg-neutral-dark">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6">
+            <h3 className="text-2xl font-bold text-error mb-4">Error loading featured artist</h3>
+            <p className="mb-6">{error}</p>
+            <div className="bg-neutral-light/40 p-4 rounded-lg">
               <p className="font-semibold mb-2">Verification steps:</p>
-              <ul className="list-disc pl-5 space-y-1">
+              <ul className="list-disc pl-5 space-y-2">
                 <li>Check Shopify credentials in .env.local</li>
                 <li>Ensure your Shopify store domain is correct</li>
                 <li>Verify that your storefront access token is valid</li>
@@ -62,21 +62,19 @@ const FeaturedArtistSection = async () => {
   // Handle empty state
   if (!featuredArtist) {
     return (
-      <section className="relative w-full h-[400px] md:h-[650px] flex items-center justify-center overflow-hidden">
-        <div className="relative z-10 flex flex-col items-center justify-center w-full h-full bg-black/40">
-          <div className="bg-yellow-900/40 border border-yellow-500 rounded-lg p-5 max-w-2xl mx-auto shadow-lg">
-            <h3 className="text-lg font-bold text-yellow-400 mb-2">No featured artist</h3>
-            <p>There is currently no featured artist set up.</p>
-            <div className="mt-4">
-              <a 
-                href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/admin/metafields`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-white text-black py-2 px-4 rounded font-medium hover:bg-gray-200 transition-colors inline-block"
-              >
-                Add Featured Artist in Shopify Admin
-              </a>
-            </div>
+      <section className="relative w-full py-28 bg-neutral-dark">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6">
+            <h3 className="text-2xl font-bold text-warning mb-4">No featured artist</h3>
+            <p className="mb-6">There is currently no featured artist set up.</p>
+            <a 
+              href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/admin/metafields`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center bg-primary text-on-dark px-6 py-2 rounded-full hover:bg-primary-light transition-colors"
+            >
+              Add Featured Artist in Shopify Admin
+            </a>
           </div>
         </div>
       </section>
@@ -84,29 +82,37 @@ const FeaturedArtistSection = async () => {
   }
 
   return (
-    <section className="relative w-full h-[400px] md:h-[650px] flex items-center justify-center overflow-hidden">
-      {/* Background image */}
-      <Image
-        src={featuredArtist.image.image.url}
-        alt={featuredArtist.image.image.altText || 'Featured Artist'}
-        fill
-        className="object-cover object-center z-0"
-        priority
-        sizes="100vw"
-      />
-      {/* Overlay */}
-      <div className="relative z-10 flex flex-col items-center justify-center w-full h-full bg-black/40">
-        <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 drop-shadow-lg text-center">
-          {featuredArtist.title}
-        </h2>
-        {featuredArtist.buttonText && (
-          <Link
-            href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}`}
-            className="bg-white text-black font-bold py-2 px-6 rounded-full shadow-lg hover:bg-gray-200 transition-colors text-base md:text-lg"
-          >
-            {featuredArtist.buttonText}
-          </Link>
-        )}
+    <section className="relative w-full py-28 bg-neutral-dark">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative rounded-2xl overflow-hidden">
+          {/* Background image */}
+          <Image
+            src={featuredArtist.image.image.url}
+            alt={featuredArtist.image.image.altText || 'Featured Artist'}
+            width={1200}
+            height={800}
+            className="w-full h-[400px] md:h-[650px] object-cover object-center"
+            priority
+          />
+          {/* Overlay */}
+          <div className="absolute inset-0 bg-gradient-overlay" />
+          {/* Content */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
+            <div className="space-y-8 text-center">
+              <h2 className="text-4xl md:text-5xl font-bold text-on-dark">
+                {featuredArtist.title}
+              </h2>
+              {featuredArtist.buttonText && (
+                <Link
+                  href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}`}
+                  className="inline-flex items-center justify-center bg-primary text-on-dark px-8 py-3 rounded-full hover:bg-primary-light transition-colors text-xl"
+                >
+                  {featuredArtist.buttonText}
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
