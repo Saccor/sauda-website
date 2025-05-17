@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import type { CartItem } from '@/context/CartContext';
 
 // Initialize Stripe with your secret key
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -21,7 +22,7 @@ export async function POST(req: Request) {
     // Create a Stripe checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types,
-      line_items: items.map((item: any) => ({
+      line_items: (items as CartItem[]).map((item) => ({
         price_data: {
           currency: 'sek', // Swedish Krona
           product_data: {

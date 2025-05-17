@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import type { Product } from '@/api/shopify';
 
-interface CartItem {
+export interface CartItem {
   product: Product;
   quantity: number;
 }
