@@ -41,18 +41,17 @@ const TourDatesSection = async () => {
     const data = await fetchTourDates();
     const edges = data?.page?.metafield?.references?.edges || [];
     
-    // Extract fields from the first node (Tour Dates Section)
-    const tourDatesSection = edges[0]?.node;
-    
-    if (tourDatesSection) {
-      // Find the tour_dates field
-      const tourDatesField = tourDatesSection.fields.find((f: ShopifyMetaobjectField) => f.key === 'tour_dates');
-      
+    // Loop through all referenced Tour Dates Section metaobjects
+    for (const sectionEdge of edges) {
+      const sectionNode = sectionEdge.node;
+      // Find the tour_dates field in each section
+      const tourDatesField = sectionNode.fields.find((f: ShopifyMetaobjectField) => f.key === 'tour_dates');
       if (tourDatesField?.references?.edges) {
         // Parse each tour date from the references
-        tourDates = tourDatesField.references.edges.map((edge: TourDateEdge) => 
+        const sectionTourDates = tourDatesField.references.edges.map((edge: TourDateEdge) => 
           parseTourDate(edge.node.fields)
         );
+        tourDates.push(...sectionTourDates);
       }
     }
   } catch (err) {
