@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import ErrorDisplay from '../common/ErrorDisplay';
+import CartButton from '../common/CartButton';
 
 interface MenuItem {
   id: string;
@@ -98,6 +99,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
               {item.title}
             </a>
           ))}
+          <CartButton />
         </nav>
 
         {/* Mobile Menu Button */}

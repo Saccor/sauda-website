@@ -1,6 +1,10 @@
+'use client';
+
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { ShoppingCart } from "lucide-react";
+import { useCart } from "@/context/CartContext";
+import type { Product } from "@/api/shopify";
 
 interface ProductCardProps {
   imageUrl: string;
@@ -8,16 +12,20 @@ interface ProductCardProps {
   price: string | number;
   iconUrl?: string;
   handle: string;
+  product: Product;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconUrl, handle }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconUrl, handle, product }) => {
+  const { addItem } = useCart();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addItem(product);
+  };
+
   return (
-    <Link 
-      href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/products/${handle}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="w-full max-w-xs md:max-w-sm lg:max-w-md bg-transparent flex flex-col items-center mx-auto hover:opacity-90 transition-opacity"
-    >
+    <div className="w-full max-w-xs md:max-w-sm lg:max-w-md bg-transparent flex flex-col items-center mx-auto group">
       {/* Floating image with portrait aspect ratio and subtle shadow */}
       <div className="aspect-[3/4] w-full bg-transparent flex items-center justify-center drop-shadow-lg relative">
         <Image
@@ -28,6 +36,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconU
           className="object-contain"
           quality={85}
         />
+        <button
+          onClick={handleAddToCart}
+          className="absolute bottom-4 right-4 bg-white text-black p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-200"
+          aria-label="Add to cart"
+        >
+          <ShoppingCart className="w-5 h-5" />
+        </button>
       </div>
       {/* Product Title below image, white text */}
       <div className="w-full flex justify-center">
@@ -48,7 +63,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconU
         )}
         <span className="text-center text-white text-[11.5px] font-normal font-inter tracking-[0.8px]">{price}</span>
       </div>
-    </Link>
+    </div>
   );
 };
 
