@@ -65,10 +65,9 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
           : 'bg-transparent'
       }`}
     >
-      <div className="flex items-center justify-center w-full h-full px-4 sm:px-6 lg:px-8 relative">
-        {/* Nav Row: Left Links, Logo, Right Links */}
-        <div className="flex items-center justify-center gap-x-10 w-full relative">
-          {/* Left Links (Desktop) */}
+      <div className="grid grid-cols-[auto_min-content_auto_min-content] items-center w-full h-full px-4 sm:px-6 lg:px-8 gap-x-10">
+        {/* Left: nav or menu */}
+        <div className="flex items-center gap-x-10 justify-end">
           <nav className="hidden md:flex items-center gap-x-10">
             {leftLinks.map((item) => (
               <motion.div
@@ -86,18 +85,40 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
               </motion.div>
             ))}
           </nav>
-          {/* Logo */}
-          <div className="flex justify-center items-center">
-            <Link href="/" className="block">
-              <span 
-                className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors"
-                style={{fontFamily: 'Zurich Extended, sans-serif'}}
-              >
-                SAUDA
-              </span>
-            </Link>
-          </div>
-          {/* Right Links (Desktop) */}
+          {/* Mobile Menu Button */}
+          <button 
+            className="md:hidden text-white p-2 z-50"
+            aria-label="Toggle menu"
+            onClick={() => setMobileMenuOpen(open => !open)}
+          >
+            <svg 
+              className="w-6 h-6" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M4 6h16M4 12h16M4 18h16" 
+              />
+            </svg>
+          </button>
+        </div>
+        {/* Center: logo */}
+        <div className="flex justify-center items-center">
+          <Link href="/" className="block">
+            <span 
+              className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors text-center w-full block"
+              style={{fontFamily: 'Zurich Extended, sans-serif'}}
+            >
+              SAUDA
+            </span>
+          </Link>
+        </div>
+        {/* Right: nav */}
+        <div className="flex items-center gap-x-10 justify-start">
           <nav className="hidden md:flex items-center gap-x-10">
             {rightLinks.map((item) => (
               <motion.div
@@ -116,34 +137,16 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
             ))}
           </nav>
         </div>
-        {/* Cart Icon Far Right (always visible) */}
-        { !mobileMenuOpen && (
-          <div className="flex-shrink-0 flex items-center justify-end z-50 absolute right-0 top-1/2 -translate-y-1/2 mr-4 md:mr-8">
-            <div className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center">
-              <CartButton />
+        {/* Far right: cart button */}
+        <div className="flex items-center justify-end">
+          { !mobileMenuOpen && (
+            <div className="flex-shrink-0 flex items-center justify-end z-50 mr-4 md:mr-8">
+              <div className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center">
+                <CartButton />
+              </div>
             </div>
-          </div>
-        )}
-        {/* Mobile Menu Button */}
-        <button 
-          className="md:hidden text-white p-2 absolute left-4 z-50"
-          aria-label="Toggle menu"
-          onClick={() => setMobileMenuOpen(open => !open)}
-        >
-          <svg 
-            className="w-6 h-6" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-          >
-            <path 
-              strokeLinecap="round" 
-              strokeLinejoin="round" 
-              strokeWidth={2} 
-              d="M4 6h16M4 12h16M4 18h16" 
-            />
-          </svg>
-        </button>
+          )}
+        </div>
 
         {/* Mobile Menu Overlay */}
         <AnimatePresence>
