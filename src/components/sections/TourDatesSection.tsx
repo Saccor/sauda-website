@@ -34,7 +34,7 @@ interface TourDateEdge {
 }
 
 const TourDatesSection = async () => {
-  let tourDates: TourDate[] = [];
+  const tourDates: TourDate[] = [];
   let error: string | null = null;
 
   try {
