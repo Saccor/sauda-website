@@ -218,6 +218,32 @@ export const FEATURED_ARTIST_SECTION_QUERY = `#graphql
   }
 `;
 
+export const HERO_SECTION_QUERY = `#graphql
+  query GetHeroSection {
+    page(handle: "homepage") {
+      metafield(namespace: "custom", key: "hero_section") {
+        reference {
+          ... on Metaobject {
+            fields {
+              key
+              value
+              type
+              reference {
+                ... on MediaImage {
+                  image {
+                    url
+                    altText
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const PRODUCTS_QUERY = `#graphql
   query Products {
     products(first: 10) {
@@ -257,6 +283,14 @@ export async function fetchTourDates() {
 
 export async function fetchFeaturedArtist() {
   return fetchShopify<FeaturedArtistResponse>(FEATURED_ARTIST_SECTION_QUERY, undefined, { cache: 'MEDIUM' });
+}
+
+export async function fetchHeroSection() {
+  return fetchShopify<{ page: { metafield: { reference: { fields: ShopifyMetaobjectField[] } } } }>(
+    HERO_SECTION_QUERY,
+    undefined,
+    { cache: 'SHORT' }
+  );
 }
 
 export interface Product {

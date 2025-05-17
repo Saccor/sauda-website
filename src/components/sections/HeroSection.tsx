@@ -1,16 +1,33 @@
-import React, { forwardRef } from "react";
+import React from "react";
 import Image from "next/image";
+import { fetchHeroSection } from '@/api/shopify';
+import type { ShopifyMetaobjectField } from '@/types/shopify';
 
-const HeroSection = forwardRef<HTMLDivElement>((props, ref) => {
+function getImageFromReference(ref: any) {
+  if (ref && typeof ref === 'object' && 'image' in ref && ref.image?.url) {
+    return ref.image;
+  }
+  return null;
+}
+
+const HeroSection = async () => {
+  // Fetch hero section data from Shopify
+  const data = await fetchHeroSection();
+  const fields = data?.page?.metafield?.reference?.fields || [];
+  // Find the image field
+  const imageField = fields.find((f: ShopifyMetaobjectField) => f.key === 'image');
+  const imageObj = getImageFromReference(imageField?.reference);
+  const imageUrl = imageObj?.url;
+  const altText = imageObj?.altText || 'Hero Image';
+
+  if (!imageUrl) return null;
+
   return (
-    <section 
-      ref={ref} 
-      className="relative w-full h-screen overflow-hidden bg-gradient-hero"
-    >
+    <section className="relative w-full h-screen overflow-hidden bg-gradient-hero">
       <div className="absolute inset-0 h-full w-full">
         <Image
-          src="/Testify-16-9.JPG"
-          alt="SAUDA Hero"
+          src={imageUrl}
+          alt={altText}
           fill
           priority
           sizes="100vw"
@@ -26,8 +43,6 @@ const HeroSection = forwardRef<HTMLDivElement>((props, ref) => {
       </div>
     </section>
   );
-});
-
-HeroSection.displayName = "HeroSection";
+};
 
 export default HeroSection; 
