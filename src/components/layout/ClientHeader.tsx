@@ -65,71 +65,70 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
           : 'bg-transparent'
       }`}
     >
-      <div className="w-full h-full flex items-center justify-between px-4 sm:px-6 lg:px-8 max-w-none relative">
-        {/* Left Links (Desktop) */}
-        <nav className="hidden md:flex flex-1 items-center justify-end gap-x-10">
-          {leftLinks.map((item) => (
-            <motion.div
-              key={item.id}
-              whileHover={{ scale: 1.08 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              className="inline-block"
-            >
-              <Link
-                href={item.url}
-                className="relative text-white hover:text-white/80 text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
+      <div className="flex items-center justify-center w-full h-full px-4 sm:px-6 lg:px-8 relative">
+        {/* Nav Row: Left Links, Logo, Right Links */}
+        <div className="flex items-center justify-center gap-x-10 w-full relative">
+          {/* Left Links (Desktop) */}
+          <nav className="hidden md:flex items-center gap-x-10">
+            {leftLinks.map((item) => (
+              <motion.div
+                key={item.id}
+                whileHover={{ scale: 1.08 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                className="inline-block"
               >
-                {item.title}
-              </Link>
-            </motion.div>
-          ))}
-        </nav>
-
-        {/* Logo Centered */}
-        <div className="flex-shrink-0 flex justify-center items-center w-full md:w-[220px] absolute left-1/2 top-1/2 md:static md:left-auto md:top-auto -translate-x-1/2 -translate-y-1/2 md:translate-x-0 md:translate-y-0">
-          <Link href="/" className="block">
-            <span 
-              className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors"
-              style={{fontFamily: 'Zurich Extended, sans-serif'}}
-            >
-              SAUDA
-            </span>
-          </Link>
+                <Link
+                  href={item.url}
+                  className="relative text-white hover:text-white/80 text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
+                >
+                  {item.title}
+                </Link>
+              </motion.div>
+            ))}
+          </nav>
+          {/* Logo */}
+          <div className="flex justify-center items-center">
+            <Link href="/" className="block">
+              <span 
+                className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors"
+                style={{fontFamily: 'Zurich Extended, sans-serif'}}
+              >
+                SAUDA
+              </span>
+            </Link>
+          </div>
+          {/* Right Links (Desktop) */}
+          <nav className="hidden md:flex items-center gap-x-10">
+            {rightLinks.map((item) => (
+              <motion.div
+                key={item.id}
+                whileHover={{ scale: 1.08 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                className="inline-block"
+              >
+                <Link
+                  href={item.url}
+                  className="relative text-white hover:text-white/80 text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
+                >
+                  {item.title}
+                </Link>
+              </motion.div>
+            ))}
+          </nav>
         </div>
-
-        {/* Right Links (Desktop) */}
-        <nav className="hidden md:flex flex-1 items-center justify-start gap-x-10">
-          {rightLinks.map((item) => (
-            <motion.div
-              key={item.id}
-              whileHover={{ scale: 1.08 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              className="inline-block"
-            >
-              <Link
-                href={item.url}
-                className="relative text-white hover:text-white/80 text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
-              >
-                {item.title}
-              </Link>
-            </motion.div>
-          ))}
-        </nav>
-
         {/* Cart Icon Far Right (always visible) */}
         { !mobileMenuOpen && (
-          <div className="flex-shrink-0 flex items-center justify-end ml-4 mr-6 md:mr-10 z-50">
+          <div className="flex-shrink-0 flex items-center justify-end z-50 absolute right-0 top-1/2 -translate-y-1/2 mr-4 md:mr-8">
             <div className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center">
               <CartButton />
             </div>
           </div>
         )}
-
         {/* Mobile Menu Button */}
         <button 
-          className="md:hidden text-white p-2 absolute right-4 z-50"
+          className="md:hidden text-white p-2 absolute left-4 z-50"
           aria-label="Toggle menu"
-          onClick={() => setMobileMenuOpen(true)}
+          onClick={() => setMobileMenuOpen(open => !open)}
         >
           <svg 
             className="w-6 h-6" 
@@ -164,7 +163,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -40, opacity: 0 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                className="flex flex-col items-center justify-start w-full h-full pt-10 px-6 relative"
+                className="flex flex-col items-center justify-start w-11/12 max-w-sm h-auto mx-auto mt-10 pt-10 px-6 relative"
                 onClick={e => e.stopPropagation()}
               >
                 {/* Close Button */}

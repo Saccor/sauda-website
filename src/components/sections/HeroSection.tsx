@@ -3,8 +3,15 @@ import Image from "next/image";
 import { fetchHeroSection } from '@/api/shopify';
 import type { ShopifyMetaobjectField } from '@/types/shopify';
 
-function getImageFromReference(ref: any) {
-  if (ref && typeof ref === 'object' && 'image' in ref && ref.image?.url) {
+interface MediaImage {
+  image: {
+    url: string;
+    altText?: string;
+  };
+}
+
+function getImageFromReference(ref: MediaImage | null | undefined) {
+  if (ref?.image?.url) {
     return ref.image;
   }
   return null;
@@ -16,7 +23,7 @@ const HeroSection = async () => {
   const fields = data?.page?.metafield?.reference?.fields || [];
   // Find the image field
   const imageField = fields.find((f: ShopifyMetaobjectField) => f.key === 'image');
-  const imageObj = getImageFromReference(imageField?.reference);
+  const imageObj = getImageFromReference(imageField?.reference as MediaImage | null);
   const imageUrl = imageObj?.url;
   const altText = imageObj?.altText || 'Hero Image';
 
