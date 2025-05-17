@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import ErrorDisplay from '../common/ErrorDisplay';
 import CartButton from '../common/CartButton';
+import Link from 'next/link';
 
 interface MenuItem {
   id: string;
@@ -66,38 +67,38 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
         {/* Left Links */}
         <nav className="hidden md:flex flex-1 items-center justify-end space-x-8">
           {leftLinks.map((item) => (
-            <a
+            <Link
               key={item.id}
               href={item.url}
               className="text-white/90 hover:text-white text-sm font-medium tracking-wide transition-colors"
             >
               {item.title}
-            </a>
+            </Link>
           ))}
         </nav>
 
         {/* Logo Centered */}
         <div className="flex-shrink-0 flex justify-center items-center w-[180px]">
-          <a href="/" className="block">
+          <Link href="/" className="block">
             <span 
               className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-gray-200 transition-colors"
               style={{fontFamily: 'Zurich Extended, sans-serif'}}
             >
               SAUDA
             </span>
-          </a>
+          </Link>
         </div>
 
         {/* Right Links */}
         <nav className="hidden md:flex flex-1 items-center justify-start space-x-8">
           {rightLinks.map((item) => (
-            <a
+            <Link
               key={item.id}
               href={item.url}
               className="text-white/90 hover:text-white text-sm font-medium tracking-wide transition-colors"
             >
               {item.title}
-            </a>
+            </Link>
           ))}
           <CartButton />
         </nav>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { fetchFooterMenu } from '@/api/shopify';
-import { MenuItem } from '@/types/shopify';
 import ClientFooter from './ClientFooter';
 
 const Footer = async () => {
