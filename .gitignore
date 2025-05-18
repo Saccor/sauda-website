@@ -36,6 +36,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 .env.local
+.env.development
+.env.production
+.env.test
 /backend/.env*
 
 # vercel
@@ -57,6 +60,7 @@ roadmap.md
 context.md
 Projektbeskrivning.md
 ARCHITECTURE.md
+SOCIAL_MEDIA_SETUP.md
 
 # images (will be managed through CMS)
 public/*.JPG
@@ -67,6 +71,13 @@ public/*.avif
 public/*.webp
 public/*.gif
 public/*.svg
+
+# API credentials and secrets
+**/credentials.json
+**/client_secret*.json
+**/service-account*.json
+**/api-keys.json
+**/tokens.json
 
 # Custom rules
 mycustomrules
