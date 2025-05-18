@@ -53,17 +53,10 @@ const Cart = () => {
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 200, damping: 30 }}
           >
-            <div className="p-4 border-b border-gray-800/50 flex justify-between items-center">
-              <h2 className="text-xl font-bold text-white">Shopping Cart</h2>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-white hover:text-gray-300"
-              >
-                <X className="w-6 h-6" />
-              </button>
+            <div className="p-4 border-b border-gray-800/50">
             </div>
 
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 overflow-y-auto p-4 pt-8 md:pt-16">
               {items.length === 0 ? (
                 <p className="text-white text-center py-8">Your cart is empty</p>
               ) : (

@@ -7,6 +7,7 @@ import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import type { Product } from '@/api/shopify';
 import { motion } from 'framer-motion';
+import { useState } from 'react';
 
 interface ProductCardProps {
   imageUrl: string;
@@ -18,6 +19,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconUrl, product }) => {
   const { addItem } = useCart();
+  const [isTouched, setIsTouched] = useState(false);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -32,11 +34,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconU
         bg-transparent border-none shadow-none rounded-none
         flex flex-col items-center mx-auto
         transition-transform duration-300
+        relative z-10
       "
     >
-      <AspectRatio ratio={3 / 4} className="w-full flex items-center justify-center relative">
+      <AspectRatio 
+        ratio={3 / 4} 
+        className="w-full flex items-center justify-center relative"
+        onTouchStart={() => setIsTouched(true)}
+        onTouchEnd={() => setIsTouched(false)}
+      >
         <motion.div
           whileHover={{ scale: 1.08, rotate: -2 }}
+          whileTap={{ scale: 0.96 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
           className="w-full h-full flex items-center justify-center"
           style={{ willChange: 'transform' }}
@@ -49,13 +58,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconU
             quality={85}
           />
         </motion.div>
-        <button
+        <motion.button
           onClick={handleAddToCart}
-          className="absolute bottom-4 right-4 bg-white text-black p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-gray-200 z-20"
+          whileTap={{ scale: 0.95 }}
+          transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+          className="absolute bottom-4 right-4 bg-white text-black p-2 rounded-full opacity-100 hover:bg-gray-200 z-20"
           aria-label="Add to cart"
         >
           <ShoppingCart className="w-5 h-5" />
-        </button>
+        </motion.button>
       </AspectRatio>
       <div className="w-full flex justify-center mt-2">
         <span className="font-inter font-normal text-[12.8px] leading-[17px] tracking-[0.48px] text-center text-white drop-shadow-md">

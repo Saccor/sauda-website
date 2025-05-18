@@ -3,12 +3,12 @@ import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 
 const CartButton = () => {
-  const { items, setIsOpen } = useCart();
+  const { items, isOpen, setIsOpen } = useCart();
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <button
-      onClick={() => setIsOpen(true)}
+      onClick={() => setIsOpen(!isOpen)}
       className="relative p-2 text-white hover:text-gray-300 transition-colors"
       aria-label="Shopping cart"
     >

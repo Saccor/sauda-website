@@ -5,6 +5,7 @@ import ErrorDisplay from '../common/ErrorDisplay';
 import CartButton from '../common/CartButton';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useCart } from '@/context/CartContext';
 
 interface MenuItem {
   id: string;
@@ -26,6 +27,26 @@ interface ClientHeaderProps {
 const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }) => {
   const [isPastHero, setIsPastHero] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { setIsOpen: setCartOpen, isOpen: isCartOpen } = useCart();
+
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+      setCartOpen(false); // Close cart when menu opens
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [mobileMenuOpen, setCartOpen]);
+
+  // Close menu when cart opens
+  useEffect(() => {
+    if (isCartOpen) {
+      setMobileMenuOpen(false);
+    }
+  }, [isCartOpen]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -59,8 +80,8 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
 
   return (
     <header 
-      className={`fixed top-0 left-0 w-full h-[80px] z-50 transition-all duration-300 ${
-        isPastHero 
+      className={`fixed top-0 left-0 w-full h-[80px] z-[100] transition-all duration-300 ${
+        isPastHero
           ? 'bg-neutral-dark/80 backdrop-blur-md shadow-lg' 
           : 'bg-transparent'
       }`}
@@ -87,7 +108,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
           </nav>
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden text-white p-2 z-50"
+            className="md:hidden text-white p-2 z-[101] absolute left-4"
             aria-label="Toggle menu"
             onClick={() => setMobileMenuOpen(open => !open)}
           >
@@ -107,7 +128,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
           </button>
 
           {/* Center: logo */}
-          <div className="flex-shrink-0 flex justify-center items-center w-[200px]">
+          <div className="flex-shrink-0 flex justify-center items-center w-full md:w-[200px]">
             <Link href="/" className="block">
               <span 
                 className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors text-center w-full block"
@@ -119,8 +140,8 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
           </div>
 
           {/* Right: nav */}
-          <div className="flex items-center gap-x-4 justify-start flex-1">
-            <nav className="hidden md:flex items-center gap-x-4">
+          <div className="hidden md:flex items-center gap-x-4 justify-start flex-1">
+            <nav className="flex items-center gap-x-4">
               {rightLinks.map((item) => (
                 <motion.div
                   key={item.id}
@@ -140,77 +161,102 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
           </div>
 
           {/* Cart Button - Absolute positioned */}
-          { !mobileMenuOpen && (
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 z-50">
-              <div className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center">
-                <CartButton />
-              </div>
+          <div className="absolute right-4 top-1/2 -translate-y-1/2 z-[101]">
+            <div className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center">
+              <CartButton />
             </div>
-          )}
+          </div>
 
           {/* Mobile Menu Overlay */}
           <AnimatePresence>
             {mobileMenuOpen && (
               <motion.div
+                id="mobile-menu-overlay"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="fixed inset-0 bg-neutral-dark/95 backdrop-blur-md z-40 flex flex-col"
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 top-[80px] bg-neutral-dark/95 backdrop-blur-xl z-[98]"
                 aria-modal="true"
                 role="dialog"
                 tabIndex={-1}
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <motion.div
-                  initial={{ y: -40, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  exit={{ y: -40, opacity: 0 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                  className="flex flex-col items-center justify-start w-11/12 max-w-sm h-auto mx-auto mt-10 pt-10 px-6 relative"
+                <motion.div 
+                  className="h-full flex items-start justify-center pt-6"
                   onClick={e => e.stopPropagation()}
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -20, opacity: 0 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                 >
-                  {/* Close Button */}
-                  <button
-                    className="absolute top-6 right-6 text-on-dark p-2"
-                    aria-label="Close menu"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                  {/* Logo */}
-                  <Link href="/" className="mb-10" onClick={() => setMobileMenuOpen(false)}>
-                    <span className="text-4xl font-extrabold tracking-wide text-white" style={{fontFamily: 'Zurich Extended, sans-serif'}}>SAUDA</span>
-                  </Link>
-                  {/* All Links */}
-                  <nav className="flex flex-col gap-8 w-full items-center">
-                    {menuItems.map((item) => (
-                      <motion.div
-                        key={item.id}
-                        whileTap={{ scale: 0.96 }}
-                        className="w-full"
-                      >
-                        <Link
-                          href={item.url}
-                          className="block text-white text-2xl font-medium tracking-wide text-center py-4 w-full hover:text-white/80 transition-colors"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            // Small delay to ensure click is registered
-                            setTimeout(() => {
+                  <div className="w-11/12 max-w-sm">
+                    {/* All Links */}
+                    <nav className="flex flex-col gap-6 items-center">
+                      {menuItems.map((item, index) => (
+                        <motion.div
+                          key={item.id}
+                          initial={{ y: 20, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          exit={{ y: 20, opacity: 0 }}
+                          transition={{
+                            type: 'spring',
+                            stiffness: 300,
+                            damping: 25,
+                            delay: index * 0.1,
+                          }}
+                          className="w-auto"
+                        >
+                          <Link
+                            href={item.url}
+                            className="block text-white text-2xl font-medium tracking-wide text-center py-3 hover:text-white/80 transition-colors whitespace-nowrap"
+                            onClick={(e) => {
+                              e.preventDefault();
                               setMobileMenuOpen(false);
                               window.location.href = item.url;
-                            }, 50);
-                          }}
+                            }}
+                          >
+                            {item.title}
+                          </Link>
+                        </motion.div>
+                      ))}
+                    </nav>
+                    {/* Cart Button */}
+                    <motion.div 
+                      className="mt-8 w-full flex justify-center"
+                      initial={{ y: 20, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: 20, opacity: 0 }}
+                      transition={{
+                        type: 'spring',
+                        stiffness: 300,
+                        damping: 25,
+                        delay: menuItems.length * 0.1 + 0.1
+                      }}
+                    >
+                      <button
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          setCartOpen(true);
+                        }}
+                        className="relative p-2 text-white hover:text-gray-300 transition-colors"
+                        aria-label="Shopping cart"
+                      >
+                        <svg 
+                          className="w-6 h-6" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
                         >
-                          {item.title}
-                        </Link>
-                      </motion.div>
-                    ))}
-                  </nav>
-                  {/* Cart Button */}
-                  <div className="mt-12 w-full flex justify-center">
-                    <CartButton />
+                          <path 
+                            strokeLinecap="round" 
+                            strokeLinejoin="round" 
+                            strokeWidth={2} 
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" 
+                          />
+                        </svg>
+                      </button>
+                    </motion.div>
                   </div>
                 </motion.div>
               </motion.div>
