@@ -46,7 +46,7 @@ const AboutPage = () => {
           <div className="bg-black/40 rounded-2xl p-8 backdrop-blur-sm border border-white/10">
             <h2 className="text-2xl font-bold mb-4">Our Story</h2>
             <p className="text-gray-300 leading-relaxed">
-              Founded in 2020, we began our journey with a simple mission: to create music that resonates with people's souls. 
+              Founded in 2020, we began our journey with a simple mission: to create music that resonates with people&apos;s souls. 
               Our unique blend of genres and innovative approach to music production has helped us carve out our own space in the industry.
             </p>
           </div>

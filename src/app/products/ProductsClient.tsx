@@ -74,7 +74,7 @@ const ProductsClient: React.FC<ProductsClientProps> = ({ products, error }) => {
           >
             <ShoppingBag className="w-16 h-16 mx-auto mb-4 text-gray-400" />
             <h3 className="text-2xl font-bold mb-2">No Products Available</h3>
-            <p className="text-gray-400 mb-6">We're currently updating our inventory. Please check back soon!</p>
+            <p className="text-gray-400 mb-6">We&apos;re currently updating our inventory. Please check back soon!</p>
           </motion.div>
         ) : (
           <motion.div 
