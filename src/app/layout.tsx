@@ -50,7 +50,7 @@ export default function RootLayout({
       <body>
         <CartProvider>
           <Header />
-          <div className="min-h-screen w-full bg-gradient-to-b from-[#0a1833] via-black to-[#0a1833]">
+          <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-b from-[#0a1833] via-black to-[#0a1833]">
             {children}
             <Footer />
           </div>

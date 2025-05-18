@@ -86,8 +86,8 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
           : 'bg-transparent'
       }`}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-full max-w-[1280px]">
-        <div className="grid grid-cols-3 items-center w-full h-full md:gap-x-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-full max-w-full sm:max-w-[1280px]">
+        <div className="grid grid-cols-3 items-center w-full h-full md:gap-x-16 min-w-0">
           {/* Left: nav or menu */}
           <div className="flex items-center min-w-0">
             <nav className="hidden md:flex items-center gap-x-4 justify-end flex-1">
@@ -130,10 +130,10 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
           </div>
 
           {/* Center: logo (always centered) */}
-          <div className="flex items-center justify-center">
-            <Link href="/" className="block">
+          <div className="flex items-center justify-center min-w-0">
+            <Link href="/" className="block w-full">
               <span 
-                className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors text-center block"
+                className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors text-center block break-words w-full"
                 style={{fontFamily: 'Zurich Extended, sans-serif'}}
               >
                 SAUDA
@@ -195,7 +195,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
                 >
                   <div className="w-11/12 max-w-sm">
                     {/* All Links */}
-                    <nav className="flex flex-col gap-6 items-center">
+                    <nav className="flex flex-col gap-6 items-center w-full">
                       {menuItems.map((item, index) => (
                         <motion.div
                           key={item.id}
@@ -208,11 +208,11 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
                             damping: 25,
                             delay: index * 0.1,
                           }}
-                          className="w-auto"
+                          className="w-full"
                         >
                           <Link
                             href={item.url}
-                            className="block text-white text-2xl font-medium tracking-wide text-center py-3 hover:text-white/80 transition-colors whitespace-nowrap"
+                            className="block text-white text-2xl font-medium tracking-wide text-center py-3 hover:text-white/80 transition-colors whitespace-nowrap w-full"
                             onClick={(e) => {
                               e.preventDefault();
                               setMobileMenuOpen(false);
