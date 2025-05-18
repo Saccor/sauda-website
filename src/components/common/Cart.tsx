@@ -6,6 +6,7 @@ import { X, Plus, Minus } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { loadStripe } from '@stripe/stripe-js';
 import { motion, AnimatePresence } from 'framer-motion';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 const Cart = () => {
   const { items, removeItem, updateQuantity, total, isOpen, setIsOpen } = useCart();
@@ -54,22 +55,60 @@ const Cart = () => {
             transition={{ type: 'spring', stiffness: 200, damping: 30 }}
           >
             <div className="p-4 border-b border-gray-800/50">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-white">Your Cart</h2>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="text-gray-400 hover:text-white transition-colors"
+                  aria-label="Close cart"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 pt-8 md:pt-16">
               {items.length === 0 ? (
-                <p className="text-white text-center py-8">Your cart is empty</p>
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="text-center py-8"
+                >
+                  <p className="text-white">Your cart is empty</p>
+                </motion.div>
               ) : (
-                <div className="space-y-4">
-                  {items.map((item) => (
-                    <div key={item.product.id} className="flex gap-4 text-white bg-black/20 rounded-lg p-4">
-                      <div className="relative w-24 h-24">
-                        <Image
-                          src={item.product.featuredImage?.url || 'https://placehold.co/282x282'}
-                          alt={item.product.title}
-                          fill
-                          className="object-cover"
-                        />
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="space-y-4"
+                >
+                  {items.map((item, index) => (
+                    <motion.div
+                      key={item.product.id}
+                      initial={{ x: 20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.2 + (index * 0.1) }}
+                      className="flex gap-4 text-white bg-black/20 rounded-lg p-4"
+                    >
+                      <div className="w-20 h-28 flex-shrink-0">
+                        <AspectRatio ratio={3/4} className="w-full h-full">
+                          <motion.div
+                            whileHover={{ scale: 1.05 }}
+                            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                            className="w-full h-full flex items-center justify-center"
+                            style={{ willChange: 'transform' }}
+                          >
+                            <Image
+                              src={item.product.featuredImage?.url || 'https://placehold.co/282x282'}
+                              alt={item.product.title}
+                              fill
+                              className="object-contain"
+                              quality={85}
+                            />
+                          </motion.div>
+                        </AspectRatio>
                       </div>
                       <div className="flex-1">
                         <h3 className="font-medium">{item.product.title}</h3>
@@ -101,30 +140,37 @@ const Cart = () => {
                       >
                         <X className="w-5 h-5" />
                       </button>
-                    </div>
+                    </motion.div>
                   ))}
-                </div>
+                </motion.div>
               )}
             </div>
 
-            <div className="p-4 border-t border-gray-800">
-              <div className="flex justify-between text-white mb-4">
-                <span>Total</span>
-                <span className="font-bold">
-                  {new Intl.NumberFormat('sv-SE', {
-                    style: 'currency',
-                    currency: 'SEK'
-                  }).format(total)}
-                </span>
-              </div>
-              <button
-                onClick={handleCheckout}
-                disabled={items.length === 0 || isLoading}
-                className="w-full bg-white text-black py-3 rounded-full font-bold hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            {items.length > 0 && (
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="p-4 border-t border-gray-800/50"
               >
-                {isLoading ? 'Processing...' : 'Checkout'}
-              </button>
-            </div>
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-lg font-semibold text-white">Total</span>
+                  <span className="text-xl font-bold text-white">
+                    {new Intl.NumberFormat('sv-SE', {
+                      style: 'currency',
+                      currency: 'SEK'
+                    }).format(total)}
+                  </span>
+                </div>
+                <button
+                  onClick={handleCheckout}
+                  disabled={isLoading}
+                  className="w-full bg-white text-black py-3 rounded-full font-bold hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isLoading ? 'Processing...' : 'Checkout'}
+                </button>
+              </motion.div>
+            )}
           </motion.div>
         </motion.div>
       )}

@@ -10,7 +10,15 @@ interface HeaderProps {
 const Header = async ({ heroRef }: HeaderProps) => {
   try {
     const { menu } = await fetchMainMenu();
-    return <ClientHeader menuItems={menu.items} error={null} heroRef={heroRef} />;
+    
+    // Transform menu items to use our custom products page
+    const transformedItems = menu.items.map(item => ({
+      ...item,
+      // If the item is "Products", update its URL to our custom products page
+      url: item.title.toLowerCase() === 'products' ? '/products' : item.url
+    }));
+
+    return <ClientHeader menuItems={transformedItems} error={null} heroRef={heroRef} />;
   } catch (error) {
     console.error('Error fetching menu:', error);
     return <ClientHeader menuItems={[]} error="Failed to load menu" heroRef={heroRef} />;
