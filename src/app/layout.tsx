@@ -1,19 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from 'next/font/local';
 import "./globals.css";
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { CartProvider } from '@/context/CartContext';
 import ClientCart from '@/components/layout/ClientCart';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const nordMedium = localFont({
+  src: '../../public/fonts/Nord-Medium.ttf',
+  variable: '--font-nord',
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -50,10 +46,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="en" className={`${nordMedium.variable} antialiased`}>
+      <body>
         <CartProvider>
           <Header />
           <div className="min-h-screen w-full bg-gradient-to-b from-[#0a1833] via-black to-[#0a1833]">
