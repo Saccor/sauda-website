@@ -86,63 +86,12 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
           : 'bg-transparent'
       }`}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-full">
-        <div className="flex items-center justify-between w-full h-full md:gap-x-16 relative">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 h-full max-w-[1280px]">
+        <div className="grid grid-cols-3 items-center w-full h-full md:gap-x-16">
           {/* Left: nav or menu */}
-          <nav className="hidden md:flex items-center gap-x-4 justify-end flex-1">
-            {leftLinks.map((item) => (
-              <motion.div
-                key={item.id}
-                whileHover={{ scale: 1.08 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className="inline-block"
-              >
-                <Link
-                  href={item.url}
-                  className="relative text-white hover:text-white/80 text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
-                >
-                  {item.title}
-                </Link>
-              </motion.div>
-            ))}
-          </nav>
-          {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden text-white p-2 z-[101] absolute left-4"
-            aria-label="Toggle menu"
-            onClick={() => setMobileMenuOpen(open => !open)}
-          >
-            <svg 
-              className="w-6 h-6" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M4 6h16M4 12h16M4 18h16" 
-              />
-            </svg>
-          </button>
-
-          {/* Center: logo */}
-          <div className="flex-shrink-0 flex justify-center items-center w-full md:w-[200px]">
-            <Link href="/" className="block">
-              <span 
-                className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors text-center w-full block"
-                style={{fontFamily: 'Zurich Extended, sans-serif'}}
-              >
-                SAUDA
-              </span>
-            </Link>
-          </div>
-
-          {/* Right: nav */}
-          <div className="hidden md:flex items-center gap-x-4 justify-start flex-1">
-            <nav className="flex items-center gap-x-4">
-              {rightLinks.map((item) => (
+          <div className="flex items-center min-w-0">
+            <nav className="hidden md:flex items-center gap-x-4 justify-end flex-1">
+              {leftLinks.map((item) => (
                 <motion.div
                   key={item.id}
                   whileHover={{ scale: 1.08 }}
@@ -158,12 +107,66 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
                 </motion.div>
               ))}
             </nav>
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden text-white p-2 z-[101] ml-2"
+              aria-label="Toggle menu"
+              onClick={() => setMobileMenuOpen(open => !open)}
+            >
+              <svg 
+                className="w-6 h-6" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M4 6h16M4 12h16M4 18h16" 
+                />
+              </svg>
+            </button>
           </div>
 
-          {/* Cart Button - Absolute positioned */}
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 z-[101]">
-            <div className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center">
-              <CartButton />
+          {/* Center: logo (always centered) */}
+          <div className="flex items-center justify-center">
+            <Link href="/" className="block">
+              <span 
+                className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors text-center block"
+                style={{fontFamily: 'Zurich Extended, sans-serif'}}
+              >
+                SAUDA
+              </span>
+            </Link>
+          </div>
+
+          {/* Right: nav and cart */}
+          <div className="flex items-center justify-end min-w-0">
+            <div className="hidden md:flex items-center gap-x-4 justify-start flex-1">
+              <nav className="flex items-center gap-x-4">
+                {rightLinks.map((item) => (
+                  <motion.div
+                    key={item.id}
+                    whileHover={{ scale: 1.08 }}
+                    transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                    className="inline-block"
+                  >
+                    <Link
+                      href={item.url}
+                      className="relative text-white hover:text-white/80 text-base font-medium tracking-wide transition-colors px-4 md:px-6 py-2"
+                    >
+                      {item.title}
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
+            </div>
+            {/* Cart Button */}
+            <div className="flex items-center justify-end ml-4">
+              <div className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center">
+                <CartButton />
+              </div>
             </div>
           </div>
 
