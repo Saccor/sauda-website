@@ -7,7 +7,6 @@ import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import type { Product } from '@/api/shopify';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
 
 interface ProductCardProps {
   imageUrl: string;
@@ -19,7 +18,6 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconUrl, product }) => {
   const { addItem } = useCart();
-  const [isTouched, setIsTouched] = useState(false);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -40,8 +38,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconU
       <AspectRatio 
         ratio={3 / 4} 
         className="w-full flex items-center justify-center relative"
-        onTouchStart={() => setIsTouched(true)}
-        onTouchEnd={() => setIsTouched(false)}
       >
         <motion.div
           whileHover={{ scale: 1.08, rotate: -2 }}
