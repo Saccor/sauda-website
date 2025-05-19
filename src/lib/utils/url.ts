@@ -10,14 +10,20 @@ const LOCAL_ROUTES: Record<string, string> = {
 
 function transformUrl(title: string, url: string): string {
   const lowerTitle = title.toLowerCase();
+  
+  // First check if it's a local route
   if (LOCAL_ROUTES[lowerTitle]) {
     return LOCAL_ROUTES[lowerTitle];
   }
-  if (process.env.NODE_ENV === 'development') {
+
+  // For all other URLs, extract the pathname
+  try {
     const urlObj = new URL(url);
     return urlObj.pathname;
+  } catch (e) {
+    // If URL parsing fails, return the original URL
+    return url;
   }
-  return url;
 }
 
 export function transformMenuUrls(items: MenuItem[]): MenuItem[] {
