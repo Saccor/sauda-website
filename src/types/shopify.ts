@@ -18,18 +18,19 @@ export interface MediaImage {
   };
 }
 
+export type MediaImageReference = {
+  image: {
+    url: string;
+    altText?: string;
+  };
+};
+
 // Metaobject types
 export interface ShopifyMetaobjectField {
   key: string;
   value: string;
   type: string;
-  reference?: {
-    fields?: ShopifyMetaobjectField[];
-    image?: {
-      url: string;
-      altText?: string;
-    };
-  } | null;
+  reference?: { fields: ShopifyMetaobjectField[] } | MediaImageReference | null;
   references?: {
     edges: Array<{
       node: {
@@ -62,7 +63,10 @@ export interface Product {
   id: string;
   title: string;
   description: string;
-  featuredImage?: MediaImage;
+  handle: string;
+  featuredImage?: {
+    url: string;
+  };
   priceRange: {
     minVariantPrice: {
       amount: string;

@@ -2,16 +2,16 @@
 
 import React from "react";
 import ProductCard from "@/components/common/ProductCard";
-import type { Product } from "@/api/shopify";
+import type { Product } from "@/types/shopify";
 import { ShoppingBag, AlertCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
-interface ProductsClientProps {
+interface ProductsSectionProps {
   products: Product[];
   error: string | null;
 }
 
-const ProductsClient: React.FC<ProductsClientProps> = ({ products, error }) => {
+export const ProductsSection: React.FC<ProductsSectionProps> = ({ products, error }) => {
   // Format price according to locale and currency
   const formatPrice = (amount: string, currencyCode: string = 'SEK') => {
     return new Intl.NumberFormat('sv-SE', {
@@ -23,7 +23,7 @@ const ProductsClient: React.FC<ProductsClientProps> = ({ products, error }) => {
   };
 
   return (
-    <motion.main 
+    <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -102,8 +102,6 @@ const ProductsClient: React.FC<ProductsClientProps> = ({ products, error }) => {
           </motion.div>
         )}
       </div>
-    </motion.main>
+    </motion.div>
   );
-};
-
-export default ProductsClient; 
+}; 

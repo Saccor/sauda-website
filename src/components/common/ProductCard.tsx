@@ -5,7 +5,7 @@ import { AspectRatio } from '@/components/ui/aspect-ratio';
 import Image from 'next/image';
 import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import type { Product } from '@/api/shopify';
+import type { Product } from '@/types/shopify';
 import { motion } from 'framer-motion';
 
 interface ProductCardProps {

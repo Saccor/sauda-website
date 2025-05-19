@@ -1,7 +1,7 @@
 import React from 'react';
 import ProductCard from '@/components/common/ProductCard';
-import { fetchProducts } from '@/api/shopify';
-import type { Product } from '@/api/shopify';
+import { fetchProducts } from '@/lib/shopify';
+import type { Product } from '@/types/shopify';
 
 // Format price according to locale and currency
 const formatPrice = (amount: string, currencyCode: string = 'USD') => {

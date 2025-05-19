@@ -1,9 +1,8 @@
-import React from "react";
-import { fetchProducts } from "@/api/shopify";
-import type { Product } from "@/api/shopify";
-import ProductsClient from "./ProductsClient";
+import { ProductsSection } from "@/components/sections/ProductsSection";
+import { fetchProducts } from "@/lib/shopify";
+import type { Product } from "@/types/shopify";
 
-const ProductsPage = async () => {
+export default async function ProductsPage() {
   let products: Product[] = [];
   let error: string | null = null;
 
@@ -15,7 +14,5 @@ const ProductsPage = async () => {
     error = err instanceof Error ? err.message : 'Unknown error';
   }
 
-  return <ProductsClient products={products} error={error} />;
-};
-
-export default ProductsPage; 
+  return <ProductsSection products={products} error={error} />;
+} 

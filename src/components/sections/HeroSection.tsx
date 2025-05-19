@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { fetchHeroSection } from '@/api/shopify';
+import { fetchHeroSection } from '@/lib/shopify';
 import type { ShopifyMetaobjectField } from '@/types/shopify';
 
 interface MediaImage {

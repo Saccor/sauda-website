@@ -1,5 +1,5 @@
 import React from 'react';
-import { fetchTourDates } from '@/api/shopify';
+import { fetchTourDates } from '@/lib/shopify';
 import type { TourDate, ShopifyMetaobjectField } from '@/types/shopify';
 
 // Format date according to locale

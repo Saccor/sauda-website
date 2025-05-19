@@ -1,6 +1,6 @@
 // Split into two components: Server and Client
 import React from 'react';
-import { fetchMainMenu } from '@/api/shopify';
+import { fetchMainMenu } from '@/lib/shopify';
 import ClientHeader from './ClientHeader';
 
 interface HeaderProps {

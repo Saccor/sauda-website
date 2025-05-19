@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import type { Product } from '@/api/shopify';
+import type { Product } from '@/types/shopify';
 
 export interface CartItem {
   product: Product;

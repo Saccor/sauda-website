@@ -1,38 +1,12 @@
 import { createStorefrontClient } from '@shopify/hydrogen-react';
-import { MenuResponse, TourDatesResponse, FeaturedArtistResponse } from '@/types/shopify';
-import { ShopifyError, NetworkError, handleShopifyError, handleNetworkError } from '@/utils/error-handling';
-
-// TypeScript interfaces for Shopify data
-export type MediaImageReference = {
-  image: {
-    url: string;
-    altText?: string;
-  };
-};
-
-export interface ShopifyMetaobjectField {
-  key: string;
-  value: string;
-  type: string;
-  reference?: { fields: ShopifyMetaobjectField[] } | MediaImageReference | null;
-}
-
-export interface TourDate {
-  date: string;
-  city: string;
-  venue: string;
-  ticketUrl: string;
-  soldOut: string;
-  specialGuest: string;
-  additionalInfo: string;
-}
-
-export interface ShopifyResponse<T> {
-  data?: T;
-  errors?: Array<{
-    message: string;
-  }>;
-}
+import { 
+  MenuResponse, 
+  TourDatesResponse, 
+  FeaturedArtistResponse,
+  ProductsResponse,
+  ShopifyMetaobjectField
+} from '@/types/shopify';
+import { ShopifyError, NetworkError, handleShopifyError, handleNetworkError } from '@/lib/error-handling';
 
 // Environment variables validation
 const STORE_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
@@ -291,30 +265,6 @@ export async function fetchHeroSection() {
     undefined,
     { cache: 'SHORT' }
   );
-}
-
-export interface Product {
-  id: string;
-  title: string;
-  description: string;
-  handle: string;
-  featuredImage?: {
-    url: string;
-  };
-  priceRange: {
-    minVariantPrice: {
-      amount: string;
-      currencyCode: string;
-    };
-  };
-}
-
-export interface ProductsResponse {
-  products: {
-    edges: Array<{
-      node: Product;
-    }>;
-  };
 }
 
 export async function fetchProducts() {
