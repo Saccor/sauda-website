@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { SocialFeedItem } from '@/types/social-media';
-import Image from 'next/image';
 
 export const SocialMediaContainer = () => {
   const [posts, setPosts] = useState<SocialFeedItem[]>([]);
@@ -52,17 +51,15 @@ export const SocialMediaContainer = () => {
           return;
         }
         
-        if (page === 1) {
-          console.log('Setting initial posts');
-          setPosts(data.posts);
-        } else {
-          console.log('Appending posts to existing');
-          setPosts(prev => {
-            const newPosts = [...prev, ...data.posts];
-            console.log('Total posts after append:', newPosts.length);
-            return newPosts;
-          });
-        }
+        // Always append new posts to existing ones
+        setPosts(prev => {
+          // Filter out any duplicates based on id
+          const existingIds = new Set(prev.map(p => p.id));
+          const newPosts = data.posts.filter((p: SocialFeedItem) => !existingIds.has(p.id));
+          const updatedPosts = [...prev, ...newPosts];
+          console.log('Total posts after append:', updatedPosts.length);
+          return updatedPosts;
+        });
         
         setHasMore(data.hasMore);
         setIsEndOfFeed(!data.hasMore);
@@ -177,6 +174,8 @@ export const SocialMediaContainer = () => {
     );
   }
 
+  const currentPost = posts[currentIndex];
+
   return (
     <div ref={containerRef} className="relative w-full h-[calc(100vh-200px)] overflow-hidden bg-gradient-to-b from-[#0a1833] via-black to-[#0a1833]">
       {/* Navigation Arrows - Desktop Only */}
@@ -213,48 +212,82 @@ export const SocialMediaContainer = () => {
           className="absolute w-full h-full flex items-center justify-center"
         >
           {/* Post Content */}
-          <div className="w-full max-w-[800px] h-auto bg-black/10 rounded-xl shadow-xl p-4">
-            <div className={`relative mb-4 ${
-              posts[currentIndex].platform === 'youtube' 
-                ? 'w-full aspect-[16/9]' 
-                : 'aspect-video'
-            }`}>
-              {posts[currentIndex].platform === 'youtube' ? (
+          <div className="w-full max-w-[960px] h-auto bg-black/20 rounded-xl shadow-xl p-4 flex flex-col items-center justify-center">
+            <div className={`relative mb-4 flex items-center justify-center bg-neutral-900/80 rounded-lg overflow-hidden
+              ${currentPost.platform === 'youtube' ? 'w-full aspect-[16/9]' : currentPost.platform === 'instagram' && currentPost.mediaType === 'VIDEO' ? 'w-full aspect-[4/5]' : 'w-full aspect-square'}`}
+              style={{ minHeight: '320px' }}
+            >
+              {currentPost.platform === 'youtube' ? (
+                <iframe
+                  src={`https://www.youtube.com/embed/${currentPost.videoId}`}
+                  title={currentPost.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="w-full h-full object-contain rounded-lg border-0"
+                  style={{ background: '#111' }}
+                />
+              ) : currentPost.platform === 'instagram' ? (
+                currentPost.mediaType === 'VIDEO' ? (
+                  <video
+                    src={currentPost.mediaUrl}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    className="w-full h-full object-contain rounded-lg bg-black"
+                    style={{ background: '#111' }}
+                    onError={(e) => {
+                      const target = e.target as HTMLVideoElement;
+                      target.poster = '';
+                      target.style.display = 'none';
+                      const fallback = document.createElement('div');
+                      fallback.textContent = 'Video failed to load';
+                      fallback.className = 'text-white text-center mt-4';
+                      target.parentElement?.appendChild(fallback);
+                    }}
+                  >
+                    Sorry, your browser doesn&apos;t support embedded videos.
+                  </video>
+                ) : (
+                  <img
+                    src={currentPost.mediaUrl}
+                    alt={currentPost.caption || 'Instagram post'}
+                    className="w-full h-full object-contain rounded-lg bg-black"
+                    style={{ background: '#111' }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const fallback = document.createElement('div');
+                      fallback.textContent = 'Image failed to load';
+                      fallback.className = 'text-white text-center mt-4';
+                      target.parentElement?.appendChild(fallback);
+                    }}
+                  />
+                )
+              ) : currentPost.platform === 'tiktok' ? (
                 <div 
                   dangerouslySetInnerHTML={{ 
-                    __html: posts[currentIndex].embedHtml 
+                    __html: currentPost.embedHtml 
                   }} 
                   className="w-full h-full rounded-lg overflow-hidden"
                 />
-              ) : (
-                <div className="relative w-full h-full">
-                  <Image
-                    src={posts[currentIndex].platform === 'instagram' ? posts[currentIndex].mediaUrl : ''}
-                    alt={posts[currentIndex].platform === 'instagram' ? posts[currentIndex].caption : ''}
-                    fill
-                    className="object-cover rounded-lg"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    priority
-                  />
-                </div>
-              )}
+              ) : null}
             </div>
-            <div className="text-white">
+            <div className="text-white w-full mt-2">
               <p className="text-sm mb-2">
-                {posts[currentIndex].platform === 'youtube' 
-                  ? posts[currentIndex].title 
-                  : posts[currentIndex].platform === 'instagram' 
-                    ? posts[currentIndex].caption 
+                {currentPost.platform === 'youtube' 
+                  ? currentPost.title 
+                  : currentPost.platform === 'instagram' 
+                    ? currentPost.caption 
                     : ''}
               </p>
               <div className="flex items-center justify-between text-xs text-white/60">
-                <span>{posts[currentIndex].platform}</span>
+                <span>{currentPost.platform}</span>
                 <span>
                   {new Date(
-                    posts[currentIndex].platform === 'youtube' 
-                      ? posts[currentIndex].publishedAt 
-                      : posts[currentIndex].platform === 'instagram'
-                        ? posts[currentIndex].timestamp
+                    currentPost.platform === 'youtube' 
+                      ? currentPost.publishedAt 
+                      : currentPost.platform === 'instagram'
+                        ? currentPost.timestamp
                         : ''
                   ).toLocaleDateString()}
                 </span>
@@ -266,7 +299,7 @@ export const SocialMediaContainer = () => {
 
       {/* Counter and Platform Indicator */}
       <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-black/60 px-4 py-1 rounded-full text-white text-xs md:text-sm font-medium shadow-lg">
-        {posts[currentIndex]?.platform.toUpperCase()} &bull; Post {currentIndex + 1} of {posts.length}
+        {currentPost?.platform.toUpperCase()} &bull; Post {currentIndex + 1} of {posts.length}
         {isEndOfFeed && ' (End of Feed)'}
       </div>
 
@@ -277,19 +310,10 @@ export const SocialMediaContainer = () => {
         </div>
       )}
 
-      {/* End of Feed Message */}
-      {isEndOfFeed && !isLoading && (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white/60 text-xs md:text-sm">
-          You&apos;ve reached the end of the feed
-        </div>
-      )}
-
       {/* Keyboard/Swipe Hint */}
-      {!isEndOfFeed && (
-        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white/60 text-xs md:text-sm">
-          Use ← → or swipe to navigate
-        </div>
-      )}
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white/60 text-xs md:text-sm md:hidden">
+        Use ← → or swipe to navigate
+      </div>
     </div>
   );
 }; 

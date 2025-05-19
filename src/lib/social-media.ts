@@ -7,6 +7,8 @@ interface InstagramMediaResponse {
     media_url: string;
     timestamp: string;
     permalink: string;
+    media_type: 'IMAGE' | 'VIDEO' | 'CAROUSEL_ALBUM';
+    thumbnail_url?: string;
   }>;
 }
 
@@ -14,23 +16,25 @@ interface InstagramOEmbedResponse {
   html: string;
 }
 
-interface YouTubeSearchResponse {
-  items: Array<{
-    id: {
-      videoId: string;
-    };
-    snippet: {
-      title: string;
-      description: string;
-      thumbnails: {
-        high: {
-          url: string;
-        };
+interface YouTubeSearchItem {
+  id: {
+    videoId: string;
+  };
+  snippet: {
+    title: string;
+    description: string;
+    thumbnails: {
+      high: {
+        url: string;
       };
-      publishedAt: string;
-      channelTitle: string;
     };
-  }>;
+    publishedAt: string;
+    channelTitle: string;
+  };
+}
+
+interface YouTubeSearchResponse {
+  items: YouTubeSearchItem[];
 }
 
 // In-memory cache
@@ -64,6 +68,7 @@ export async function getLatestInstagramPost(): Promise<SocialFeedItem | null> {
       timestamp: latest.timestamp,
       permalink: latest.permalink,
       embedHtml: oembed.html,
+      mediaType: latest.media_type,
     };
   } catch (error) {
     console.error('Error fetching Instagram post:', error);
@@ -136,6 +141,106 @@ export async function getLatestYouTubeVideo(): Promise<SocialFeedItem | null> {
   }
 }
 
+export async function getLatestInstagramPosts(): Promise<SocialFeedItem[]> {
+  try {
+    const userId = process.env.INSTAGRAM_USER_ID;
+    const accessToken = process.env.INSTAGRAM_ACCESS_TOKEN;
+
+    if (!userId || !accessToken) {
+      console.error('Instagram configuration missing:', {
+        hasUserId: !!userId,
+        hasAccessToken: !!accessToken
+      });
+      return [];
+    }
+
+    // Fetch up to 10 latest posts with media_type and thumbnail_url
+    const mediaRes = await fetch(
+      `https://graph.instagram.com/${userId}/media?fields=id,caption,media_url,timestamp,permalink,media_type,thumbnail_url&limit=10&access_token=${accessToken}`
+    );
+
+    if (!mediaRes.ok) {
+      const errorData = await mediaRes.json().catch(() => null);
+      console.error('Instagram API error:', {
+        status: mediaRes.status,
+        statusText: mediaRes.statusText,
+        error: errorData
+      });
+      throw new Error(`Instagram API error: ${mediaRes.status}`);
+    }
+
+    const mediaData = await mediaRes.json() as InstagramMediaResponse;
+    
+    if (!mediaData.data?.length) {
+      console.log('No Instagram posts found');
+      return [];
+    }
+
+    console.log(`Found ${mediaData.data.length} Instagram posts`);
+
+    // Process posts without oEmbed
+    const posts = mediaData.data.map(post => {
+      // Create appropriate embed HTML based on media type
+      let embedHtml = '';
+      if (post.media_type === 'VIDEO') {
+        embedHtml = `
+          <div class="relative w-full aspect-[4/5]">
+            <video 
+              class="w-full h-full object-cover rounded-lg"
+              controls
+              playsInline
+              preload="metadata"
+            >
+              <source src="${post.media_url}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>`;
+      } else if (post.media_type === 'IMAGE') {
+        embedHtml = `
+          <div class="relative w-full aspect-square">
+            <img 
+              src="${post.media_url}" 
+              alt="${post.caption || 'Instagram post'}" 
+              class="w-full h-full object-cover rounded-lg"
+            />
+          </div>`;
+      } else if (post.media_type === 'CAROUSEL_ALBUM') {
+        embedHtml = `
+          <div class="relative w-full aspect-square">
+            <img 
+              src="${post.media_url}" 
+              alt="${post.caption || 'Instagram carousel'}" 
+              class="w-full h-full object-cover rounded-lg"
+            />
+          </div>`;
+      }
+
+      return {
+        id: post.id,
+        platform: 'instagram' as const,
+        mediaUrl: post.media_url,
+        caption: post.caption,
+        timestamp: post.timestamp,
+        permalink: post.permalink,
+        embedHtml,
+        mediaType: post.media_type
+      };
+    });
+
+    console.log(`Successfully processed ${posts.length} Instagram posts`);
+    return posts;
+  } catch (error) {
+    console.error('Error fetching Instagram posts:', error);
+    if (error instanceof Error) {
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack
+      });
+    }
+    return [];
+  }
+}
+
 export async function getUnifiedSocialFeed(): Promise<SocialFeedItem[]> {
   // Use cache if fresh
   if (cache && Date.now() - cache.timestamp < CACHE_TTL) {
@@ -158,84 +263,39 @@ export async function getUnifiedSocialFeed(): Promise<SocialFeedItem[]> {
     }
 
     console.log('Fetching social media content...');
-    const [ig, tt, ytData] = await Promise.all([
-      getLatestInstagramPost(),
-      getLatestTikTokPost(),
+    const [youtubePosts, instagramPosts] = await Promise.all([
+      // Existing YouTube fetch
       fetch(`https://www.googleapis.com/youtube/v3/search?key=${apiKey}&channelId=${channelId}&part=snippet&order=date&maxResults=10`)
+        .then(res => res.json())
+        .then((data: YouTubeSearchResponse) => {
+          if (!data.items?.length) return [];
+          return data.items.map(item => ({
+            id: item.id.videoId,
+            platform: 'youtube' as const,
+            videoId: item.id.videoId,
+            title: item.snippet.title,
+            description: item.snippet.description,
+            thumbnailUrl: item.snippet.thumbnails?.high?.url,
+            publishedAt: item.snippet.publishedAt,
+            channelTitle: item.snippet.channelTitle,
+            embedHtml: `<iframe width="100%" height="400" src="https://www.youtube.com/embed/${item.id.videoId}" frameborder="0" allowfullscreen></iframe>`
+          }));
+        }),
+      // New Instagram fetch
+      getLatestInstagramPosts()
     ]);
 
-    const items: SocialFeedItem[] = [];
-    
-    // Add Instagram post if available
-    if (ig) {
-      console.log('Instagram post found:', ig.id);
-      items.push(ig);
-    } else {
-      console.log('No Instagram post available');
-    }
-    
-    // Add TikTok post if available
-    if (tt) {
-      console.log('TikTok post found:', tt.id);
-      items.push(tt);
-    } else {
-      console.log('No TikTok post available');
-    }
-    
-    // Add YouTube videos
-    if (!ytData.ok) {
-      const errorData = await ytData.json();
-      console.error('YouTube API error:', {
-        status: ytData.status,
-        statusText: ytData.statusText,
-        error: errorData
-      });
-      throw new Error(`YouTube API error: ${ytData.status}`);
-    }
-
-    const ytResponse = await ytData.json() as YouTubeSearchResponse;
-    console.log('YouTube API response:', {
-      status: ytData.status,
-      itemsCount: ytResponse.items?.length,
-      firstItem: ytResponse.items?.[0]?.snippet?.title
-    });
-
-    if (ytResponse.items?.length) {
-      console.log(`Processing ${ytResponse.items.length} YouTube videos`);
-      const youtubeItems = ytResponse.items.map(item => ({
-        id: item.id.videoId,
-        platform: 'youtube' as const,
-        videoId: item.id.videoId,
-        title: item.snippet.title,
-        description: item.snippet.description,
-        thumbnailUrl: item.snippet.thumbnails?.high?.url,
-        publishedAt: item.snippet.publishedAt,
-        channelTitle: item.snippet.channelTitle,
-        embedHtml: `<iframe width="100%" height="400" src="https://www.youtube.com/embed/${item.id.videoId}" frameborder="0" allowfullscreen></iframe>`
-      }));
-      items.push(...youtubeItems);
-    } else {
-      console.log('No YouTube videos found in response');
-    }
-
-    // Sort by timestamp/publishedAt descending
-    const sorted = items.sort((a, b) => {
+    // Combine and sort all posts
+    const allPosts = [...youtubePosts, ...instagramPosts].sort((a, b) => {
       const dateA = a.platform === 'youtube' ? new Date(a.publishedAt) : new Date(a.timestamp);
       const dateB = b.platform === 'youtube' ? new Date(b.publishedAt) : new Date(b.timestamp);
       return dateB.getTime() - dateA.getTime();
     });
 
-    console.log('Final feed composition:', {
-      totalItems: sorted.length,
-      platforms: sorted.map(item => item.platform),
-      firstItem: sorted[0]?.id,
-      lastItem: sorted[sorted.length - 1]?.id
-    });
-
     // Update cache
-    cache = { feed: sorted, timestamp: Date.now() };
+    cache = { feed: allPosts, timestamp: Date.now() };
     
-    return sorted;
+    return allPosts;
   } catch (error) {
     console.error('Error fetching unified social feed:', error);
     if (error instanceof Error) {

@@ -58,8 +58,7 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
           <div className="flex-shrink-0 flex justify-center items-center w-full md:w-[200px] order-1 md:order-2 mb-2 md:mb-0 min-w-0">
             <Link href="/" className="block">
               <span 
-                className="text-2xl md:text-3xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors"
-                style={{fontFamily: 'Zurich Extended, sans-serif'}}
+                className="text-2xl md:text-3xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors font-sans"
               >
                 SAUDA
               </span>

@@ -5,6 +5,7 @@ export interface InstagramPost {
   timestamp: string;
   permalink: string;
   embedHtml: string;
+  mediaType: 'IMAGE' | 'VIDEO' | 'CAROUSEL_ALBUM';
 }
 
 export interface TikTokPost {

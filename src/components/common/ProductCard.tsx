@@ -7,6 +7,8 @@ import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import type { Product } from '@/types/shopify';
 import { motion } from 'framer-motion';
+import { useFlyToCart } from '@/components/ui/FlyToCartProvider';
+import React from 'react';
 
 interface ProductCardProps {
   imageUrl: string;
@@ -18,10 +20,16 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconUrl, product }) => {
   const { addItem } = useCart();
+  const { flyToCart } = useFlyToCart();
+  const addBtnRef = React.useRef<HTMLButtonElement>(null);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    if (addBtnRef.current) {
+      const rect = addBtnRef.current.getBoundingClientRect();
+      flyToCart({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
+    }
     addItem(product);
   };
 
@@ -55,6 +63,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconU
           />
         </motion.div>
         <motion.button
+          ref={addBtnRef}
           onClick={handleAddToCart}
           whileTap={{ scale: 0.95 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
