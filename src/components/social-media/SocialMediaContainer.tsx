@@ -9,7 +9,7 @@ export const SocialMediaContainer = () => {
   const [direction, setDirection] = useState(0);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isEndOfFeed, setIsEndOfFeed] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -72,6 +72,13 @@ export const SocialMediaContainer = () => {
     }
     fetchPosts();
   }, [page]);
+
+  // Reset currentIndex when posts change and we're at the end
+  useEffect(() => {
+    if (posts.length > 0 && currentIndex >= posts.length) {
+      setCurrentIndex(0);
+    }
+  }, [posts, currentIndex]);
 
   // Load more posts when reaching the end
   useEffect(() => {
