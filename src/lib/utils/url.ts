@@ -20,7 +20,7 @@ function transformUrl(title: string, url: string): string {
   try {
     const urlObj = new URL(url);
     return urlObj.pathname;
-  } catch (e) {
+  } catch {
     // If URL parsing fails, return the original URL
     return url;
   }
