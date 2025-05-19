@@ -4,6 +4,7 @@ export interface InstagramPost {
   caption: string;
   timestamp: string;
   permalink: string;
+  embedHtml: string;
 }
 
 export interface TikTokPost {
@@ -12,6 +13,7 @@ export interface TikTokPost {
   description: string;
   timestamp: string;
   permalink: string;
+  embedHtml: string;
 }
 
 export interface YouTubeVideo {
@@ -22,4 +24,10 @@ export interface YouTubeVideo {
   thumbnailUrl: string;
   publishedAt: string;
   channelTitle: string;
-} 
+  embedHtml: string;
+}
+
+export type SocialFeedItem =
+  | ({ platform: 'instagram' } & InstagramPost)
+  | ({ platform: 'tiktok' } & TikTokPost)
+  | ({ platform: 'youtube' } & YouTubeVideo); 

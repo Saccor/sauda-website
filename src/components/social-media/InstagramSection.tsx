@@ -2,6 +2,7 @@ import React from 'react';
 import { InstagramPost } from '@/types/social-media';
 import { motion } from 'framer-motion';
 import { Heart, MessageCircle, Bookmark, Share2 } from 'lucide-react';
+import Image from 'next/image';
 
 interface InstagramSectionProps {
   post: InstagramPost | null;
@@ -46,10 +47,13 @@ export const InstagramSection: React.FC<InstagramSectionProps> = ({ post }) => {
 
       {/* Instagram Image */}
       <div className="relative flex-grow">
-        <img
+        <Image
           src={post.mediaUrl}
           alt={post.caption}
-          className="w-full h-full object-cover"
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          priority
         />
       </div>
 
