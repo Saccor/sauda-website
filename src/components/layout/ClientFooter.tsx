@@ -28,12 +28,12 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
   const rightLinks = menuItems.slice(half);
 
   return (
-    <footer className="w-full bg-transparent border-t border-neutral-light/10 shadow-lg min-h-[120px]">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 pb-4 flex flex-col items-center max-w-full sm:max-w-[1280px]">
+    <footer className="w-full bg-transparent border-t border-neutral-light/10 shadow-lg">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 flex flex-col items-center max-w-full sm:max-w-[1280px]">
         {/* Main Row: Links Left, Logo, Links Right */}
-        <div className="w-full flex flex-col md:flex-row items-center justify-center md:justify-between gap-y-6 md:gap-y-0 md:gap-x-16 min-w-0">
+        <div className="w-full flex flex-col md:flex-row items-center justify-center md:justify-between gap-8 md:gap-16 min-w-0">
           {/* Left Links */}
-          <nav className="flex flex-wrap gap-x-8 gap-y-2 justify-center md:justify-end flex-1 order-2 md:order-1 w-full md:w-auto min-w-0">
+          <nav className="flex flex-wrap gap-4 justify-center md:justify-end flex-1 order-2 md:order-1 w-full md:w-auto min-w-0">
             {error ? (
               <ErrorDisplay message={error} />
             ) : leftLinks.length > 0 ? (
@@ -46,7 +46,7 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
                 >
                   <Link
                     href={item.url}
-                    className="text-white font-semibold text-base tracking-wide hover:text-white/80 transition-colors px-2 py-1 rounded"
+                    className="text-white font-semibold text-sm md:text-base tracking-wide hover:text-white/80 transition-colors px-2 py-1 rounded"
                   >
                     {item.title}
                   </Link>
@@ -54,8 +54,9 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
               ))
             ) : null}
           </nav>
+
           {/* Logo Centered */}
-          <div className="flex-shrink-0 flex justify-center items-center w-full md:w-[200px] order-1 md:order-2 mb-2 md:mb-0 min-w-0">
+          <div className="flex-shrink-0 flex justify-center items-center w-full md:w-[200px] order-1 md:order-2 min-w-0">
             <Link href="/" className="block">
               <span 
                 className="text-2xl md:text-3xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors font-sans"
@@ -64,8 +65,9 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
               </span>
             </Link>
           </div>
+
           {/* Right Links */}
-          <nav className="flex flex-wrap gap-x-8 gap-y-2 justify-center md:justify-start flex-1 order-3 md:order-3 w-full md:w-auto min-w-0">
+          <nav className="flex flex-wrap gap-4 justify-center md:justify-start flex-1 order-3 w-full md:w-auto min-w-0">
             {rightLinks.length > 0 && rightLinks.map((item) => (
               <motion.div
                 key={item.id}
@@ -75,7 +77,7 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
               >
                 <Link
                   href={item.url}
-                  className="text-white font-semibold text-base tracking-wide hover:text-white/80 transition-colors px-2 py-1 rounded"
+                  className="text-white font-semibold text-sm md:text-base tracking-wide hover:text-white/80 transition-colors px-2 py-1 rounded"
                 >
                   {item.title}
                 </Link>
@@ -83,8 +85,9 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
             ))}
           </nav>
         </div>
+
         {/* Copyright Centered Underneath */}
-        <div className="w-full pt-6 text-xs text-white text-center">
+        <div className="w-full pt-8 md:pt-12 text-xs text-white/80 text-center">
           &copy; {new Date().getFullYear()} SAUDA. All rights reserved.
         </div>
       </div>
