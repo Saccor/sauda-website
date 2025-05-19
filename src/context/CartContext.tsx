@@ -1,41 +1,25 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import type { Product } from '@/types/shopify';
-
-export interface CartItem {
-  product: Product;
-  quantity: number;
-}
-
-interface CartContextType {
-  items: CartItem[];
-  addItem: (product: Product) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
-  clearCart: () => void;
-  total: number;
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-}
+import type { Product, CartItem, CartContextType } from '@/types/shopify';
+import { loadCartFromStorage, saveCartToStorage } from '@/lib/cart/storage';
+import { createCheckoutSession } from '@/lib/cart/api';
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Load cart from localStorage on mount
   useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      setItems(JSON.parse(savedCart));
-    }
+    setItems(loadCartFromStorage());
   }, []);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(items));
+    saveCartToStorage(items);
   }, [items]);
 
   const addItem = (product: Product) => {
@@ -79,6 +63,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems([]);
   };
 
+  const checkout = async () => {
+    try {
+      setIsLoading(true);
+      const { sessionId } = await createCheckoutSession(items);
+      window.location.href = `/checkout?session_id=${sessionId}`;
+    } catch (error) {
+      console.error('Checkout error:', error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const total = items.reduce((sum, item) => {
     const price = parseFloat(item.product.priceRange.minVariantPrice.amount);
     return sum + (price * item.quantity);
@@ -91,9 +88,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeItem,
       updateQuantity,
       clearCart,
+      checkout,
       total,
       isOpen,
-      setIsOpen
+      setIsOpen,
+      isLoading
     }}>
       {children}
     </CartContext.Provider>

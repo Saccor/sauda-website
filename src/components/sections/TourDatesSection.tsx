@@ -1,16 +1,9 @@
 import React from 'react';
-import { fetchTourDates } from '@/lib/shopify';
+import { fetchTourDates } from '@/lib/shopify/api';
+import { formatDate } from '@/lib/utils/format';
+import { ErrorState } from '@/components/common/ErrorState';
+import { EmptyState } from '@/components/common/EmptyState';
 import type { TourDate, ShopifyMetaobjectField } from '@/types/shopify';
-
-// Format date according to locale
-const formatDate = (dateStr: string) => {
-  const date = new Date(dateStr);
-  return date.toLocaleString('en-US', {
-    month: 'short',
-    day: '2-digit',
-    year: 'numeric',
-  });
-};
 
 // Parse tour date fields from Shopify metaobject
 function parseTourDate(fields: ShopifyMetaobjectField[]): TourDate {
@@ -62,45 +55,28 @@ const TourDatesSection = async () => {
   // Handle error state
   if (error) {
     return (
-      <section className="relative w-full py-28 bg-neutral-dark">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6">
-            <h3 className="text-2xl font-bold text-error mb-4">Error loading tour dates</h3>
-            <p className="mb-6">{error}</p>
-            <div className="bg-neutral-light/40 p-4 rounded-lg">
-              <p className="font-semibold mb-2">Verification steps:</p>
-              <ul className="list-disc pl-5 space-y-2">
-                <li>Check Shopify credentials in .env.local</li>
-                <li>Ensure your Shopify store domain is correct</li>
-                <li>Verify that your storefront access token is valid</li>
-                <li>Confirm tour dates are set up in Shopify Admin</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ErrorState
+        title="Error loading tour dates"
+        message={error}
+        verificationSteps={[
+          'Check Shopify credentials in .env.local',
+          'Ensure your Shopify store domain is correct',
+          'Verify that your storefront access token is valid',
+          'Confirm tour dates are set up in Shopify Admin'
+        ]}
+      />
     );
   }
 
   // Handle no tour dates state
   if (tourDates.length === 0) {
     return (
-      <section className="relative w-full py-28 bg-neutral-dark">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-neutral text-on-dark shadow-lg rounded-2xl p-6">
-            <h3 className="text-2xl font-bold text-warning mb-4">No upcoming events</h3>
-            <p className="mb-6">There are currently no tour dates scheduled.</p>
-            <a 
-              href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/admin/metafields`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-primary text-on-dark px-6 py-2 rounded-full hover:bg-primary-light transition-colors"
-            >
-              Add Tour Dates in Shopify Admin
-            </a>
-          </div>
-        </div>
-      </section>
+      <EmptyState
+        title="No upcoming events"
+        message="There are currently no tour dates scheduled."
+        actionUrl={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/admin/metafields`}
+        actionText="Add Tour Dates in Shopify Admin"
+      />
     );
   }
 

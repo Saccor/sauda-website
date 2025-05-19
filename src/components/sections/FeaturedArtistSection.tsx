@@ -1,7 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { fetchFeaturedArtist } from '@/lib/shopify';
+import { fetchFeaturedArtist } from '@/lib/shopify/api';
 import type { FeaturedArtist, ShopifyMetaobjectField } from '@/types/shopify';
 
 const FeaturedArtistSection = async () => {

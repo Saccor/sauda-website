@@ -40,7 +40,7 @@ const Cart = () => {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 bg-black/20 z-50 flex justify-end"
+          className="fixed inset-0 bg-black/20 z-[200] flex justify-end"
           onClick={() => setIsOpen(false)}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -59,7 +59,7 @@ const Cart = () => {
                 <h2 className="text-xl font-bold text-white">Your Cart</h2>
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-gray-400 hover:text-white transition-colors p-2"
                   aria-label="Close cart"
                 >
                   <X className="w-6 h-6" />
@@ -147,15 +147,10 @@ const Cart = () => {
             </div>
 
             {items.length > 0 && (
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="p-4 border-t border-gray-800/50"
-              >
+              <div className="p-4 border-t border-gray-800/50">
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-lg font-semibold text-white">Total</span>
-                  <span className="text-xl font-bold text-white">
+                  <span className="text-white font-medium">Total</span>
+                  <span className="text-white font-bold">
                     {new Intl.NumberFormat('sv-SE', {
                       style: 'currency',
                       currency: 'SEK'
@@ -165,11 +160,11 @@ const Cart = () => {
                 <button
                   onClick={handleCheckout}
                   disabled={isLoading}
-                  className="w-full bg-white text-black py-3 rounded-full font-bold hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-[#0a1833] text-white font-bold py-3 rounded-none hover:bg-[#142a4d] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? 'Processing...' : 'Checkout'}
                 </button>
-              </motion.div>
+              </div>
             )}
           </motion.div>
         </motion.div>

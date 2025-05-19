@@ -80,7 +80,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
 
   return (
     <header 
-      className={`fixed top-0 left-0 w-full h-[80px] z-[100] transition-all duration-300 ${
+      className={`fixed top-0 left-0 w-full h-[80px] z-[90] transition-all duration-300 ${
         isPastHero
           ? 'bg-neutral-dark/80 backdrop-blur-md shadow-lg' 
           : 'bg-transparent'
@@ -130,10 +130,10 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
           </div>
 
           {/* Center: logo (always centered) */}
-          <div className="flex items-center justify-center min-w-0">
-            <Link href="/" className="block w-full">
+          <div className="flex items-center justify-center min-w-0 px-4">
+            <Link href="/" className="block">
               <span 
-                className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors text-center block break-words w-full"
+                className="text-3xl md:text-4xl font-extrabold tracking-wide text-white hover:text-white/80 transition-colors text-center block"
                 style={{fontFamily: 'Zurich Extended, sans-serif'}}
               >
                 SAUDA
@@ -179,7 +179,7 @@ const ClientHeader: React.FC<ClientHeaderProps> = ({ menuItems, error, heroRef }
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="fixed inset-0 top-[80px] bg-neutral-dark/95 backdrop-blur-xl z-[98]"
+                className="fixed inset-0 top-[80px] bg-black/60 backdrop-blur-xl z-[98]"
                 aria-modal="true"
                 role="dialog"
                 tabIndex={-1}

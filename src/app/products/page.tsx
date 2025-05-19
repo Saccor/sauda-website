@@ -1,5 +1,5 @@
 import { ProductsSection } from "@/components/sections/ProductsSection";
-import { fetchProducts } from "@/lib/shopify";
+import { fetchProducts } from "@/lib/shopify/api";
 import type { Product } from "@/types/shopify";
 
 export default async function ProductsPage() {

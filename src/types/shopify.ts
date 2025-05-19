@@ -140,4 +140,25 @@ export interface MusicPlayerResponse {
       };
     };
   };
+}
+
+/**
+ * Cart Types
+ */
+export interface CartItem {
+  product: Product;
+  quantity: number;
+}
+
+export interface CartContextType {
+  items: CartItem[];
+  addItem: (product: Product) => void;
+  removeItem: (productId: string) => void;
+  updateQuantity: (productId: string, quantity: number) => void;
+  clearCart: () => void;
+  checkout: () => Promise<void>;
+  total: number;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  isLoading: boolean;
 } 
