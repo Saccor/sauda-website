@@ -6,6 +6,7 @@ import Footer from '../components/layout/Footer';
 import { CartProvider } from '@/context/CartContext';
 import ClientCart from '@/components/layout/ClientCart';
 import { FlyToCartProvider } from '@/components/ui/FlyToCartProvider';
+import { FloatingSocialButton } from '@/components/social-media/FloatingSocialButton';
 
 const nordMedium = localFont({
   src: '../../public/fonts/Nord-Medium.ttf',
@@ -56,6 +57,7 @@ export default function RootLayout({
             <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-b from-[#0a1833] via-black to-[#0a1833]">
               {children}
               <Footer />
+              <FloatingSocialButton />
             </div>
           </CartProvider>
         </FlyToCartProvider>
