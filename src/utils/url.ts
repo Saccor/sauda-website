@@ -8,6 +8,12 @@ const LOCAL_ROUTES: Record<string, string> = {
   'contact': '/contact',
 };
 
+/**
+ * Transform a URL based on its title and original URL
+ * @param title - The title of the menu item
+ * @param url - The original URL
+ * @returns Transformed URL string
+ */
 function transformUrl(title: string, url: string): string {
   const lowerTitle = title.toLowerCase();
   
@@ -26,6 +32,11 @@ function transformUrl(title: string, url: string): string {
   }
 }
 
+/**
+ * Transform URLs in a menu item array
+ * @param items - Array of menu items
+ * @returns Array of menu items with transformed URLs
+ */
 export function transformMenuUrls(items: MenuItem[]): MenuItem[] {
   return items.map(item => ({
     ...item,

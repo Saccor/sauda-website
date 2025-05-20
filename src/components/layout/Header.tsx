@@ -1,7 +1,7 @@
 // Split into two components: Server and Client
 import React from 'react';
 import { fetchMainMenu } from '@/lib/shopify/api';
-import { transformMenuUrls } from '@/lib/utils/url';
+import { transformMenuUrls } from '@/utils/url';
 import ClientHeader from './ClientHeader';
 
 interface HeaderProps {

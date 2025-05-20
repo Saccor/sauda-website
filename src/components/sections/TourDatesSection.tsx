@@ -1,6 +1,6 @@
 import React from 'react';
 import { fetchTourDates } from '@/lib/shopify/api';
-import { formatDate } from '@/lib/utils/format';
+import { formatDate } from '@/utils/formatting';
 import { ErrorState } from '@/components/common/ErrorState';
 import { EmptyState } from '@/components/common/EmptyState';
 import type { TourDate, ShopifyMetaobjectField } from '@/types/shopify';

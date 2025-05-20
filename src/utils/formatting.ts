@@ -12,6 +12,13 @@ export const formatDate = (dateStr: string): string => {
   });
 };
 
+/**
+ * Format a price amount with currency
+ * @param amount - The amount to format
+ * @param currencyCode - The currency code (default: USD)
+ * @param locale - The locale to use (default: en-US)
+ * @returns Formatted price string
+ */
 export function formatPrice(amount: string, currencyCode: string = 'USD', locale: string = 'en-US'): string {
   return new Intl.NumberFormat(locale, {
     style: 'currency',

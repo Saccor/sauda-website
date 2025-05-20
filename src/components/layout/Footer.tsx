@@ -1,6 +1,6 @@
 import React from 'react';
 import { fetchFooterMenu } from '@/lib/shopify/api';
-import { transformMenuUrls } from '@/lib/utils/url';
+import { transformMenuUrls } from '@/utils/url';
 import ClientFooter from './ClientFooter';
 
 const Footer = async () => {
