@@ -1,4 +1,5 @@
 import { InstagramMediaResponse, InstagramOEmbedResponse, SocialFeedItem } from '../types';
+import { NetworkError, ShopifyError } from '../../error-handling';
 
 export async function getLatestInstagramPost(): Promise<SocialFeedItem | null> {
   try {
@@ -32,8 +33,10 @@ export async function getLatestInstagramPost(): Promise<SocialFeedItem | null> {
       mediaType: latest.media_type,
     };
   } catch (error) {
-    console.error('Error fetching Instagram post:', error);
-    return null;
+    if (error instanceof ShopifyError) {
+      throw error;
+    }
+    throw new NetworkError('Failed to fetch Instagram data', 500, { originalError: error });
   }
 }
 
@@ -55,13 +58,7 @@ export async function getLatestInstagramPosts(): Promise<SocialFeedItem[]> {
     );
 
     if (!mediaRes.ok) {
-      const errorData = await mediaRes.json().catch(() => null);
-      console.error('Instagram API error:', {
-        status: mediaRes.status,
-        statusText: mediaRes.statusText,
-        error: errorData
-      });
-      throw new Error(`Instagram API error: ${mediaRes.status}`);
+      throw new ShopifyError(`Instagram API error: ${mediaRes.status}`, mediaRes.status, 'INSTAGRAM_API_ERROR');
     }
 
     const mediaData = await mediaRes.json() as InstagramMediaResponse;
@@ -123,13 +120,9 @@ export async function getLatestInstagramPosts(): Promise<SocialFeedItem[]> {
     console.log(`Successfully processed ${posts.length} Instagram posts`);
     return posts;
   } catch (error) {
-    console.error('Error fetching Instagram posts:', error);
-    if (error instanceof Error) {
-      console.error('Error details:', {
-        message: error.message,
-        stack: error.stack
-      });
+    if (error instanceof ShopifyError) {
+      throw error;
     }
-    return [];
+    throw new NetworkError('Failed to fetch Instagram data', 500, { originalError: error });
   }
 } 

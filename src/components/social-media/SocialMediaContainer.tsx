@@ -305,9 +305,18 @@ export const SocialMediaContainer = () => {
       </AnimatePresence>
 
       {/* Counter and Platform Indicator */}
-      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-black/60 px-4 py-1 rounded-full text-white text-xs md:text-sm font-medium shadow-lg">
-        {currentPost?.platform.toUpperCase()} &bull; Post {currentIndex + 1} of {posts.length}
-        {isEndOfFeed && ' (End of Feed)'}
+      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center z-10">
+        <div className="flex gap-2 mb-1">
+          {posts.map((_, idx) => (
+            <span
+              key={idx}
+              className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                idx === currentIndex ? 'bg-white' : 'bg-white/30'
+              }`}
+            />
+          ))}
+        </div>
+        <span className="text-white/60 text-xs md:hidden">Swipe &larr; &rarr; to navigate</span>
       </div>
 
       {/* Loading Indicator */}
@@ -316,11 +325,6 @@ export const SocialMediaContainer = () => {
           <Loader2 className="w-6 h-6 text-white animate-spin" />
         </div>
       )}
-
-      {/* Keyboard/Swipe Hint */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white/60 text-xs md:text-sm md:hidden">
-        Use ← → or swipe to navigate
-      </div>
     </div>
   );
 }; 

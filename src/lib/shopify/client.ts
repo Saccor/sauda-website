@@ -6,6 +6,7 @@
  */
 
 import { createStorefrontClient } from '@shopify/hydrogen-react';
+import { ShopifyError } from '../error-handling';
 
 // Environment variable validation
 function validateEnvVariables() {
@@ -15,19 +16,21 @@ function validateEnvVariables() {
   };
 
   const missingVars = Object.entries(requiredVars)
-    .filter(([_, value]) => !value)
+    .filter(([, value]) => !value)
     .map(([key]) => key);
 
   if (missingVars.length > 0) {
-    throw new Error(
-      `Missing required Shopify environment variables: ${missingVars.join(', ')}`
+    throw new ShopifyError(
+      `Missing required Shopify environment variables: ${missingVars.join(', ')}`,
+      500,
+      'MISSING_ENV'
     );
   }
 
   // Validate store domain format
   const storeDomain = requiredVars.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
   if (!storeDomain?.match(/^[a-zA-Z0-9][a-zA-Z0-9-]*\.myshopify\.com$/)) {
-    throw new Error('Invalid Shopify store domain format');
+    throw new ShopifyError('Invalid Shopify store domain format', 400, 'INVALID_DOMAIN');
   }
 
   return requiredVars;
@@ -60,8 +63,9 @@ export const SHOPIFY_API_URL = `https://${NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}/api/
 
 /**
  * Default headers for Shopify API requests
+ * Note: The access token is validated in validateEnvVariables, so it's safe to assert as string
  */
 export const SHOPIFY_HEADERS = {
   'Content-Type': 'application/json',
-  'X-Shopify-Storefront-Access-Token': NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN,
+  'X-Shopify-Storefront-Access-Token': NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN as string,
 } as const; 

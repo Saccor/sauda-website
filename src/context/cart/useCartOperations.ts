@@ -5,62 +5,102 @@
  * removing items, and checking out.
  */
 
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Product } from '@/types/shopify';
 import { createCheckoutSession } from '@/lib/cart/api';
 import { loadCartFromStorage, saveCartToStorage } from '@/lib/cart/storage';
 import { CartState, CartAction } from './cartReducer';
+import { AppError } from '@/lib/error-handling';
 
 export function useCartOperations(
   state: CartState,
-  dispatch: React.Dispatch<CartAction>
+  dispatch: React.Dispatch<CartAction>,
+  setError: (error: AppError | null) => void
 ) {
   const addItem = useCallback((product: Product) => {
-    dispatch({ type: 'ADD_ITEM', payload: product });
-  }, [dispatch]);
+    try {
+      dispatch({ type: 'ADD_ITEM', payload: product });
+      setError(null);
+    } catch (error) {
+      setError(error instanceof AppError ? error : new AppError('Failed to add item to cart'));
+    }
+  }, [dispatch, setError]);
 
   const removeItem = useCallback((productId: string) => {
-    dispatch({ type: 'REMOVE_ITEM', payload: productId });
-  }, [dispatch]);
+    try {
+      dispatch({ type: 'REMOVE_ITEM', payload: productId });
+      setError(null);
+    } catch (error) {
+      setError(error instanceof AppError ? error : new AppError('Failed to remove item from cart'));
+    }
+  }, [dispatch, setError]);
 
   const updateQuantity = useCallback((productId: string, quantity: number) => {
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, quantity } });
-  }, [dispatch]);
+    try {
+      dispatch({ type: 'UPDATE_QUANTITY', payload: { productId, quantity } });
+      setError(null);
+    } catch (error) {
+      setError(error instanceof AppError ? error : new AppError('Failed to update item quantity'));
+    }
+  }, [dispatch, setError]);
 
   const clearCart = useCallback(() => {
-    dispatch({ type: 'CLEAR_CART' });
-  }, [dispatch]);
+    try {
+      dispatch({ type: 'CLEAR_CART' });
+      setError(null);
+    } catch (error) {
+      setError(error instanceof AppError ? error : new AppError('Failed to clear cart'));
+    }
+  }, [dispatch, setError]);
 
   const checkout = useCallback(async () => {
     try {
       dispatch({ type: 'SET_IS_LOADING', payload: true });
+      setError(null);
       const { sessionId } = await createCheckoutSession(state.items);
       window.location.href = `/checkout?session_id=${sessionId}`;
     } catch (error) {
-      console.error('Checkout error:', error);
+      setError(error instanceof AppError ? error : new AppError('Failed to create checkout session'));
       throw error;
     } finally {
       dispatch({ type: 'SET_IS_LOADING', payload: false });
     }
-  }, [dispatch, state.items]);
+  }, [dispatch, state.items, setError]);
 
   const loadCart = useCallback(() => {
-    const savedItems = loadCartFromStorage();
-    dispatch({ type: 'SET_ITEMS', payload: savedItems });
-  }, [dispatch]);
+    try {
+      const savedItems = loadCartFromStorage();
+      dispatch({ type: 'SET_ITEMS', payload: savedItems });
+      setError(null);
+    } catch (error) {
+      setError(error instanceof AppError ? error : new AppError('Failed to load cart from storage'));
+    }
+  }, [dispatch, setError]);
 
   const saveCart = useCallback(() => {
-    saveCartToStorage(state.items);
-  }, [state.items]);
+    try {
+      saveCartToStorage(state.items);
+      setError(null);
+    } catch (error) {
+      setError(error instanceof AppError ? error : new AppError('Failed to save cart to storage'));
+    }
+  }, [state.items, setError]);
 
   const setIsOpen = useCallback((isOpen: boolean) => {
-    dispatch({ type: 'SET_IS_OPEN', payload: isOpen });
-  }, [dispatch]);
+    try {
+      dispatch({ type: 'SET_IS_OPEN', payload: isOpen });
+      setError(null);
+    } catch (error) {
+      setError(error instanceof AppError ? error : new AppError('Failed to update cart state'));
+    }
+  }, [dispatch, setError]);
 
-  const total = state.items.reduce((sum, item) => {
-    const price = parseFloat(item.product.priceRange.minVariantPrice.amount);
-    return sum + (price * item.quantity);
-  }, 0);
+  const total = useMemo(() => {
+    return state.items.reduce((sum, item) => {
+      const price = parseFloat(item.product.priceRange.minVariantPrice.amount);
+      return sum + (price * item.quantity);
+    }, 0);
+  }, [state.items]);
 
   return {
     addItem,

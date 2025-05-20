@@ -1,4 +1,5 @@
 import { SocialFeedItem, YouTubeSearchResponse } from '../types';
+import { NetworkError, ShopifyError } from '../../error-handling';
 
 export async function getLatestYouTubeVideo(): Promise<SocialFeedItem | null> {
   try {
@@ -17,7 +18,7 @@ export async function getLatestYouTubeVideo(): Promise<SocialFeedItem | null> {
     );
     
     if (!ytRes.ok) {
-      throw new Error(`YouTube API error: ${ytRes.status}`);
+      throw new ShopifyError(`YouTube API error: ${ytRes.status}`, ytRes.status, 'YOUTUBE_API_ERROR');
     }
     
     const ytData = await ytRes.json() as YouTubeSearchResponse;
@@ -47,7 +48,9 @@ export async function getLatestYouTubeVideo(): Promise<SocialFeedItem | null> {
       embedHtml,
     };
   } catch (error) {
-    console.error('Error fetching YouTube video:', error);
-    return null;
+    if (error instanceof ShopifyError) {
+      throw error;
+    }
+    throw new NetworkError('Failed to fetch YouTube data', 500, { originalError: error });
   }
 } 
