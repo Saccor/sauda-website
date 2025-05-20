@@ -1,8 +1,13 @@
 /**
  * Core Shopify Types
+ * 
+ * This module contains the fundamental types used across the Shopify integration,
+ * including base response types, media types, and metaobject types.
  */
 
-// Base response type for all Shopify API calls
+/**
+ * Base response type for all Shopify API calls
+ */
 export interface ShopifyResponse<T> {
   data?: T;
   errors?: Array<{
@@ -10,7 +15,9 @@ export interface ShopifyResponse<T> {
   }>;
 }
 
-// Media types
+/**
+ * Media image type used across Shopify entities
+ */
 export interface MediaImage {
   image: {
     url: string;
@@ -25,7 +32,9 @@ export type MediaImageReference = {
   };
 };
 
-// Metaobject types
+/**
+ * Metaobject field type used in Shopify's metafields
+ */
 export interface ShopifyMetaobjectField {
   key: string;
   value: string;
@@ -40,7 +49,9 @@ export interface ShopifyMetaobjectField {
   };
 }
 
-// Menu types
+/**
+ * Menu item type for navigation
+ */
 export interface MenuItem {
   id: string;
   title: string;
@@ -52,13 +63,18 @@ export interface MenuItem {
   }>;
 }
 
+/**
+ * Menu type for navigation structure
+ */
 export interface Menu {
   id: string;
   title: string;
   items: MenuItem[];
 }
 
-// Product types
+/**
+ * Product type representing a Shopify product
+ */
 export interface Product {
   id: string;
   title: string;
@@ -75,7 +91,9 @@ export interface Product {
   };
 }
 
-// Tour date types
+/**
+ * Tour date type for event listings
+ */
 export interface TourDate {
   date: string;
   city: string;
@@ -86,79 +104,11 @@ export interface TourDate {
   additionalInfo: string;
 }
 
-// Featured artist types
+/**
+ * Featured artist type for promotional content
+ */
 export interface FeaturedArtist {
   image: MediaImage;
   title: string;
   buttonText: string;
-}
-
-/**
- * API Response Types
- */
-export interface MenuResponse {
-  menu: Menu;
-}
-
-export interface ProductsResponse {
-  products: {
-    edges: Array<{
-      node: Product;
-    }>;
-  };
-}
-
-export interface TourDatesResponse {
-  page: {
-    metafield: {
-      references: {
-        edges: Array<{
-          node: {
-            fields: ShopifyMetaobjectField[];
-          };
-        }>;
-      };
-    };
-  };
-}
-
-export interface FeaturedArtistResponse {
-  page: {
-    metafield: {
-      reference: {
-        fields: ShopifyMetaobjectField[];
-      };
-    };
-  };
-}
-
-export interface MusicPlayerResponse {
-  page: {
-    metafield: {
-      reference: {
-        fields: ShopifyMetaobjectField[];
-      };
-    };
-  };
-}
-
-/**
- * Cart Types
- */
-export interface CartItem {
-  product: Product;
-  quantity: number;
-}
-
-export interface CartContextType {
-  items: CartItem[];
-  addItem: (product: Product) => void;
-  removeItem: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
-  clearCart: () => void;
-  checkout: () => Promise<void>;
-  total: number;
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-  isLoading: boolean;
 } 

@@ -1,14 +1,35 @@
-import type { CartItem } from '@/types/shopify';
+/**
+ * Cart Storage Utilities
+ * 
+ * This module provides functions for persisting cart data in localStorage.
+ */
 
-const CART_STORAGE_KEY = 'cart';
+import { CartItem } from '@/context/cart/cartReducer';
 
-export function loadCartFromStorage(): CartItem[] {
-  if (typeof window === 'undefined') return [];
-  const savedCart = localStorage.getItem(CART_STORAGE_KEY);
-  return savedCart ? JSON.parse(savedCart) : [];
-}
+const CART_STORAGE_KEY = 'sauda-cart';
 
 export function saveCartToStorage(items: CartItem[]): void {
-  if (typeof window === 'undefined') return;
-  localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+  try {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
+  } catch (error) {
+    console.error('Failed to save cart to storage:', error);
+  }
+}
+
+export function loadCartFromStorage(): CartItem[] {
+  try {
+    const storedCart = localStorage.getItem(CART_STORAGE_KEY);
+    return storedCart ? JSON.parse(storedCart) : [];
+  } catch (error) {
+    console.error('Failed to load cart from storage:', error);
+    return [];
+  }
+}
+
+export function clearCartStorage(): void {
+  try {
+    localStorage.removeItem(CART_STORAGE_KEY);
+  } catch (error) {
+    console.error('Failed to clear cart storage:', error);
+  }
 } 
