@@ -2,6 +2,8 @@ import React from 'react';
 import ProductCard from '@/components/common/ProductCard';
 import { fetchProducts } from '@/lib/shopify/api';
 import type { Product } from '@/types/shopify';
+import { GradientButton } from '@/components/ui/gradient-button';
+import Link from 'next/link';
 
 // Format price according to locale and currency
 const formatPrice = (amount: string, currencyCode: string = 'USD') => {
@@ -90,14 +92,15 @@ const MerchandiseSection = async () => {
           </div>
           
           <div className="text-center">
-            <a 
-              href={`https://${process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center bg-[#0a1833] text-white font-bold px-10 py-3 rounded-none hover:bg-[#142a4d] transition-colors text-lg min-w-[180px] text-center"
+            <GradientButton
+              asChild
+              color="blue"
+              className="min-w-[180px]"
             >
-              View Full Store
-            </a>
+              <Link href="/products">
+                View Full Store
+              </Link>
+            </GradientButton>
           </div>
         </div>
       </div>

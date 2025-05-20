@@ -4,6 +4,7 @@ import { formatDate } from '@/lib/utils/format';
 import { ErrorState } from '@/components/common/ErrorState';
 import { EmptyState } from '@/components/common/EmptyState';
 import type { TourDate, ShopifyMetaobjectField } from '@/types/shopify';
+import { GradientButton } from '@/components/ui/gradient-button';
 
 // Parse tour date fields from Shopify metaobject
 function parseTourDate(fields: ShopifyMetaobjectField[]): TourDate {
@@ -117,14 +118,20 @@ const TourDatesSection = async () => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M18.75 15l3-3m0 0l-3-3m3 3H9" />
                       </svg>
                     </a>
-                    <a
-                      href={event.ticketUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center bg-[#0a1833] text-white font-bold px-10 py-3 rounded-none hover:bg-[#142a4d] transition-colors text-lg min-w-[140px] text-center"
+                    <GradientButton
+                      asChild
+                      color="blue"
+                      className="min-w-[140px] text-lg font-bold px-10 py-3"
                     >
-                      Tickets
-                    </a>
+                      <a
+                        href={event.ticketUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white text-center"
+                      >
+                        Tickets
+                      </a>
+                    </GradientButton>
                   </div>
                 </div>
               </li>
