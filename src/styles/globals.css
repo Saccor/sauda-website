@@ -1,0 +1,17 @@
+/* Blue gradient for floating social button, matches GradientButton blue */
+.blue-gradient-bg {
+  background: linear-gradient(135deg, #1f3f6d 0%, #469396 100%);
+  transition: background 0.5s;
+}
+
+.store-gradient-bg {
+  background: radial-gradient(
+    150% 180.06% at 11.14% 140%,
+    #000022 0%,
+    #1f3f6d 45%,
+    #469396 65%,
+    #f1ffa5 85%,
+    #fffbe6 100%
+  );
+  transition: background 0.5s;
+} 
