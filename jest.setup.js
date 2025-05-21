@@ -49,4 +49,32 @@ jest.mock('framer-motion', () => ({
     div: 'div',
   },
   AnimatePresence: ({ children }) => children,
-})) 
+}))
+
+// Mock Next.js navigation
+jest.mock('next/navigation', () => ({
+  useRouter() {
+    return {
+      push: jest.fn(),
+      replace: jest.fn(),
+      back: jest.fn(),
+    };
+  },
+  usePathname() {
+    return '';
+  },
+  useSearchParams() {
+    return new URLSearchParams();
+  },
+}))
+
+// Add Request and Response to global
+global.Request = jest.fn().mockImplementation((input, init) => ({
+  ...input,
+  ...init,
+}));
+
+global.Response = jest.fn().mockImplementation((body, init) => ({
+  ...body,
+  ...init,
+})); 

@@ -23,6 +23,7 @@ export function Section({
 }: SectionProps) {
   return (
     <section 
+      data-testid="section"
       className={cn(
         bgClass,
         'py-28 text-on-dark',
