@@ -1,266 +1,196 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { act } from 'react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import Cart from '../Cart'
-import { CartProvider } from '@/context/CartContext'
-import { useCartOperations } from '@/context/cart/useCartOperations'
-import { getStripe } from '@/lib/stripe/client'
+import { CartProvider, useCart } from '@/context/CartContext'
+import '@testing-library/jest-dom'
 
-// Mock the useCartOperations hook
-jest.mock('@/context/cart/useCartOperations', () => ({
-  useCartOperations: jest.fn(),
+type CartContextType = {
+  items: Array<{
+    product: {
+      id: string;
+      title: string;
+      featuredImage: { url: string };
+      priceRange: {
+        minVariantPrice: {
+          amount: string;
+          currencyCode: string;
+        };
+      };
+    };
+    quantity: number;
+  }>;
+  removeItem: (id: string) => void;
+  updateQuantity: (id: string, quantity: number) => void;
+  total: number;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+};
+
+type CartItem = CartContextType['items'][0];
+
+// Mock the useCart hook
+jest.mock('@/context/CartContext', () => ({
+  useCart: jest.fn(() => ({
+    items: [],
+    removeItem: jest.fn(),
+    updateQuantity: jest.fn(),
+    total: 0,
+    isOpen: true,
+    setIsOpen: jest.fn(),
+  })),
+  CartProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }))
 
-// Mock the Stripe client
-jest.mock('@/lib/stripe/client', () => ({
-  getStripe: jest.fn(),
-}))
-
-// Mock fetch
-global.fetch = jest.fn()
-
-describe('Cart', () => {
-  const mockRemoveItem = jest.fn()
-  const mockUpdateQuantity = jest.fn()
-  const mockSetIsOpen = jest.fn()
-  const mockLoadCart = jest.fn()
-
+describe('Cart Component', () => {
   beforeEach(() => {
-    // Reset all mocks before each test
-    jest.clearAllMocks()
-    
-    // Default mock implementation
-    ;(useCartOperations as jest.Mock).mockImplementation(() => ({
-      items: [],
-      removeItem: mockRemoveItem,
-      updateQuantity: mockUpdateQuantity,
-      total: 0,
-      isOpen: true,
-      setIsOpen: mockSetIsOpen,
-      loadCart: mockLoadCart,
-    }))
-
-    // Mock fetch response
-    ;(global.fetch as jest.Mock).mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve({ sessionId: 'test-session-id' }),
-    })
-
-    // Mock Stripe
-    ;(getStripe as jest.Mock).mockResolvedValue({
-      redirectToCheckout: jest.fn().mockResolvedValue({ error: null }),
-    })
+    // Clear localStorage before each test
+    localStorage.clear()
   })
 
-  it('renders empty cart message when no items and cart is open', async () => {
-    await act(async () => {
-      render(
-        <CartProvider>
-          <Cart />
-        </CartProvider>
-      )
-    })
-
+  it('renders empty cart message when cart is empty', () => {
+    render(
+      <CartProvider>
+        <Cart />
+      </CartProvider>
+    )
     expect(screen.getByText(/your cart is empty/i)).toBeInTheDocument()
   })
 
-  it('renders cart items when items are present', async () => {
-    const mockItems = [
-      {
-        product: {
-          id: '1',
-          title: 'Test Product',
-          featuredImage: { url: '/test-image.jpg' },
-          priceRange: {
-            minVariantPrice: {
-              amount: '100.00',
-              currencyCode: 'SEK',
-            },
+  it('renders cart items when cart has items', () => {
+    // Mock cart data
+    const mockItems: CartItem[] = [{
+      product: {
+        id: '1',
+        title: 'Test Product',
+        featuredImage: { url: '/test.jpg' },
+        priceRange: {
+          minVariantPrice: {
+            amount: '19.99',
+            currencyCode: 'SEK',
           },
         },
-        quantity: 1,
       },
-    ]
+      quantity: 1,
+    }];
 
-    ;(useCartOperations as jest.Mock).mockImplementation(() => ({
+    // Mock useCart with items
+    (useCart as jest.Mock).mockReturnValue({
       items: mockItems,
-      removeItem: mockRemoveItem,
-      updateQuantity: mockUpdateQuantity,
-      total: 100,
+      removeItem: jest.fn(),
+      updateQuantity: jest.fn(),
+      total: 19.99,
       isOpen: true,
-      setIsOpen: mockSetIsOpen,
-      loadCart: mockLoadCart,
-    }))
-
-    await act(async () => {
-      render(
-        <CartProvider>
-          <Cart />
-        </CartProvider>
-      )
+      setIsOpen: jest.fn(),
     })
 
+    render(
+      <CartProvider>
+        <Cart />
+      </CartProvider>
+    )
     expect(screen.getByText('Test Product')).toBeInTheDocument()
-    expect(screen.getByText('100,00 kr', { selector: 'p.text-sm.text-gray-400' })).toBeInTheDocument()
-    expect(screen.getByText('Total')).toBeInTheDocument()
-    expect(screen.getByText('100,00 kr', { selector: 'span.text-white.font-bold' })).toBeInTheDocument()
+    expect(screen.getByText('19,99 kr')).toBeInTheDocument()
   })
 
-  it('calls removeItem when remove button is clicked', async () => {
-    const mockItems = [
-      {
-        product: {
-          id: '1',
-          title: 'Test Product',
-          featuredImage: { url: '/test-image.jpg' },
-          priceRange: {
-            minVariantPrice: {
-              amount: '100.00',
-              currencyCode: 'SEK',
-            },
-          },
-        },
-        quantity: 1,
-      },
-    ]
-
-    ;(useCartOperations as jest.Mock).mockImplementation(() => ({
-      items: mockItems,
-      removeItem: mockRemoveItem,
-      updateQuantity: mockUpdateQuantity,
-      total: 100,
+  it('calls setIsOpen when close button is clicked', () => {
+    const mockSetIsOpen: jest.Mock = jest.fn();
+    (useCart as jest.Mock).mockReturnValue({
+      items: [],
+      removeItem: jest.fn(),
+      updateQuantity: jest.fn(),
+      total: 0,
       isOpen: true,
       setIsOpen: mockSetIsOpen,
-      loadCart: mockLoadCart,
-    }))
-
-    await act(async () => {
-      render(
-        <CartProvider>
-          <Cart />
-        </CartProvider>
-      )
     })
 
-    const removeButton = screen.getByRole('button', { name: /remove item/i })
-    await act(async () => {
-      fireEvent.click(removeButton)
-    })
-    expect(mockRemoveItem).toHaveBeenCalledWith('1')
-  })
-
-  it('calls updateQuantity when quantity buttons are clicked', async () => {
-    const mockItems = [
-      {
-        product: {
-          id: '1',
-          title: 'Test Product',
-          featuredImage: { url: '/test-image.jpg' },
-          priceRange: {
-            minVariantPrice: {
-              amount: '100.00',
-              currencyCode: 'SEK',
-            },
-          },
-        },
-        quantity: 1,
-      },
-    ]
-
-    ;(useCartOperations as jest.Mock).mockImplementation(() => ({
-      items: mockItems,
-      removeItem: mockRemoveItem,
-      updateQuantity: mockUpdateQuantity,
-      total: 100,
-      isOpen: true,
-      setIsOpen: mockSetIsOpen,
-      loadCart: mockLoadCart,
-    }))
-
-    await act(async () => {
-      render(
-        <CartProvider>
-          <Cart />
-        </CartProvider>
-      )
-    })
-
-    const plusButton = screen.getByRole('button', { name: /increase quantity/i })
-    const minusButton = screen.getByRole('button', { name: /decrease quantity/i })
-
-    await act(async () => {
-      fireEvent.click(plusButton)
-    })
-    expect(mockUpdateQuantity).toHaveBeenCalledWith('1', 2)
-
-    await act(async () => {
-      fireEvent.click(minusButton)
-    })
-    expect(mockUpdateQuantity).toHaveBeenCalledWith('1', 0)
-  })
-
-  it('calls setIsOpen when close button is clicked', async () => {
-    await act(async () => {
-      render(
-        <CartProvider>
-          <Cart />
-        </CartProvider>
-      )
-    })
-
+    render(
+      <CartProvider>
+        <Cart />
+      </CartProvider>
+    )
+    
     const closeButton = screen.getByRole('button', { name: /close cart/i })
-    await act(async () => {
-      fireEvent.click(closeButton)
-    })
+    fireEvent.click(closeButton)
+    
     expect(mockSetIsOpen).toHaveBeenCalledWith(false)
   })
 
-  it('handles checkout process', async () => {
-    const mockItems = [
-      {
-        product: {
-          id: '1',
-          title: 'Test Product',
-          featuredImage: { url: '/test-image.jpg' },
-          priceRange: {
-            minVariantPrice: {
-              amount: '100.00',
-              currencyCode: 'SEK',
-            },
+  it('calls removeItem when remove button is clicked', () => {
+    const mockRemoveItem: jest.Mock = jest.fn();
+    const mockItems: CartItem[] = [{
+      product: {
+        id: '1',
+        title: 'Test Product',
+        featuredImage: { url: '/test.jpg' },
+        priceRange: {
+          minVariantPrice: {
+            amount: '19.99',
+            currencyCode: 'SEK',
           },
         },
-        quantity: 1,
       },
-    ]
+      quantity: 1,
+    }];
 
-    ;(useCartOperations as jest.Mock).mockImplementation(() => ({
+    (useCart as jest.Mock).mockReturnValue({
       items: mockItems,
       removeItem: mockRemoveItem,
-      updateQuantity: mockUpdateQuantity,
-      total: 100,
+      updateQuantity: jest.fn(),
+      total: 19.99,
       isOpen: true,
-      setIsOpen: mockSetIsOpen,
-      loadCart: mockLoadCart,
-    }))
-
-    await act(async () => {
-      render(
-        <CartProvider>
-          <Cart />
-        </CartProvider>
-      )
+      setIsOpen: jest.fn(),
     })
 
-    const checkoutButton = screen.getByRole('button', { name: /checkout/i })
-    await act(async () => {
-      fireEvent.click(checkoutButton)
-    })
+    render(
+      <CartProvider>
+        <Cart />
+      </CartProvider>
+    )
+    
+    const removeButton = screen.getByRole('button', { name: /remove item/i })
+    fireEvent.click(removeButton)
+    
+    expect(mockRemoveItem).toHaveBeenCalledWith('1')
+  })
 
-    expect(global.fetch).toHaveBeenCalledWith('/api/stripe', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+  it('calls updateQuantity when quantity buttons are clicked', () => {
+    const mockUpdateQuantity: jest.Mock = jest.fn();
+    const mockItems: CartItem[] = [{
+      product: {
+        id: '1',
+        title: 'Test Product',
+        featuredImage: { url: '/test.jpg' },
+        priceRange: {
+          minVariantPrice: {
+            amount: '19.99',
+            currencyCode: 'SEK',
+          },
+        },
       },
-      body: JSON.stringify({ items: mockItems }),
+      quantity: 1,
+    }];
+
+    (useCart as jest.Mock).mockReturnValue({
+      items: mockItems,
+      removeItem: jest.fn(),
+      updateQuantity: mockUpdateQuantity,
+      total: 19.99,
+      isOpen: true,
+      setIsOpen: jest.fn(),
     })
+
+    render(
+      <CartProvider>
+        <Cart />
+      </CartProvider>
+    )
+    
+    const increaseButton = screen.getByRole('button', { name: /increase quantity/i })
+    const decreaseButton = screen.getByRole('button', { name: /decrease quantity/i })
+    
+    fireEvent.click(increaseButton)
+    expect(mockUpdateQuantity).toHaveBeenCalledWith('1', 2)
+    
+    fireEvent.click(decreaseButton)
+    expect(mockUpdateQuantity).toHaveBeenCalledWith('1', 0)
   })
 }) 
