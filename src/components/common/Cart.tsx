@@ -4,14 +4,9 @@ import React, { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { X, Plus, Minus } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { getStripe } from '@/lib/stripe/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
-
-// Lazy load Stripe-related functionality
-const getStripe = async () => {
-  const { getStripe: loadStripe } = await import('@/lib/stripe/client');
-  return loadStripe();
-};
 
 const Cart = () => {
   const { items, removeItem, updateQuantity, total, isOpen, setIsOpen } = useCart();
@@ -23,28 +18,35 @@ const Cart = () => {
       setIsLoading(true);
       setError(null);
 
+      // Validate items before sending
+      if (!items.length) {
+        throw new Error('Your cart is empty');
+      }
+
       const response = await fetch('/api/stripe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          items: items.map(item => ({
-            id: item.product.id,
-            quantity: item.quantity,
-          })),
-        }),
+        body: JSON.stringify({ items }),
       });
 
-      const { sessionId } = await response.json();
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create checkout session');
+      }
+
+      if (!data.sessionId) {
+        throw new Error('No session ID received from server');
+      }
       
-      // Only load Stripe when needed
       const stripe = await getStripe();
       if (!stripe) {
         throw new Error('Failed to initialize Stripe');
       }
 
-      const { error: stripeError } = await stripe.redirectToCheckout({ sessionId });
+      const { error: stripeError } = await stripe.redirectToCheckout({ sessionId: data.sessionId });
       if (stripeError) {
         throw stripeError;
       }

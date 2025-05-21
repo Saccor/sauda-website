@@ -11,6 +11,27 @@ export async function POST(req: Request) {
   try {
     const { items } = await req.json();
 
+    // Validate items array
+    if (!Array.isArray(items) || items.length === 0) {
+      return NextResponse.json(
+        { error: 'No items provided for checkout' },
+        { status: 400 }
+      );
+    }
+
+    // Validate each item has required fields
+    const invalidItems = items.filter(item => 
+      !item.product?.title || 
+      !item.product?.priceRange?.minVariantPrice?.amount
+    );
+
+    if (invalidItems.length > 0) {
+      return NextResponse.json(
+        { error: 'Some items are missing required fields' },
+        { status: 400 }
+      );
+    }
+
     // Get the base URL from the request
     const protocol = process.env.NODE_ENV === 'development' ? 'http' : 'https';
     const host = req.headers.get('host') || 'localhost:3000';
@@ -42,7 +63,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error('Error creating checkout session:', error);
     return NextResponse.json(
-      { error: 'Error creating checkout session' },
+      { error: error instanceof Error ? error.message : 'Error creating checkout session' },
       { status: 500 }
     );
   }
