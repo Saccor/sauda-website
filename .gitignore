@@ -14,6 +14,20 @@
 # testing
 /coverage
 /backend/coverage
+/tests/
+/__tests__/
+/test/
+/backend/tests/
+/backend/__tests__/
+/backend/test/
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+*.test.jsx
+*.test.tsx
+*.spec.jsx
+*.spec.tsx
 
 # next.js
 /.next/
@@ -92,3 +106,39 @@ mycustomrules
 # Lighthouse CI
 .lighthouseci/
 !lighthouserc.js
+
+# Testing
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/coverage/
+/.nyc_output/
+/jest-coverage/
+/cypress/videos/
+/cypress/screenshots/
+
+# Test artifacts
+*.test.js.snap
+*.test.ts.snap
+*.spec.js.snap
+*.spec.ts.snap
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/coverage/
+/.nyc_output/
+/jest-coverage/
+/cypress/videos/
+/cypress/screenshots/
+
+# Test logs
+test.log
+test-results.log
+playwright-debug.log
+jest-debug.log
+
+# Test environment
+.env.test
+.env.test.local
+.env.e2e
+.env.e2e.local
