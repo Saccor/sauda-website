@@ -10,25 +10,29 @@ jest.mock('framer-motion', () => ({
   },
 }))
 
+// Mock dependencies
+jest.mock('../../common/CartButton', () => {
+  const CartButton = React.forwardRef<HTMLButtonElement>((props, ref) => (
+    <button ref={ref} {...props}>Cart</button>
+  ))
+  CartButton.displayName = 'CartButton'
+  return CartButton
+})
+
+jest.mock('../../common/ErrorDisplay', () => {
+  const ErrorDisplay = ({ message }: { message: string }) => (
+    <div data-testid="error">{message}</div>
+  )
+  ErrorDisplay.displayName = 'ErrorDisplay'
+  return ErrorDisplay
+})
+
+jest.mock('@/context/CartContext', () => ({ useCart: () => ({ setIsOpen: jest.fn(), isOpen: false }) }))
+jest.mock('@/components/ui/FlyToCartProvider', () => ({ useFlyToCart: () => ({ setCartButtonRef: jest.fn() }) }))
+
 import { render, screen, act } from '@testing-library/react'
 import React, { Suspense } from 'react'
 import ClientHeader from '../ClientHeader'
-
-// Mock dependencies
-const CartButton = React.forwardRef<HTMLButtonElement>((props, ref) => (
-  <button ref={ref} {...props}>Cart</button>
-))
-CartButton.displayName = 'CartButton'
-
-const ErrorDisplay = ({ message }: { message: string }) => (
-  <div data-testid="error">{message}</div>
-)
-ErrorDisplay.displayName = 'ErrorDisplay'
-
-jest.mock('../../common/CartButton', () => CartButton)
-jest.mock('../../common/ErrorDisplay', () => ErrorDisplay)
-jest.mock('@/context/CartContext', () => ({ useCart: () => ({ setIsOpen: jest.fn(), isOpen: false }) }))
-jest.mock('@/components/ui/FlyToCartProvider', () => ({ useFlyToCart: () => ({ setCartButtonRef: jest.fn() }) }))
 
 // Mock window.matchMedia
 beforeAll(() => {

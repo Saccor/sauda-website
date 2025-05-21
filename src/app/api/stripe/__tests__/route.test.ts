@@ -1,6 +1,6 @@
 // Mock Stripe at the very top, before any imports
-const createMock = jest.fn();
 jest.mock('stripe', () => {
+  const createMock = jest.fn();
   return jest.fn().mockImplementation(() => ({
     checkout: {
       sessions: {
@@ -24,8 +24,13 @@ jest.mock('next/server', () => ({
 }));
 
 describe('Stripe API', () => {
+  let createMock: jest.Mock;
+
   beforeEach(() => {
     jest.clearAllMocks();
+    // Get the mock function from the Stripe instance
+    const stripe = require('stripe')();
+    createMock = stripe.checkout.sessions.create;
   });
 
   describe('POST /api/stripe', () => {
@@ -211,20 +216,23 @@ describe('Stripe API', () => {
 
       expect(response.status).toBe(200);
       expect(data).toEqual({ sessionId: 'test_session_id' });
-      expect(createMock).toHaveBeenCalledWith(
-        expect.objectContaining({
-          line_items: expect.arrayContaining([
-            expect.objectContaining({
-              price_data: {
-                product_data: {
-                  name: 'Test Product',
-                  images: []
-                }
-              }
-            })
-          ])
-        })
-      );
+      expect(createMock).toHaveBeenCalledWith({
+        cancel_url: 'https://localhost:3000/cart',
+        line_items: [{
+          price_data: {
+            currency: 'sek',
+            product_data: {
+              name: 'Test Product',
+              images: []
+            },
+            unit_amount: 10000
+          },
+          quantity: 1
+        }],
+        mode: 'payment',
+        payment_method_types: ['card', 'klarna'],
+        success_url: 'https://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}'
+      });
     });
   });
 }); 
