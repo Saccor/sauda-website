@@ -83,3 +83,6 @@ public/*.svg
 
 # Custom rules
 mycustomrules
+.cursor/
+.cursor/rules/
+/docs/
