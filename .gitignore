@@ -64,6 +64,7 @@ SOCIAL_MEDIA_SETUP.md
 social-media-setup.md
 routes.md
 /docs/*
+/summary/
 
 # images (will be managed through CMS)
 public/*.JPG
