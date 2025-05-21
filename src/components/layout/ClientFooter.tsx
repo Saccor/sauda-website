@@ -27,6 +27,18 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
   const leftLinks = menuItems.slice(0, half);
   const rightLinks = menuItems.slice(half);
 
+  if (error) {
+    return (
+      <footer className="w-full bg-transparent border-t border-neutral-light/10 shadow-lg">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 flex flex-col items-center max-w-full sm:max-w-[1280px]">
+          <div className="w-full flex justify-center items-center min-h-[60px]">
+            <ErrorDisplay message={error} />
+          </div>
+        </div>
+      </footer>
+    );
+  }
+
   return (
     <footer className="w-full bg-transparent border-t border-neutral-light/10 shadow-lg">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 flex flex-col items-center max-w-full sm:max-w-[1280px]">
@@ -34,25 +46,21 @@ const ClientFooter: React.FC<ClientFooterProps> = ({ menuItems, error }) => {
         <div className="w-full flex flex-col md:flex-row items-center justify-center md:justify-between gap-8 md:gap-16 min-w-0">
           {/* Left Links */}
           <nav className="flex flex-wrap gap-4 justify-center md:justify-end flex-1 order-2 md:order-1 w-full md:w-auto min-w-0">
-            {error ? (
-              <ErrorDisplay message={error} />
-            ) : leftLinks.length > 0 ? (
-              leftLinks.map((item) => (
-                <motion.div
-                  key={item.id}
-                  whileHover={{ scale: 1.08 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                  className="inline-block"
+            {leftLinks.length > 0 && leftLinks.map((item) => (
+              <motion.div
+                key={item.id}
+                whileHover={{ scale: 1.08 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                className="inline-block"
+              >
+                <Link
+                  href={item.url}
+                  className="text-white font-semibold text-sm md:text-base tracking-wide hover:text-white/80 transition-colors px-2 py-1 rounded"
                 >
-                  <Link
-                    href={item.url}
-                    className="text-white font-semibold text-sm md:text-base tracking-wide hover:text-white/80 transition-colors px-2 py-1 rounded"
-                  >
-                    {item.title}
-                  </Link>
-                </motion.div>
-              ))
-            ) : null}
+                  {item.title}
+                </Link>
+              </motion.div>
+            ))}
           </nav>
 
           {/* Logo Centered */}

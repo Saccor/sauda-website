@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { SocialFeedItem } from '@/types/social-media';
+import Image from 'next/image';
 
 export const SocialMediaContainer = () => {
   const [posts, setPosts] = useState<SocialFeedItem[]>([]);
@@ -255,10 +256,12 @@ export const SocialMediaContainer = () => {
                     Sorry, your browser doesn&apos;t support embedded videos.
                   </video>
                 ) : (
-                  <img
+                  <Image
                     src={currentPost.mediaUrl}
                     alt={currentPost.caption || 'Instagram post'}
-                    className="w-full h-full object-contain rounded-lg bg-black"
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-contain rounded-lg bg-black"
                     style={{ background: '#111' }}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;

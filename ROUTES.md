@@ -260,13 +260,11 @@ interface ClientFooterProps {
 1. `EmptyState` ✅ - Assert title, message, optional action URL and text render correctly
 2. `ErrorDisplay` ✅ - Assert message renders, retry callback fires when present
 3. `ErrorState` ✅ - Assert title, message, optional verification steps render
-4. `Button` - Assert all variants ('default', 'destructive', 'outline', 'secondary', 'ghost', 'link') and sizes render correctly
-5. `GradientButton` - Assert color variants ('default', 'blue') and gradient styles apply correctly
-6. `Section` - Assert bgClass applies, children render correctly
-7. `Card` - Assert className passes through, children render correctly
-8. `Sheet` components - Assert Dialog functionality, header/footer/content areas render correctly
-9. `ClientHeader` - Assert menu items render, error state handles correctly, hero ref functionality
-10. `ClientFooter` - Assert menu items render, error state handles correctly
+4. `Section` ✅ - Assert bgClass applies, children render correctly
+5. `Card` ✅ - Assert className passes through, children render correctly
+6. `Sheet` components ✅ - Assert Dialog functionality, header/footer/content areas render correctly
+7. `ClientHeader` ✅ - Assert menu items render, error state handles correctly, hero ref functionality
+8.  `ClientFooter` ✅ - Assert menu items render, error state handles correctly
 
 ### Page Integration Tests
 1. `/` (Home) - Assert Main component renders correctly
@@ -277,7 +275,7 @@ interface ClientFooterProps {
 6. `/success` - Assert post-purchase state, session_id handling, cart clearing
 
 ### API Route Tests
-1. `/api/social-feed` (GET)
+1. `/api/social-feed` ✅(GET)
    - Input: page query param (optional)
    - Assert: Returns paginated posts array, hasMore flag, page number, totalItems count
    - Test: pagination, error handling
