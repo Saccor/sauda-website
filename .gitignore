@@ -86,3 +86,7 @@ mycustomrules
 .cursor/
 .cursor/rules/
 /docs/
+
+# Lighthouse CI
+.lighthouseci/
+!lighthouserc.js
