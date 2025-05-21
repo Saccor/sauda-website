@@ -14,6 +14,9 @@ const nordMedium = localFont({
   display: 'swap',
   preload: true,
   fallback: ['system-ui', 'arial'],
+  adjustFontFallback: 'Arial',
+  weight: '500',
+  style: 'normal',
 });
 
 export const metadata: Metadata = {
@@ -51,12 +54,21 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${nordMedium.variable} antialiased`}>
-      <body>
+      <head>
+        <link
+          rel="preload"
+          href="/fonts/Nord-Medium.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
+      </head>
+      <body className="bg-gradient-to-b from-[#0a1833] via-black to-[#0a1833]">
         <FlyToCartProvider>
           <CartProvider>
             <ClientCart />
             <Header />
-            <div className="min-h-screen w-full overflow-x-hidden bg-gradient-to-b from-[#0a1833] via-black to-[#0a1833]">
+            <div className="min-h-screen w-full overflow-x-hidden">
               {children}
               <Footer />
               <FloatingSocialButton />

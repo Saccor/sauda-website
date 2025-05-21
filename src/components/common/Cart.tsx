@@ -4,9 +4,14 @@ import React, { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { X, Plus, Minus } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { getStripe } from '@/lib/stripe/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
+
+// Lazy load Stripe-related functionality
+const getStripe = async () => {
+  const { getStripe: loadStripe } = await import('@/lib/stripe/client');
+  return loadStripe();
+};
 
 const Cart = () => {
   const { items, removeItem, updateQuantity, total, isOpen, setIsOpen } = useCart();
@@ -23,15 +28,17 @@ const Cart = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({
+          items: items.map(item => ({
+            id: item.product.id,
+            quantity: item.quantity,
+          })),
+        }),
       });
-
-      if (!response.ok) {
-        throw new Error('Failed to create checkout session');
-      }
 
       const { sessionId } = await response.json();
       
+      // Only load Stripe when needed
       const stripe = await getStripe();
       if (!stripe) {
         throw new Error('Failed to initialize Stripe');
