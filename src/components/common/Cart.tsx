@@ -1,20 +1,23 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Image from 'next/image';
 import { X, Plus, Minus } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { loadStripe } from '@stripe/stripe-js';
+import { getStripe } from '@/lib/stripe/client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 
 const Cart = () => {
   const { items, removeItem, updateQuantity, total, isOpen, setIsOpen } = useCart();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleCheckout = async () => {
+  const handleCheckout = useCallback(async () => {
     try {
       setIsLoading(true);
+      setError(null);
+
       const response = await fetch('/api/stripe', {
         method: 'POST',
         headers: {
@@ -23,18 +26,28 @@ const Cart = () => {
         body: JSON.stringify({ items }),
       });
 
+      if (!response.ok) {
+        throw new Error('Failed to create checkout session');
+      }
+
       const { sessionId } = await response.json();
       
-      // Redirect to Stripe Checkout
-      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-      await stripe?.redirectToCheckout({ sessionId });
+      const stripe = await getStripe();
+      if (!stripe) {
+        throw new Error('Failed to initialize Stripe');
+      }
+
+      const { error: stripeError } = await stripe.redirectToCheckout({ sessionId });
+      if (stripeError) {
+        throw stripeError;
+      }
     } catch (error) {
       console.error('Error during checkout:', error);
-      alert('Something went wrong during checkout. Please try again.');
+      setError(error instanceof Error ? error.message : 'Something went wrong during checkout');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [items]);
 
   return (
     <AnimatePresence>
@@ -68,6 +81,16 @@ const Cart = () => {
             </div>
 
             <div className="flex-1 overflow-y-auto p-4 pt-8 md:pt-16">
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 mb-4 text-red-500"
+                >
+                  {error}
+                </motion.div>
+              )}
+              
               {items.length === 0 ? (
                 <motion.div
                   initial={{ opacity: 0 }}
@@ -94,20 +117,23 @@ const Cart = () => {
                     >
                       <div className="w-20 h-28 flex-shrink-0">
                         <AspectRatio ratio={3/4} className="w-full h-full">
-                          <motion.div
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                            className="w-full h-full flex items-center justify-center"
-                            style={{ willChange: 'transform' }}
-                          >
-                            <Image
-                              src={item.product.featuredImage?.url || 'https://placehold.co/282x282'}
-                              alt={item.product.title}
-                              fill
-                              className="object-contain"
-                              quality={85}
-                            />
-                          </motion.div>
+                          <div className="w-full h-full">
+                            <motion.div
+                              className="w-full h-full flex items-center justify-center"
+                              style={{ willChange: 'transform' }}
+                            >
+                              <div className="w-full h-full hover:scale-105 transition-transform">
+                                <Image
+                                  src={item.product.featuredImage?.url || 'https://placehold.co/282x282'}
+                                  alt={item.product.title}
+                                  width={282}
+                                  height={282}
+                                  className="object-contain w-full h-full"
+                                  quality={85}
+                                />
+                              </div>
+                            </motion.div>
+                          </div>
                         </AspectRatio>
                       </div>
                       <div className="flex-1">
@@ -122,6 +148,7 @@ const Cart = () => {
                           <button
                             onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
                             className="p-1 hover:bg-gray-800 rounded"
+                            aria-label="decrease quantity"
                           >
                             <Minus className="w-4 h-4" />
                           </button>
@@ -129,6 +156,7 @@ const Cart = () => {
                           <button
                             onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
                             className="p-1 hover:bg-gray-800 rounded"
+                            aria-label="increase quantity"
                           >
                             <Plus className="w-4 h-4" />
                           </button>
@@ -137,6 +165,7 @@ const Cart = () => {
                       <button
                         onClick={() => removeItem(item.product.id)}
                         className="text-gray-400 hover:text-white"
+                        aria-label="remove item"
                       >
                         <X className="w-5 h-5" />
                       </button>

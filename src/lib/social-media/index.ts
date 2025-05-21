@@ -8,7 +8,7 @@
 
 import { SocialFeedItem } from './types';
 import { getLatestInstagramPost, getLatestInstagramPosts } from './platforms/instagram';
-import { getLatestYouTubeVideo } from './platforms/youtube';
+import { getLatestYouTubeVideos } from './platforms/youtube';
 import { getLatestTikTokPost } from './platforms/tiktok';
 import { getCachedFeed, setCachedFeed } from './utils/cache';
 
@@ -25,16 +25,16 @@ export async function getUnifiedSocialFeed(): Promise<SocialFeedItem[]> {
   }
 
   // Fetch from all platforms
-  const [instagramPosts, youtubeVideo, tiktokPost] = await Promise.all([
+  const [instagramPosts, youtubeVideos, tiktokPost] = await Promise.all([
     getLatestInstagramPosts(),
-    getLatestYouTubeVideo(),
+    getLatestYouTubeVideos(),
     getLatestTikTokPost()
   ]);
 
   // Combine and sort by timestamp
   const feed = [
     ...instagramPosts,
-    ...(youtubeVideo ? [youtubeVideo] : []),
+    ...youtubeVideos,
     ...(tiktokPost ? [tiktokPost] : [])
   ].sort((a, b) => {
     const dateA = new Date(
@@ -60,6 +60,6 @@ export async function getUnifiedSocialFeed(): Promise<SocialFeedItem[]> {
 export {
   getLatestInstagramPost,
   getLatestInstagramPosts,
-  getLatestYouTubeVideo,
+  getLatestYouTubeVideos,
   getLatestTikTokPost
 }; 

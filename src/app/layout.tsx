@@ -12,6 +12,8 @@ const nordMedium = localFont({
   src: '../../public/fonts/Nord-Medium.ttf',
   variable: '--font-nord',
   display: 'swap',
+  preload: true,
+  fallback: ['system-ui', 'arial'],
 });
 
 export const metadata: Metadata = {

@@ -1,20 +1,23 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Image from "next/image";
 import { X, Plus, Minus } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-import { loadStripe } from "@stripe/stripe-js";
+import { getStripe } from "@/lib/stripe/client";
 import { motion } from "framer-motion";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const CartPage = () => {
   const { items, removeItem, updateQuantity, total } = useCart();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleCheckout = async () => {
+  const handleCheckout = useCallback(async () => {
     try {
       setIsLoading(true);
+      setError(null);
+
       const response = await fetch("/api/stripe", {
         method: "POST",
         headers: {
@@ -22,16 +25,29 @@ const CartPage = () => {
         },
         body: JSON.stringify({ items }),
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to create checkout session');
+      }
+
       const { sessionId } = await response.json();
-      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
-      await stripe?.redirectToCheckout({ sessionId });
+      const stripe = await getStripe();
+      
+      if (!stripe) {
+        throw new Error('Failed to initialize Stripe');
+      }
+
+      const { error: stripeError } = await stripe.redirectToCheckout({ sessionId });
+      if (stripeError) {
+        throw stripeError;
+      }
     } catch (error) {
       console.error("Error during checkout:", error);
-      alert("Something went wrong during checkout. Please try again.");
+      setError(error instanceof Error ? error.message : 'Something went wrong during checkout');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [items]);
 
   return (
     <motion.main 
@@ -48,6 +64,17 @@ const CartPage = () => {
         className="max-w-2xl w-full mx-auto bg-black/30 rounded-2xl shadow-xl p-8 md:p-12 flex flex-col items-center"
       >
         <h1 className="text-4xl font-bold mb-10 text-center tracking-tight">Your Cart</h1>
+        
+        {error && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-red-500/10 border border-red-500/20 rounded-lg p-4 mb-6 w-full text-red-500"
+          >
+            {error}
+          </motion.div>
+        )}
+
         {items.length === 0 ? (
           <motion.div 
             initial={{ y: 20, opacity: 0 }}
