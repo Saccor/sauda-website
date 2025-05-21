@@ -1,6 +1,6 @@
 // Mock Stripe at the very top, before any imports
+export const createMock = jest.fn();
 jest.mock('stripe', () => {
-  const createMock = jest.fn();
   return jest.fn().mockImplementation(() => ({
     checkout: {
       sessions: {
@@ -24,13 +24,8 @@ jest.mock('next/server', () => ({
 }));
 
 describe('Stripe API', () => {
-  let createMock: jest.Mock;
-
   beforeEach(() => {
     jest.clearAllMocks();
-    // Get the mock function from the Stripe instance
-    const stripe = require('stripe')();
-    createMock = stripe.checkout.sessions.create;
   });
 
   describe('POST /api/stripe', () => {
