@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Enable Turbopack for development
+  turbopack: {},
+
   images: {
     remotePatterns: [
       {
@@ -43,42 +46,37 @@ const nextConfig = {
   // Optimize production builds
   poweredByHeader: false,
   reactStrictMode: true,
-  
-  // Optimize chunks
-  webpack: (config, { dev, isServer }) => {
-    // Production optimizations
+};
+
+// Only apply Webpack config if explicitly using Webpack
+if (process.env.NEXT_WEBPACK === 'true') {
+  nextConfig.webpack = (config, { dev, isServer }) => {
+    // Only apply custom splitChunks on production Webpack builds
     if (!dev && !isServer) {
-      // Split chunks more aggressively
       config.optimization.splitChunks = {
         chunks: 'all',
         minSize: 20000,
         maxSize: 100000,
         cacheGroups: {
-          default: false,
-          vendors: false,
-          // Vendor chunk
           vendor: {
             name: 'vendor',
-            chunks: 'all',
             test: /[\\/]node_modules[\\/]/,
             priority: 20,
             enforce: true,
             reuseExistingChunk: true,
           },
-          // Common chunk
           common: {
             name: 'common',
             minChunks: 2,
-            chunks: 'all',
             priority: 10,
-            reuseExistingChunk: true,
             enforce: true,
+            reuseExistingChunk: true,
           },
         },
       };
     }
     return config;
-  },
-};
+  };
+}
 
 module.exports = nextConfig; 
