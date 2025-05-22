@@ -35,13 +35,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ imageUrl, title, price, iconU
 
   return (
     <Card
-      className="
-        group w-full max-w-xs md:max-w-sm lg:max-w-md
-        bg-transparent border-none shadow-none rounded-none
-        flex flex-col items-center mx-auto
-        transition-transform duration-300
-        relative z-10
-      "
+      className="group w-full max-w-xs md:max-w-sm lg:max-w-md bg-transparent border-none shadow-none rounded-none flex flex-col items-center mx-auto transition-transform duration-300 relative z-10"
     >
       <AspectRatio 
         ratio={3 / 4} 

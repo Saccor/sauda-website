@@ -260,9 +260,11 @@ export const SocialMediaContainer = () => {
                     src={currentPost.mediaUrl}
                     alt={currentPost.caption || 'Instagram post'}
                     fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-contain rounded-lg bg-black"
                     style={{ background: '#111' }}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    priority
+                    unoptimized
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.style.display = 'none';
