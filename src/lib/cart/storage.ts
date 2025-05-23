@@ -1,9 +1,3 @@
-/**
- * Cart Storage Utilities
- * 
- * This module provides functions for persisting cart data in localStorage.
- */
-
 import { CartItem } from '@/context/cart/cartReducer';
 
 const CART_STORAGE_KEY = 'sauda-cart';
