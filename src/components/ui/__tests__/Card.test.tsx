@@ -4,11 +4,11 @@ import { Card } from '../card'
 describe('Card', () => {
   it('applies className prop to the card', () => {
     render(
-      <Card className="custom-class">
+      <Card className="custom-class test-card">
         <div>Test content</div>
       </Card>
     )
-    const card = screen.getByTestId('card')
+    const card = screen.getByText('Test content').parentElement
     expect(card).toHaveClass('custom-class')
   })
 

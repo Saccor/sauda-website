@@ -1,11 +1,3 @@
-/**
- * Social Media Integration Module
- * 
- * This module provides a unified interface for fetching and managing social media content
- * from various platforms (Instagram, YouTube, TikTok). It includes caching functionality
- * to optimize performance and reduce API calls.
- */
-
 import { SocialFeedItem } from './types';
 import { getLatestInstagramPost, getLatestInstagramPosts } from './platforms/instagram';
 import { getLatestYouTubeVideos } from './platforms/youtube';

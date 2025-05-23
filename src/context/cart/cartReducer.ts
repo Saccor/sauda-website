@@ -67,7 +67,7 @@ export function cartReducer(state: CartState, action: CartAction): CartState {
         ...state,
         items: state.items.map(item =>
           item.product.id === action.payload.productId
-            ? { ...item, quantity: action.payload.quantity }
+            ? { ...item, quantity: Math.max(0, action.payload.quantity) }
             : item
         ),
       };

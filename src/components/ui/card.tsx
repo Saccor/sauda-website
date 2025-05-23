@@ -11,7 +11,7 @@ interface CardProps {
 
 export function Card({ className, children }: CardProps) {
   return (
-    <div data-testid="card" className={cn(
+    <div className={cn(
       "bg-neutral text-on-dark shadow-lg rounded-2xl p-6",
       className
     )}>

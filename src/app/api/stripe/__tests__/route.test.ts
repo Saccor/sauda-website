@@ -1,10 +1,10 @@
 // Mock Stripe at the very top, before any imports
-export const createMock = jest.fn();
 jest.mock('stripe', () => {
+  const mockCreateSession = jest.fn();
   return jest.fn().mockImplementation(() => ({
     checkout: {
       sessions: {
-        create: createMock
+        create: mockCreateSession
       }
     }
   }));
@@ -12,6 +12,9 @@ jest.mock('stripe', () => {
 
 import { POST } from '../route';
 import { NextResponse } from 'next/server';
+
+// Get the mock function after the mock is set up
+const mockCreateSession = jest.requireMock('stripe')().checkout.sessions.create;
 
 // Mock NextResponse
 jest.mock('next/server', () => ({
@@ -47,7 +50,7 @@ describe('Stripe API', () => {
     ];
 
     it('should create a checkout session with valid items', async () => {
-      createMock.mockResolvedValue({ id: 'test_session_id' });
+      mockCreateSession.mockResolvedValue({ id: 'test_session_id' });
       const request = {
         json: () => Promise.resolve({ items: validItems }),
         headers: {
@@ -60,7 +63,7 @@ describe('Stripe API', () => {
 
       expect(response.status).toBe(200);
       expect(data).toEqual({ sessionId: 'test_session_id' });
-      expect(createMock).toHaveBeenCalledWith(
+      expect(mockCreateSession).toHaveBeenCalledWith(
         expect.objectContaining({
           payment_method_types: ['card', 'klarna'],
           line_items: expect.arrayContaining([
@@ -143,7 +146,7 @@ describe('Stripe API', () => {
     });
 
     it('should handle Stripe API errors', async () => {
-      createMock.mockRejectedValueOnce(new Error('Stripe API error'));
+      mockCreateSession.mockRejectedValueOnce(new Error('Stripe API error'));
       const request = {
         json: () => Promise.resolve({ items: validItems }),
         headers: {
@@ -161,7 +164,7 @@ describe('Stripe API', () => {
     });
 
     it('should handle missing host header', async () => {
-      createMock.mockResolvedValue({ id: 'test_session_id' });
+      mockCreateSession.mockResolvedValue({ id: 'test_session_id' });
       const request = {
         json: () => Promise.resolve({ items: validItems }),
         headers: {
@@ -174,7 +177,7 @@ describe('Stripe API', () => {
 
       expect(response.status).toBe(200);
       expect(data).toEqual({ sessionId: 'test_session_id' });
-      expect(createMock).toHaveBeenCalledWith(
+      expect(mockCreateSession).toHaveBeenCalledWith(
         expect.objectContaining({
           success_url: expect.stringContaining('localhost:3000'),
           cancel_url: expect.stringContaining('localhost:3000')
@@ -183,7 +186,7 @@ describe('Stripe API', () => {
     });
 
     it('should handle products without featured images', async () => {
-      createMock.mockResolvedValue({ id: 'test_session_id' });
+      mockCreateSession.mockResolvedValue({ id: 'test_session_id' });
       const itemsWithoutImages = [
         {
           product: {
@@ -211,7 +214,7 @@ describe('Stripe API', () => {
 
       expect(response.status).toBe(200);
       expect(data).toEqual({ sessionId: 'test_session_id' });
-      expect(createMock).toHaveBeenCalledWith({
+      expect(mockCreateSession).toHaveBeenCalledWith({
         cancel_url: 'https://localhost:3000/cart',
         line_items: [{
           price_data: {

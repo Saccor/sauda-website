@@ -156,8 +156,9 @@ const Cart = () => {
                         <div className="flex items-center gap-2 mt-2">
                           <button
                             onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                            className="p-1 hover:bg-gray-800 rounded"
+                            className={`p-1 rounded ${item.quantity > 0 ? 'hover:bg-gray-800' : 'opacity-50 cursor-not-allowed'}`}
                             aria-label="decrease quantity"
+                            disabled={item.quantity <= 0}
                           >
                             <Minus className="w-4 h-4" />
                           </button>
